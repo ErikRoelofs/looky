@@ -1,19 +1,22 @@
 function love.load()
-  --mobdebug = require("mobdebug") mobdebug.start()
+  if arg[#arg] == "-debug" then require("mobdebug").start() end
   root = newRoot()
   
-  layout = buildLayout("linear", {width = 150, height = "fill", color = {100,200,50,100}, marginRight = 20, marginLeft = 20})
+  layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20})
   root:addChild(layout)
   
-  layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {100,200,50,100}, paddingLeft = 10, paddingTop = 10})
+  layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
   root:addChild(layout2)
   
-  layout3 = buildLayout("linear", {width = 250, height = "fill", color = {0, 255, 0, 200}})
+  layout3 = buildLayout("linear", {width = 250, height = "fill", backgroundColor = {0, 255, 0, 200}})
   root:addChild(layout3)
 
-  layout4 = buildLayout("linear", {width = "fill", height = "fill", color = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
+  layout4 = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
   root:addChild(layout4)
 
+
+  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}}) )
+  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}}) )
   --layout:addChild( newLayout( "fill", 120, {200, 50, 50, 200}))
   --layout:addChild( newLayout( "fill", 40, {20, 30, 40, 200}))
   
@@ -48,8 +51,7 @@ function newRoot()
       return love.graphics.getHeight()
     end,
     layoutingPass = function(self)
-      verticalLayout(self, self.children)
-      -- allocate all fills leftover size divided equally over all fill items
+      verticalLayout(self, self.children)      
     end,
     render = function(self)
       local offset = 0
@@ -105,41 +107,32 @@ function newLayout(width, height, color)
       
     end,
     render = function(self)
-      renderText(self)
-      --[[
-      love.graphics.setColor(color)
-      love.graphics.rectangle("fill", 0, 0, self:grantedWidth(), self:grantedHeight())
-      
-      local offset = 0
-      
-      for k, v in ipairs(self.children) do
-        love.graphics.push()
-        if self.direction == "v" then 
-          love.graphics.translate(0, offset)
-          offset = offset + v:grantedHeight()
-        else
-          love.graphics.translate(offset, 0)
-          offset = offset + v:grantedWidth()
-        end
-          
-        v:render()
-        
-        love.graphics.pop()
-      end]]--
+      renderText(self)     
     end
   }
 end
 
 renderText = function(self)
-  love.graphics.setColor(self.color)
+  love.graphics.setColor(self.backgroundColor)
+  local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
+  local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
+  love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)  
+  
+  love.graphics.setColor(self.textColor or {255,255,255,255})
+  love.graphics.print(self.text,self.paddingLeft,self.paddingTop)
+
+end
+
+renderImage = function(self)
+  
+end
+
+renderChildren = function(self) 
+  love.graphics.setColor(self.backgroundColor)
   local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
   local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
   love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)
-  if self.text ~= "linear" then
-    love.graphics.setColor(self.textColor or {255,255,255,255})
-    love.graphics.print(self.text,self.paddingLeft,self.paddingTop)
-  end
-  
+
   local offset = 0
   
   for k, v in ipairs(self.children) do
@@ -170,15 +163,14 @@ function buildLayout(kind, options)
   start.marginBottom = options.marginBottom or 0
   
   if kind == "linear" then
-    start.render = renderText
-    start.layoutingPass = verticalLayout
-    start.color = options.color
+    start.render = renderChildren
+    start.layoutingPass = function(self) verticalLayout(self, self.children) end
+    start.backgroundColor = options.backgroundColor or {0,0,0,0}
     start.text = "linear"
     start.textColor = {255,255,255,255}
   elseif kind == "text" then
     start.render = renderText
-    start.layoutingPass = verticalLayout    
-    start.color = {0,0,0,255}
+    start.backgroundColor = options.backgroundColor or {0,0,0,0}
     start.text = options.text
     start.textColor = options.textColor or {255,255,255,255}
   end
@@ -242,9 +234,9 @@ function baseLayout(width, height)
 end
 
 verticalLayout = function(parent, children)
-  local availableSize = parent:desiredWidth();      
+  local availableSize = parent:grantedWidth();      
   local fills = {}
-  for k, v in ipairs(children) do        
+  for k, v in ipairs(children) do
     if v:desiredWidth() == "fill" then
       table.insert(fills, v)
     else
@@ -269,5 +261,9 @@ verticalLayout = function(parent, children)
       end
       v:setDimensions(availableSize / #fills, height)
     end
+  end
+  
+  for k, v in ipairs(children) do    
+    v:layoutingPass()
   end
 end
