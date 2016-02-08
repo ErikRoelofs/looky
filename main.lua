@@ -12,7 +12,7 @@ function love.load()
   root:addChild(layout3)
   
   
-  imageLayout = buildLayout("image", {width = "fill", height = "fill", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25 })
+  imageLayout = buildLayout("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25 })
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
@@ -166,6 +166,8 @@ function buildLayout(kind, options)
   elseif kind == "image" then
     start.render = renderImage
     start.image = love.graphics.newImage(options.file)
+    start.contentWidth = imageWidth
+    start.contentHeight = imageHeight
   end
   return start
 end
@@ -196,14 +198,18 @@ function baseLayout(width, height)
     desiredWidth = function(self)      
       if self.width == "fill" then
         return self.width
+      elseif self.width == "wrap" then
+        return self:contentWidth() + self.marginLeft + self.marginRight
       else
         return self.width + self.marginLeft + self.marginRight
       end
     end,
     desiredHeight = function(self)
       if self.height == "fill" then
-        return self.height 
-      else
+        return self.height
+      elseif self.height == "wrap" then
+        return self:contentHeight() + self.marginTop + self.marginBottom
+      else        
         return self.height + self.marginTop + self.marginBottom
       end
     end,
@@ -228,6 +234,12 @@ function baseLayout(width, height)
     end,
     render = function(self)
     
+    end,
+    contentWidth = function(self)
+      return 0
+    end,
+    contentHeight = function(self)
+      return 0
     end
   }
 end
@@ -300,4 +312,12 @@ verticalLayout = function(parent, children)
   for k, v in ipairs(children) do    
     v:layoutingPass()
   end
+end
+
+function imageWidth(self)
+  return self.image:getWidth() + self.paddingLeft + self.paddingRight
+end
+
+function imageHeight(self)
+  return self.image:getHeight() + self.paddingTop + self.paddingBottom
 end
