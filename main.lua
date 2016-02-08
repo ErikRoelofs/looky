@@ -2,13 +2,13 @@ function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   root = newRoot()
   
-  layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "h"})
+  layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
   
   layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
   root:addChild(layout2)
   
-  layout3 = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "h"})
+  layout3 = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout3)
   
   
@@ -27,15 +27,13 @@ function love.load()
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
-  subContainer = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {200,250,20,150}, direction = "v"})
+  subContainer = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {200,250,20,150}, direction = "h"})
   layout:addChild( subContainer )
   
   subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  
-  
   
   root:layoutingPass()
 end
@@ -74,7 +72,7 @@ function newRoot()
       return love.graphics.getHeight()
     end,
     layoutingPass = function(self)
-      verticalLayout(self, self.children)      
+      horizontalLayout(self, self.children)      
     end,
     render = function(self)
       local offset = 0
@@ -118,7 +116,7 @@ renderChildren = function(self)
   renderBackground(self)
 
   local offset = 0
-  if self.direction == "v" then
+  if self.direction == "h" then
     offset = self.marginTop
   else
     offset = self.marginLeft
@@ -126,7 +124,7 @@ renderChildren = function(self)
   
   for k, v in ipairs(self.children) do
     love.graphics.push()
-    if self.direction == "h" then 
+    if self.direction == "v" then 
       love.graphics.translate(self.marginLeft, offset)
       offset = offset + v:grantedHeight()
     else
@@ -234,7 +232,7 @@ function baseLayout(width, height)
   }
 end
 
-verticalLayout = function(parent, children)
+horizontalLayout = function(parent, children)
   local availableSize = parent:availableWidth()
   local fills = {}
   for k, v in ipairs(children) do
@@ -269,7 +267,7 @@ verticalLayout = function(parent, children)
   end
 end
 
-horizontalLayout = function(parent, children)
+verticalLayout = function(parent, children)
   local availableSize = parent:availableHeight()
   local fills = {}
   for k, v in ipairs(children) do
