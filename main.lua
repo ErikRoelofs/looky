@@ -2,7 +2,7 @@ function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   root = newRoot()
   
-  layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20})
+  layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "h"})
   root:addChild(layout)
   
   layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
@@ -106,11 +106,11 @@ renderChildren = function(self)
   
   for k, v in ipairs(self.children) do
     love.graphics.push()
-    if self.direction == "v" then 
-      love.graphics.translate(0, offset)
+    if self.direction == "h" then 
+      love.graphics.translate(self.marginLeft, offset)
       offset = offset + v:grantedHeight()
     else
-      love.graphics.translate(offset, 0)
+      love.graphics.translate(offset, self.marginTop)
       offset = offset + v:grantedWidth()
     end
       
@@ -134,7 +134,13 @@ function buildLayout(kind, options)
   
   if kind == "linear" then
     start.render = renderChildren
-    start.layoutingPass = function(self) verticalLayout(self, self.children) end  
+    start.direction = options.direction or "v"
+    if start.direction == "v" then
+      start.layoutingPass = function(self) verticalLayout(self, self.children) end  
+    else
+      start.layoutingPass = function(self) horizontalLayout(self, self.children) end  
+    end
+    
   elseif kind == "text" then
     start.render = renderText
     start.text = options.text
@@ -217,7 +223,7 @@ verticalLayout = function(parent, children)
     else
       local height = v:desiredHeight()
       if height == "fill" then
-        height = parent:grantedHeight()
+        height = parent:availableHeight()
       end
       if v:desiredWidth() < availableSize then
         availableSize = availableSize - v:desiredWidth()            
@@ -235,6 +241,41 @@ verticalLayout = function(parent, children)
         height = parent:grantedHeight()
       end
       v:setDimensions(availableSize / #fills, height)
+    end
+  end
+  
+  for k, v in ipairs(children) do    
+    v:layoutingPass()
+  end
+end
+
+horizontalLayout = function(parent, children)
+  local availableSize = parent:availableHeight()
+  local fills = {}
+  for k, v in ipairs(children) do
+    if v:desiredHeight() == "fill" then
+      table.insert(fills, v)
+    else
+      local width = v:desiredWidth()
+      if width == "fill" then
+        width = parent:availableWidth()
+      end
+      if v:desiredHeight() < availableSize then
+        availableSize = availableSize - v:desiredHeight()            
+        v:setDimensions(width, v:desiredHeight())
+      else
+        v:setDimensions(width, availableSize)
+        availableSize = 0
+      end
+    end
+  end
+  if availableSize > 0 then
+    for k, v in ipairs(fills) do
+      local width = v:desiredWidth()
+      if width == "fill" then
+        width = parent:grantedWidth()
+      end
+      v:setDimensions(width, availableSize / #fills)
     end
   end
   
