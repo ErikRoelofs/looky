@@ -17,8 +17,6 @@ function love.load()
 
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}}) )
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}}) )
-  --layout:addChild( newLayout( "fill", 120, {200, 50, 50, 200}))
-  --layout:addChild( newLayout( "fill", 40, {20, 30, 40, 200}))
   
   root:layoutingPass()
 end
@@ -69,49 +67,6 @@ function newRoot()
   }
 end
 
-function newLayout(width, height, color)
-  return {
-    children = {},
-    parent = nil,
-    width = width,
-    height = height,
-    givenWidth = 0,
-    givenHeight = 0,
-    color = color,
-    direction = "v",
-    text = "test",
-    addChild = function(self, child)
-      table.insert(self.children, child)
-      child:setParent(self)
-    end,
-    setParent = function(self, parent)
-      self.parent = parent
-    end,
-    desiredWidth = function(self)      
-      return self.width
-    end,
-    desiredHeight = function(self)
-      return self.height
-    end,
-    grantedWidth = function(self)
-      return self.givenWidth
-    end,
-    grantedHeight = function(self)
-      return self.givenHeight
-    end,
-    setDimensions = function(self, x, y)
-      self.givenWidth = x
-      self.givenHeight = y
-    end,
-    layoutingPass = function(self)
-      
-    end,
-    render = function(self)
-      renderText(self)     
-    end
-  }
-end
-
 renderText = function(self)
   love.graphics.setColor(self.backgroundColor)
   local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
@@ -124,7 +79,12 @@ renderText = function(self)
 end
 
 renderImage = function(self)
+  love.graphics.setColor(self.backgroundColor)
+  local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
+  local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
+  love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)  
   
+  love.graphics.draw(self.image, self.paddingLeft, self.paddingTop)
 end
 
 renderChildren = function(self) 
