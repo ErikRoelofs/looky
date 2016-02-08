@@ -8,7 +8,7 @@ function love.load()
   layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
   root:addChild(layout2)
   
-  layout3 = buildLayout("linear", {width = 250, height = "fill", backgroundColor = {0, 255, 0, 200}})
+  layout3 = buildLayout("image", {width = 250, height = 150, backgroundColor = {0, 0, 255, 200}, file = "test.png" })
   root:addChild(layout3)
 
   layout4 = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
@@ -79,11 +79,11 @@ renderText = function(self)
 end
 
 renderImage = function(self)
-  love.graphics.setColor(self.backgroundColor)
+  love.graphics.setColor(self.backgroundColor)  
   local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
   local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
   love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)  
-  
+  love.graphics.setColor(255,255,255,255)
   love.graphics.draw(self.image, self.paddingLeft, self.paddingTop)
 end
 
@@ -121,18 +121,18 @@ function buildLayout(kind, options)
   start.marginTop = options.marginTop or 0
   start.marginRight = options.marginRight or 0
   start.marginBottom = options.marginBottom or 0
+  start.backgroundColor = options.backgroundColor or {0,0,0,0}
   
   if kind == "linear" then
     start.render = renderChildren
-    start.layoutingPass = function(self) verticalLayout(self, self.children) end
-    start.backgroundColor = options.backgroundColor or {0,0,0,0}
-    start.text = "linear"
-    start.textColor = {255,255,255,255}
+    start.layoutingPass = function(self) verticalLayout(self, self.children) end  
   elseif kind == "text" then
     start.render = renderText
-    start.backgroundColor = options.backgroundColor or {0,0,0,0}
     start.text = options.text
     start.textColor = options.textColor or {255,255,255,255}
+  elseif kind == "image" then
+    start.render = renderImage
+    start.image = love.graphics.newImage(options.file)
   end
   return start
 end
