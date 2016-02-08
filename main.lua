@@ -8,15 +8,14 @@ function love.load()
   layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
   root:addChild(layout2)
   
-  layout3 = buildLayout("image", {width = 250, height = 150, backgroundColor = {0, 0, 255, 200}, file = "test.png" })
+  layout3 = buildLayout("image", {width = 250, height = 150, backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25 })
   root:addChild(layout3)
 
   layout4 = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
   root:addChild(layout4)
 
-
-  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}}) )
-  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}}) )
+  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
   
   root:layoutingPass()
 end
@@ -48,6 +47,12 @@ function newRoot()
     grantedHeight = function(self)
       return love.graphics.getHeight()
     end,
+    availableWidth = function(self)
+      return love.graphics.getWidth()
+    end,
+    availableHeight = function(self)
+      return love.graphics.getHeight()
+    end,
     layoutingPass = function(self)
       verticalLayout(self, self.children)      
     end,
@@ -67,11 +72,15 @@ function newRoot()
   }
 end
 
-renderText = function(self)
+renderBackground = function(self)
   love.graphics.setColor(self.backgroundColor)
-  local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
-  local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
-  love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)  
+  local width = self:grantedWidth() - (self.marginLeft + self.marginRight)
+  local height = self:grantedHeight() - (self.marginTop + self.marginBottom)
+  love.graphics.rectangle("fill", self.marginLeft, self.marginTop, width, height)    
+end
+
+renderText = function(self)
+  renderBackground(self)
   
   love.graphics.setColor(self.textColor or {255,255,255,255})
   love.graphics.print(self.text,self.paddingLeft,self.paddingTop)
@@ -79,21 +88,21 @@ renderText = function(self)
 end
 
 renderImage = function(self)
-  love.graphics.setColor(self.backgroundColor)  
-  local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
-  local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
-  love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)  
+  renderBackground(self)
+  
   love.graphics.setColor(255,255,255,255)
-  love.graphics.draw(self.image, self.paddingLeft, self.paddingTop)
+  love.graphics.draw(self.image, self.marginLeft + self.paddingLeft, self.marginTop + self.paddingTop)
 end
 
 renderChildren = function(self) 
-  love.graphics.setColor(self.backgroundColor)
-  local width = self:grantedWidth() - (self.paddingLeft + self.paddingRight)
-  local height = self:grantedHeight() - (self.paddingTop + self.paddingBottom)
-  love.graphics.rectangle("fill", self.paddingLeft, self.paddingTop, width, height)
+  renderBackground(self)
 
   local offset = 0
+  if self.direction == "v" then
+    offset = self.marginTop
+  else
+    offset = self.marginLeft
+  end
   
   for k, v in ipairs(self.children) do
     love.graphics.push()
@@ -184,6 +193,12 @@ function baseLayout(width, height)
       self.givenWidth = x
       self.givenHeight = y
     end,
+    availableWidth = function(self)
+      return self:grantedWidth() - self.marginLeft - self.marginRight
+    end,
+    availableHeight = function(self)
+      return self:grantedHeight() - self.marginTop - self.marginBottom
+    end,
     layoutingPass = function(self)
       
     end,
@@ -194,7 +209,7 @@ function baseLayout(width, height)
 end
 
 verticalLayout = function(parent, children)
-  local availableSize = parent:grantedWidth();      
+  local availableSize = parent:availableWidth()
   local fills = {}
   for k, v in ipairs(children) do
     if v:desiredWidth() == "fill" then
