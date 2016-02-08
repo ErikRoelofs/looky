@@ -8,14 +8,34 @@ function love.load()
   layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
   root:addChild(layout2)
   
-  layout3 = buildLayout("image", {width = 250, height = 150, backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25 })
+  layout3 = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "h"})
   root:addChild(layout3)
+  
+  
+  imageLayout = buildLayout("image", {width = "fill", height = "fill", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25 })
+  layout3:addChild(imageLayout)
+  layout3:addChild(imageLayout)
+  layout3:addChild(imageLayout)
+  layout3:addChild(imageLayout)
+
 
   layout4 = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
   root:addChild(layout4)
 
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  
+  subContainer = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {200,250,20,150}, direction = "v"})
+  layout:addChild( subContainer )
+  
+  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  
+  
   
   root:layoutingPass()
 end
@@ -273,7 +293,7 @@ horizontalLayout = function(parent, children)
     for k, v in ipairs(fills) do
       local width = v:desiredWidth()
       if width == "fill" then
-        width = parent:grantedWidth()
+        width = parent:availableWidth()
       end
       v:setDimensions(width, availableSize / #fills)
     end
