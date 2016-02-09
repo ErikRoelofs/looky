@@ -1,18 +1,21 @@
 function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
+  
+  font = love.graphics.newFont()
+  
   root = newRoot()
   
   layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
   
-  layout2 = buildLayout("text", {width = 150, height = "fill", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 10})
+  layout2 = buildLayout("text", {width = "wrap", height = "wrap", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 50, marginTop = 50, backgroundColor = {100,100,100,255}})
   root:addChild(layout2)
   
   layout3 = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout3)
   
   
-  imageLayout = buildLayout("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25 })
+  imageLayout = buildLayout("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25, paddingRight = 10, paddingBottom = 5 })
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
@@ -23,7 +26,7 @@ function love.load()
   root:addChild(layout4)
 
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( buildLayout("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
@@ -163,6 +166,8 @@ function buildLayout(kind, options)
     start.render = renderText
     start.text = options.text
     start.textColor = options.textColor or {255,255,255,255}
+    start.contentWidth = textWidth
+    start.contentHeight = textHeight
   elseif kind == "image" then
     start.render = renderImage
     start.image = love.graphics.newImage(options.file)
@@ -195,11 +200,16 @@ function baseLayout(width, height)
     setParent = function(self, parent)
       self.parent = parent
     end,
-    desiredWidth = function(self)      
+    desiredWidth = function(self)
       if self.width == "fill" then
         return self.width
       elseif self.width == "wrap" then
-        return self:contentWidth() + self.marginLeft + self.marginRight
+        local content = self:contentWidth()
+        if content == "fill" then
+          return content
+        else
+          return content + self.marginLeft + self.marginRight
+        end
       else
         return self.width + self.marginLeft + self.marginRight
       end
@@ -208,7 +218,12 @@ function baseLayout(width, height)
       if self.height == "fill" then
         return self.height
       elseif self.height == "wrap" then
-        return self:contentHeight() + self.marginTop + self.marginBottom
+        local content = self:contentHeight()
+        if content == "fill" then
+          return content
+        else
+          return content + self.marginTop + self.marginBottom
+        end
       else        
         return self.height + self.marginTop + self.marginBottom
       end
@@ -314,10 +329,42 @@ verticalLayout = function(parent, children)
   end
 end
 
+function textWidth(self)
+  return font:getWidth(self.text) + self.paddingLeft + self.paddingRight
+end
+
+function textHeight(self)
+  return font:getHeight() + self.paddingTop + self.paddingBottom
+end
+
 function imageWidth(self)
   return self.image:getWidth() + self.paddingLeft + self.paddingRight
 end
 
 function imageHeight(self)
   return self.image:getHeight() + self.paddingTop + self.paddingBottom
+end
+
+function containerWidth(self)
+  local width = 0
+  for k, v in ipairs(self.children) do
+    if v:desiredWidth() == "fill" then
+      return "fill"
+    else
+      width = width + v:desiredWidth()
+    end
+  end
+  return width
+end
+
+function containerHeight(self)
+  local height = 0
+  for k, v in ipairs(self.children) do
+    if v:desiredHeight() == "fill" then
+      return "fill"
+    else
+      height = height + v:desiredHeight()
+    end
+  end
+  return height
 end
