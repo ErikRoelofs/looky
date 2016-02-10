@@ -1,42 +1,47 @@
 function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
-  
+
   font = love.graphics.newFont()
   
   root = newRoot()
   
-  layout = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
+  lc = layoutCreator()
+  lc:register("linear", linearLayout)
+  lc:register("text", textLayout)
+  lc:register("image", imageLayout)  
+  
+  layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
   
-  layout2 = buildLayout("text", {width = "wrap", height = "wrap", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 50, marginTop = 50, backgroundColor = {100,100,100,255}})
+  layout2 = lc:build("text", {width = "wrap", height = "wrap", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 50, marginTop = 50, backgroundColor = {100,100,100,255}})
   root:addChild(layout2)
   
-  layout3 = buildLayout("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
+  layout3 = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout3)
   
   
-  imageLayout = buildLayout("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25, paddingRight = 10, paddingBottom = 5 })
+  imageLayout = lc:build("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", marginLeft = 25, marginTop = 30, paddingLeft = 25, paddingTop = 25, paddingRight = 10, paddingBottom = 5 })
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
 
 
-  layout4 = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
+  layout4 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255, 255, 0, 200}, paddingLeft = 50, paddingBottom = 200, paddingTop = 25})
   root:addChild(layout4)
 
-  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  layout:addChild( buildLayout("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
-  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  layout:addChild( buildLayout("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( lc:build("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
-  subContainer = buildLayout("linear", {width = "fill", height = "fill", backgroundColor = {200,250,20,150}, direction = "h"})
+  subContainer = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {200,250,20,150}, direction = "h"})
   layout:addChild( subContainer )
   
-  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  subContainer:addChild( buildLayout("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( lc:build("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( lc:build("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( lc:build("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
+  subContainer:addChild( lc:build("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
   root:layoutingPass()
 end
@@ -141,40 +146,60 @@ renderChildren = function(self)
   end
 end
 
-function buildLayout(kind, options)
-  local start = baseLayout(options.width, options.height)
-  start.paddingLeft = options.paddingLeft or 0
-  start.paddingTop = options.paddingTop or 0
-  start.paddingRight = options.paddingRight or 0
-  start.paddingBottom = options.paddingBottom or 0
-  start.marginLeft = options.marginLeft or 0
-  start.marginTop = options.marginTop or 0
-  start.marginRight = options.marginRight or 0
-  start.marginBottom = options.marginBottom or 0
-  start.backgroundColor = options.backgroundColor or {0,0,0,0}
-  
-  if kind == "linear" then
-    start.render = renderChildren
-    start.direction = options.direction or "v"
-    if start.direction == "v" then
-      start.layoutingPass = function(self) verticalLayout(self, self.children) end  
-    else
-      start.layoutingPass = function(self) horizontalLayout(self, self.children) end  
+function layoutCreator()
+  return {
+    kinds = {},
+    build = function( self, kind, options )      
+      assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")
+      local base = self:makeBaseLayout(options)
+      return self.kinds[kind](base, options)
+    end,
+    register = function( self, name, fn )
+      assert(not self.kinds[name], "A layout named " .. name .. " was previously registered")
+      self.kinds[name] = fn
+    end,
+    makeBaseLayout = function(self, options)
+      local start = baseLayout(options.width, options.height)
+      start.paddingLeft = options.paddingLeft or 0
+      start.paddingTop = options.paddingTop or 0
+      start.paddingRight = options.paddingRight or 0
+      start.paddingBottom = options.paddingBottom or 0
+      start.marginLeft = options.marginLeft or 0
+      start.marginTop = options.marginTop or 0
+      start.marginRight = options.marginRight or 0
+      start.marginBottom = options.marginBottom or 0
+      start.backgroundColor = options.backgroundColor or {0,0,0,0}
+      return start
     end
-    
-  elseif kind == "text" then
-    start.render = renderText
-    start.text = options.text
-    start.textColor = options.textColor or {255,255,255,255}
-    start.contentWidth = textWidth
-    start.contentHeight = textHeight
-  elseif kind == "image" then
-    start.render = renderImage
-    start.image = love.graphics.newImage(options.file)
-    start.contentWidth = imageWidth
-    start.contentHeight = imageHeight
+  }
+end
+
+function linearLayout(base, options)
+  base.render = renderChildren
+  base.direction = options.direction or "v"
+  if base.direction == "v" then
+    base.layoutingPass = function(self) verticalLayout(self, self.children) end  
+  else
+    base.layoutingPass = function(self) horizontalLayout(self, self.children) end  
   end
-  return start
+  return base
+end
+
+function textLayout(base, options)  
+  base.render = renderText
+  base.text = options.text
+  base.textColor = options.textColor or {255,255,255,255}
+  base.contentWidth = textWidth
+  base.contentHeight = textHeight
+  return base
+end
+
+function imageLayout(base, options)
+  base.render = renderImage
+  base.image = love.graphics.newImage(options.file)
+  base.contentWidth = imageWidth
+  base.contentHeight = imageHeight  
+  return base
 end
 
 function baseLayout(width, height)
