@@ -10,12 +10,16 @@ function love.load()
   lc:register("text", textLayout)
   lc:register("image", imageLayout)  
   lc:register("caption", captionLayout )
+  lc:register("list", listLayout )
   
   layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
   
   caption = lc:build("caption", {width="wrap", height = "fill", text = "this is a caption", file="test.png"})
   root:addChild(caption)
+  
+  list = lc:build("list", {width="wrap", height="fill", texts = { "derp", "merp", "lots of merp" }})
+  root:addChild(list)
   
   layout3 = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout3)
@@ -209,6 +213,14 @@ function captionLayout(base, options)
   local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
   container:addChild( lc:build( "image", {file = options.file, width="wrap", height="wrap"} ))
   container:addChild( lc:build( "text", {text = options.text, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}) )
+  return container
+end
+
+function listLayout(base, options)
+  local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
+  for k, v in ipairs( options.texts ) do
+    container:addChild( lc:build( "text", {text = v, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}) )
+  end
   return container
 end
 
