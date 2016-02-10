@@ -9,12 +9,13 @@ function love.load()
   lc:register("linear", linearLayout)
   lc:register("text", textLayout)
   lc:register("image", imageLayout)  
+  lc:register("caption", captionLayout )
   
   layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
   
-  layout2 = lc:build("text", {width = "wrap", height = "wrap", text = "this is a text item", textColor = {255,0,0,255}, paddingLeft = 10, paddingTop = 50, marginTop = 50, backgroundColor = {100,100,100,255}})
-  root:addChild(layout2)
+  caption = lc:build("caption", {width="wrap", height = "fill", text = "this is a caption", file="test.png"})
+  root:addChild(caption)
   
   layout3 = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout3)
@@ -182,6 +183,8 @@ function linearLayout(base, options)
   else
     base.layoutingPass = function(self) horizontalLayout(self, self.children) end  
   end
+  base.contentWidth = containerWidth
+  base.contentHeight = containerHeight
   return base
 end
 
@@ -200,6 +203,13 @@ function imageLayout(base, options)
   base.contentWidth = imageWidth
   base.contentHeight = imageHeight  
   return base
+end
+
+function captionLayout(base, options)
+  local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
+  container:addChild( lc:build( "image", {file = options.file, width="wrap", height="wrap"} ))
+  container:addChild( lc:build( "text", {text = options.text, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}) )
+  return container
 end
 
 function baseLayout(width, height)
@@ -376,7 +386,9 @@ function containerWidth(self)
     if v:desiredWidth() == "fill" then
       return "fill"
     else
-      width = width + v:desiredWidth()
+      if v:desiredWidth() > width then
+        width = v:desiredWidth()
+      end
     end
   end
   return width
@@ -388,7 +400,9 @@ function containerHeight(self)
     if v:desiredHeight() == "fill" then
       return "fill"
     else
-      height = height + v:desiredHeight()
+      if v:desiredHeight() > height then
+        height = v:desiredHeight()
+      end
     end
   end
   return height
