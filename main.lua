@@ -15,10 +15,10 @@ function love.load()
   layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
   
-  caption = lc:build("caption", {width="wrap", height = "fill", text = "this is a caption", file="test.png"})
+  caption = lc:build("caption", {width="wrap", height = "wrap", text = "this is a caption", file="test.png"})
   root:addChild(caption)
   
-  list = lc:build("list", {width="wrap", height="fill", texts = { "derp", "merp", "lots of merp" }})
+  list = lc:build("list", {width="wrap", height="fill", texts = { "derp", "merp", "lots of merp" }, textOptions = { paddingTop = 15, backgroundColor = {255,255,255,255}}})
   root:addChild(list)
   
   layout3 = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
@@ -212,16 +212,29 @@ end
 function captionLayout(base, options)
   local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
   container:addChild( lc:build( "image", {file = options.file, width="wrap", height="wrap"} ))
-  container:addChild( lc:build( "text", {text = options.text, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}) )
+  container:addChild( lc:build( "text", {text = options.text, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, paddingLeft = 5, paddingRight = 5, paddingTop = 5, paddingBottom = 5}) )
   return container
 end
 
 function listLayout(base, options)
   local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
+  
+  local base = {width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}
+  local merged = mergeOptions(base, options.textOptions or {})
+  
   for k, v in ipairs( options.texts ) do
-    container:addChild( lc:build( "text", {text = v, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}) )
+    local toPass = merged
+    toPass.text = v
+    container:addChild( lc:build( "text", toPass) )
   end
   return container
+end
+
+function mergeOptions(baseOptions, options)
+  for k, v in pairs(options) do
+    baseOptions[k] = v
+  end
+  return baseOptions
 end
 
 function baseLayout(width, height)
@@ -392,14 +405,19 @@ function imageHeight(self)
   return self.image:getHeight() + self.paddingTop + self.paddingBottom
 end
 
-function containerWidth(self)
+function containerWidth(self)  
+  -- todo: either max or sum based on direction
   local width = 0
   for k, v in ipairs(self.children) do
     if v:desiredWidth() == "fill" then
       return "fill"
     else
-      if v:desiredWidth() > width then
-        width = v:desiredWidth()
+      if self.direction == "v" then
+        if v:desiredWidth() > width then
+          width = v:desiredWidth()
+        end
+      else
+        width = width + v:desiredWidth()
       end
     end
   end
@@ -407,13 +425,18 @@ function containerWidth(self)
 end
 
 function containerHeight(self)
+  -- todo: either max or sum based on direction
   local height = 0
   for k, v in ipairs(self.children) do
     if v:desiredHeight() == "fill" then
       return "fill"
     else
-      if v:desiredHeight() > height then
-        height = v:desiredHeight()
+      if self.direction == "v" then
+        height = height + v:desiredHeight()
+      else
+        if v:desiredHeight() > height then
+          height = v:desiredHeight()
+        end
       end
     end
   end
