@@ -37,7 +37,7 @@ function love.load()
 
   layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
-  layout:addChild( lc:build("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5, layoutGravity = "right"}) )
+  layout:addChild( lc:build("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5, layoutGravity = "end"}) )
   
   layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
@@ -142,7 +142,7 @@ renderChildren = function(self)
     if self.direction == "v" then 
       love.graphics.translate(self.marginLeft, offset)
       offset = offset + v:grantedHeight()
-      if v.layoutGravity == "right" then
+      if v.layoutGravity == "end" then
         love.graphics.translate( self:availableWidth() - v:grantedWidth() , 0 )
       elseif v.layoutGravity == "center" then
         love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 , 0 )
@@ -150,6 +150,11 @@ renderChildren = function(self)
     else
       love.graphics.translate(offset, self.marginTop)
       offset = offset + v:grantedWidth()
+      if v.layoutGravity == "end" then
+        love.graphics.translate( self:availableHeight() - v:grantedHeight() , 0 )
+      elseif v.layoutGravity == "center" then
+        love.graphics.translate( (self:availableHeight() - v:grantedHeight()) /2 , 0 )
+      end
     end
     
     
@@ -182,8 +187,8 @@ function layoutCreator()
       start.marginRight = options.marginRight or 0
       start.marginBottom = options.marginBottom or 0
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
-      start.layoutGravity = options.layoutGravity or "left"
-      start.gravity = options.gravity or "left"
+      start.layoutGravity = options.layoutGravity or "start"
+      start.gravity = options.gravity or "start"
       return start
     end
   }
