@@ -36,7 +36,9 @@ function love.load()
   root:addChild(layout4)
 
   layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 1", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
-  layout:addChild( lc:build("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5}) )
+  
+  layout:addChild( lc:build("text", {width = "wrap", height = 100, text = "list 2", textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, paddingLeft = 5, paddingTop = 5, layoutGravity = "right"}) )
+  
   layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 3", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   layout:addChild( lc:build("text", {width = "fill", height = 100, text = "list 4", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
@@ -140,11 +142,17 @@ renderChildren = function(self)
     if self.direction == "v" then 
       love.graphics.translate(self.marginLeft, offset)
       offset = offset + v:grantedHeight()
+      if v.layoutGravity == "right" then
+        love.graphics.translate( self:availableWidth() - v:grantedWidth() , 0 )
+      elseif v.layoutGravity == "center" then
+        love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 , 0 )
+      end
     else
       love.graphics.translate(offset, self.marginTop)
       offset = offset + v:grantedWidth()
     end
-      
+    
+    
     v:render()
     
     love.graphics.pop()
@@ -174,6 +182,8 @@ function layoutCreator()
       start.marginRight = options.marginRight or 0
       start.marginBottom = options.marginBottom or 0
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
+      start.layoutGravity = options.layoutGravity or "left"
+      start.gravity = options.gravity or "left"
       return start
     end
   }
@@ -197,7 +207,7 @@ function textLayout(base, options)
   base.text = options.text
   base.textColor = options.textColor or {255,255,255,255}
   base.contentWidth = textWidth
-  base.contentHeight = textHeight
+  base.contentHeight = textHeight  
   return base
 end
 
@@ -211,7 +221,7 @@ end
 
 function captionLayout(base, options)
   local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
-  container:addChild( lc:build( "image", {file = options.file, width="wrap", height="wrap"} ))
+  container:addChild( lc:build( "image", {file = options.file, width="wrap", height="wrap", layoutGravity = "center" } ))
   container:addChild( lc:build( "text", {text = options.text, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, paddingLeft = 5, paddingRight = 5, paddingTop = 5, paddingBottom = 5}) )
   return container
 end
@@ -253,6 +263,8 @@ function baseLayout(width, height)
     marginRight = 0,
     marginTop = 0,
     marginBottom = 0,
+    layoutGravity = "left",
+    gravity = "left",
     addChild = function(self, child)
       table.insert(self.children, child)
       child:setParent(self)
