@@ -63,7 +63,7 @@ end
 
 function dialog()
   dialogview = lc:build("root", { backgroundColor = { 100, 100, 100, 100 } } )
-  dialogview:addChild( lc:build( "text", { text = "This is a dialog overlay", width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 }, layoutGravity = "center", gravity = "end" } ) )
+  dialogview:addChild( lc:build( "text", { text = "This is a dialog overlay", width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 }, layoutGravity = "center", gravity = {"center","center"} } ) )
   
   dialogview:layoutingPass()
 end
