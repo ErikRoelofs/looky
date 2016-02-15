@@ -63,17 +63,21 @@ end
 
 function dialog()
   dialogview = lc:build("root", { backgroundColor = { 100, 100, 100, 100 } } )
-  dialogview:addChild( lc:build( "text", { text = "This is a dialog overlay", width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 } } ) )
+  dialogview:addChild( lc:build( "text", { text = "This is a dialog overlay", width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 }, layoutGravity = "center" } ) )
   
   dialogview:layoutingPass()
 end
 
 function love.update(dt)
-  
+    if love.keyboard.isDown("escape") then
+      dialogview = nil
+    end
 end
 
 function love.draw()
   root:render()
-  dialogview:render()
+  if dialogview then
+    dialogview:render()
+  end
 end
 

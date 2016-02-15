@@ -22,9 +22,9 @@ local renderChildren = function(self)
       love.graphics.translate(offset, self.marginTop)
       offset = offset + v:grantedWidth()
       if v.layoutGravity == "end" then
-        love.graphics.translate( self:availableHeight() - v:grantedHeight() , 0 )
+        love.graphics.translate( 0, self:availableHeight() - v:grantedHeight() )
       elseif v.layoutGravity == "center" then
-        love.graphics.translate( (self:availableHeight() - v:grantedHeight()) /2 , 0 )
+        love.graphics.translate( 0, (self:availableHeight() - v:grantedHeight()) /2 )
       end
     end
     
