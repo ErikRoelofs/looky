@@ -4,18 +4,6 @@ local  function baseLayout(width, height)
     parent = nil,
     width = width,
     height = height,
-    givenWidth = 0,
-    givenHeight = 0,
-    paddingLeft = 0,
-    paddingRight = 0,
-    paddingTop = 0,
-    paddingBottom = 0,
-    marginLeft = 0,
-    marginRight = 0,
-    marginTop = 0,
-    marginBottom = 0,
-    layoutGravity = "left",
-    gravity = "left",
     addChild = function(self, child)
       table.insert(self.children, child)
       child:setParent(self)
