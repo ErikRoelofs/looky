@@ -9,8 +9,15 @@ function love.load()
   lc:register("image", require "layout/image" )  
   lc:register("caption", require "layout/caption" )
   lc:register("list", require "layout/list" )
+  lc:register("root", require "layout/root" )
   
-  root = require "layout/root"
+  mainview()
+  dialog()
+  
+end
+
+function mainview()
+    root = lc:build("root", {})
   
   layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
@@ -51,7 +58,14 @@ function love.load()
   subContainer:addChild( lc:build("text", {width = "fill", height = 100, text = "check", textColor = {255,0,0,255}, paddingLeft = 5, paddingTop = 5}) )
   
   root:layoutingPass()
+
+end
+
+function dialog()
+  dialogview = lc:build("root", { backgroundColor = { 100, 100, 100, 100 } } )
+  dialogview:addChild( lc:build( "text", { text = "This is a dialog overlay", width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 } } ) )
   
+  dialogview:layoutingPass()
 end
 
 function love.update(dt)
@@ -60,5 +74,6 @@ end
 
 function love.draw()
   root:render()
+  dialogview:render()
 end
 
