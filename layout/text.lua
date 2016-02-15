@@ -1,8 +1,20 @@
 local renderText = function(self)
   self:renderBackground()
   
+  local locX, locY
+  if self.gravity == "start" then
+    locX = self.paddingLeft
+    locY = self.paddingTop
+  elseif self.gravity == "end" then
+    locX = self:grantedWidth() - self.paddingRight - self:contentWidth()
+    locY = self.paddingTop
+  elseif self.gravity == "center" then
+    locX = (self:grantedWidth() - self:contentWidth() - self.paddingRight - self.paddingLeft) / 2
+    locY = self.paddingTop
+  end
+  
   love.graphics.setColor(self.textColor or {255,255,255,255})
-  love.graphics.print(self.text,self.paddingLeft,self.paddingTop)
+  love.graphics.print(self.text,locX,locY)
 
 end
 
