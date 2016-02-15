@@ -3,14 +3,14 @@ function love.load()
 
   font = love.graphics.newFont()
   
-  root = require "layout/root"
-  
   lc = require "layoutcreator"
   lc:register("linear", require "layout/linear" )
   lc:register("text", require "layout/text" )
   lc:register("image", require "layout/image" )  
   lc:register("caption", require "layout/caption" )
   lc:register("list", require "layout/list" )
+  
+  root = require "layout/root"
   
   layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, marginRight = 20, marginLeft = 20, direction = "v"})
   root:addChild(layout)
