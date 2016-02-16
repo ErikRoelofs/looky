@@ -5,16 +5,16 @@ local renderText = function(self)
   if self.gravity[1] == "start" then
     locX = self.paddingLeft    
   elseif self.gravity[1] == "end" then
-    locX = self:grantedWidth() - self.paddingRight - self:contentWidth()
+    locX = self:grantedWidth() - self:contentWidth()
   elseif self.gravity[1] == "center" then
-    locX = (self:grantedWidth() - self:contentWidth() - self.paddingRight - self.paddingLeft) / 2
+    locX = (self:grantedWidth() - self:contentWidth()) / 2
   end
   if self.gravity[2] == "start" then
     locY = self.paddingTop
   elseif self.gravity[2] == "end" then
-    locY = self:grantedHeight() - self.paddingBottom - self:contentHeight()
+    locY = self:grantedHeight() - self:contentHeight() + self.paddingBottom
   elseif self.gravity[2] == "center" then
-    locY = (self:grantedHeight() - self:contentHeight() - self.paddingTop - self.paddingBottom) / 2
+    locY = (self:grantedHeight() - self:contentHeight()) / 2 + self.paddingBottom
   end
   
   
