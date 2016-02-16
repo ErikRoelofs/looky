@@ -101,7 +101,7 @@ end
       start.marginBottom = options.marginBottom or 0
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
       start.layoutGravity = options.layoutGravity or "start"
-      start.gravity = options.gravity or "start"
+      start.gravity = options.gravity or {"start","start"}
       return start
     end,
     mergeOptions = function (baseOptions, options)
