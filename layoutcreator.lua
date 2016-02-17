@@ -61,6 +61,9 @@ local  function baseLayout(width, height)
     render = function(self)
     
     end,
+    update = function(self, dt)
+      
+    end,
     contentWidth = function(self)
       return 0
     end,

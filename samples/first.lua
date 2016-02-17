@@ -63,6 +63,7 @@ return {
     if love.keyboard.isDown("escape") then
       self.dialogview = nil
     end
+    self.root:update(dt)
   end,
   draw = function(self)
     self.root:render()

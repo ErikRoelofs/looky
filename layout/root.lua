@@ -32,7 +32,10 @@ return function(base, options)
     end,
     render = function(self)
       self.linear:render()
-    end  
+    end,
+    update = function(self, dt)
+      self.linear:update(dt)
+    end
   }
   root:setLinear(child)
   return root

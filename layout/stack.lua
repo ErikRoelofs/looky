@@ -86,5 +86,10 @@ return function (base, options)
   base.contentHeight = containerHeight
   base.tiltDirection = options.tiltDirection or {"none", "none"}
   base.tiltAmount = options.tiltAmount or {0,0}
+  base.update = function(self, dt)
+    for k, v in ipairs(self.children) do
+      v:update(dt)
+    end
+  end
   return base
 end

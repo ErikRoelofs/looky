@@ -154,5 +154,10 @@ return function (base, options)
   end
   base.contentWidth = containerWidth
   base.contentHeight = containerHeight
+  base.update = function(self, dt)
+    for k, v in ipairs(self.children) do
+      v:update(dt)
+    end
+  end
   return base
 end
