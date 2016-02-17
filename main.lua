@@ -11,8 +11,9 @@ function love.load()
   lc:register("caption", require "layout/caption" )
   lc:register("list", require "layout/list" )
   lc:register("root", require "layout/root" )
+  lc:register("stack", require "layout/stack" )
   
-  display = require "samples/third"
+  display = require "samples/fourth"
   
   
 end
@@ -24,6 +25,8 @@ function love.keypressed(key)
     display = require "samples/second"
   elseif key == "3" then
     display = require "samples/third"
+  elseif key == "4" then
+    display = require "samples/fourth"
   end
 end
 
