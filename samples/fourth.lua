@@ -5,7 +5,7 @@ function mainview()
   root:addChild(p1)
   local p2 = lc:build("stack", {width = "fill", height = "fill", tiltDirection = {"end", "end"}, tiltAmount = { 10, 20 }, backgroundColor = {0,255,0,100}})
   root:addChild(p2)
-  local p3 = lc:build("stack", {width = "fill", height = "fill", backgroundColor = {0,0,255,100}})
+  local p3 = lc:build("stack", {width = "fill", height = "fill", tiltDirection = {"start", "end"}, tiltAmount = { 2, 25 }, backgroundColor = {0,0,255,100}})
   root:addChild(p3)
 
   addtext(p1, "first", {"start", "start"})
@@ -36,7 +36,7 @@ function addtext(container, text, gravity)
   local width = 200
   local height = 100
   
-  container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = useMT, marginLeft = useML, marginRight = useMR, marginBottom = useMB, paddingTop = usePT, paddingLeft = usePL, paddingRight = usePR, paddingBottom = usePB, gravity=gravity } ))
+  container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = useMT, marginLeft = useML, marginRight = useMR, marginBottom = useMB, paddingTop = usePT, paddingLeft = usePL, paddingRight = usePR, paddingBottom = usePB, gravity=gravity, border={color={255,255,255,255}, thickness=2 }} ))
   
 end
 
