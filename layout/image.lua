@@ -1,8 +1,9 @@
 local renderImage = function(self)
   self:renderBackground()
   
+  local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(255,255,255,255)
-  love.graphics.draw(self.image, self.paddingLeft, self.paddingTop)
+  love.graphics.draw(self.image, locX, locY)
 end
 
 local function imageWidth(self)

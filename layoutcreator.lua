@@ -78,7 +78,27 @@ local  function baseLayout(width, height)
       local width = self:availableWidth()
       local height = self:availableHeight()
       love.graphics.rectangle("fill", 0, 0, width, height)    
+    end,
+    startCoordsBasedOnGravity = function(self)
+      local locX, locY
+      if self.gravity[1] == "start" then
+        locX = self.paddingLeft  
+      elseif self.gravity[1] == "end" then
+        locX = self:availableWidth() - self:contentWidth() - self.paddingLeft
+      elseif self.gravity[1] == "center" then
+        locX = (self:availableWidth() - self:contentWidth() - self.paddingLeft - self.paddingRight) / 2
+      end
+      if self.gravity[2] == "start" then
+        locY = self.paddingTop
+      elseif self.gravity[2] == "end" then
+        locY = self:availableHeight() - self:contentHeight() - self.paddingBottom
+      elseif self.gravity[2] == "center" then
+        locY = (self:availableHeight() - self:contentHeight() - self.paddingBottom - self.paddingTop) / 2 
+      end
+      return locX, locY
     end
+
+    
 
   }
 end
