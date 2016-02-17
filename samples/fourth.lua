@@ -1,43 +1,22 @@
 function mainview()
   local root = lc:build("root", {})
   
-  local p1 = lc:build("stack", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}})
+  local p1 = lc:build("stack", {width = "fill", height = "fill", tiltDirection = {"start", "start"}, tiltAmount = { 10, 20 }, backgroundColor = {255,0,0,100}})
   root:addChild(p1)
-  local p2 = lc:build("stack", {width = "fill", height = "fill", backgroundColor = {0,255,0,100}})
+  local p2 = lc:build("stack", {width = "fill", height = "fill", tiltDirection = {"end", "end"}, tiltAmount = { 10, 20 }, backgroundColor = {0,255,0,100}})
   root:addChild(p2)
-  local p3 = lc:build("stack", {width = "fill", height = "fill", backgroundColor = {0,255,0,100}})
+  local p3 = lc:build("stack", {width = "fill", height = "fill", backgroundColor = {0,0,255,100}})
   root:addChild(p3)
-  
-  local c1 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "h"})
-  p1:addChild(c1)
-  local c2 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {0,255,0,100}, direction = "h"})
-  p1:addChild(c2)
-  local c3 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {0,0,255,100}, direction = "h"})
-  p1:addChild(c3)
-  
-  local c4 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {0,255,0,100}, direction = "h"})
-  p2:addChild(c4)
-  local c5 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "h"})
-  p2:addChild(c5)
-  local c6 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {0,0,255,100}, direction = "h"})
-  p2:addChild(c6)
-  
-  local c7 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {0,0,255, 100}, direction = "h"})
-  p3:addChild(c7)
-  local c8 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {0,255,0,100}, direction = "h"})
-  p3:addChild(c8)
-  local c9 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "h"})
-  p3:addChild(c9)
 
-  addtext(c1, {"start", "start"})
-  addtext(c2, {"start", "center"})
-  addtext(c3, {"start", "end"})
-  addtext(c4, {"center", "start"})
-  addtext(c5, {"center", "center"})
-  addtext(c6, {"center", "end"})
-  addtext(c7, {"end", "start"})
-  addtext(c8, {"end", "center"})
-  addtext(c9, {"end", "end"})
+  addtext(p1, "first", {"start", "start"})
+  addtext(p1, "second", {"start", "start"})
+  addtext(p1, "third", {"start", "start"})
+  addtext(p2, "first", {"start", "start"})
+  addtext(p2, "second", {"start", "start"})
+  addtext(p2, "third", {"start", "start"})
+  addtext(p3, "first", {"start", "start"})
+  addtext(p3, "second", {"start", "start"})
+  addtext(p3, "third", {"start", "start"})
 
 
   root:layoutingPass()
@@ -45,7 +24,7 @@ function mainview()
   return root
 end
 
-function addtext(container, gravity)
+function addtext(container, text, gravity)
   local useMT = 5
   local useML = 8
   local useMR = 4
@@ -56,7 +35,6 @@ function addtext(container, gravity)
   local usePB = 2
   local width = 200
   local height = 100
-  local text = "Some text"
   
   container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = useMT, marginLeft = useML, marginRight = useMR, marginBottom = useMB, paddingTop = usePT, paddingLeft = usePL, paddingRight = usePR, paddingBottom = usePB, gravity=gravity } ))
   
