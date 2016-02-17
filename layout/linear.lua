@@ -2,11 +2,6 @@ local renderChildren = function(self)
   self:renderBackground()
 
   local offset = 0
-  if self.direction == "h" then
-    offset = self.marginTop
-  else
-    offset = self.marginLeft
-  end
   
   for k, v in ipairs(self.children) do
     love.graphics.push()
