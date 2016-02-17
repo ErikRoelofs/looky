@@ -1,5 +1,6 @@
-function love.load()
-  if arg[#arg] == "-debug" then require("mobdebug").start() end
+function love.load()  
+  if arg[#arg] == "-debug" then debug = true else debug = false end
+  if debug then require("mobdebug").start() end
 
   font = love.graphics.newFont()
   

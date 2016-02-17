@@ -11,25 +11,33 @@ local renderChildren = function(self)
   for k, v in ipairs(self.children) do
     love.graphics.push()
     if self.direction == "v" then 
-      love.graphics.translate(self.marginLeft, offset)
+      love.graphics.translate(0, offset)
       offset = offset + v:grantedHeight()
-      if v.layoutGravity == "end" then
-        love.graphics.translate( self:availableWidth() - v:grantedWidth() , 0 )
+      if v.layoutGravity == "start" then
+        love.graphics.translate( v.marginLeft, v.marginTop )
+      elseif v.layoutGravity == "end" then
+        love.graphics.translate( self:availableWidth() - v:grantedWidth() - v.marginRight, v.marginTop )
       elseif v.layoutGravity == "center" then
-        love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 , 0 )
+        love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 - (v.marginLeft - v.marginRight) / 2, v.marginTop )
       end
     else
-      love.graphics.translate(offset, self.marginTop)
+      love.graphics.translate(offset, 0)
       offset = offset + v:grantedWidth()
-      if v.layoutGravity == "end" then
-        love.graphics.translate( 0, self:availableHeight() - v:grantedHeight() )
+      if v.layoutGravity == "start" then
+        love.graphics.translate( v.marginLeft, v.marginTop )
+      elseif v.layoutGravity == "end" then
+        love.graphics.translate( v.marginLeft, self:availableHeight() - v:grantedHeight() - v.marginBottom )
       elseif v.layoutGravity == "center" then
-        love.graphics.translate( 0, (self:availableHeight() - v:grantedHeight()) /2 )
+        love.graphics.translate( v.marginLeft, (self:availableHeight() - v:grantedHeight()) /2 - (v.marginTop - v.marginBottom) / 2)
       end
     end
     
     
     v:render()
+    if debug then
+      love.graphics.setColor(255,255,255,255)
+      love.graphics.rectangle("line",0,0,v:availableWidth(),v:availableHeight())
+    end
     
     love.graphics.pop()
   end

@@ -29,22 +29,37 @@ function mainview()
   local c9 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "h"})
   p3:addChild(c9)
 
-  local t1 = c1:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"start", "start"} } ))
-  local t2 = c2:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"start", "center"} } ))
-  local t3 = c3:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"start", "end"} } ))
-
-  local t4 = c4:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"center", "start"} } ))
-  local t5 = c5:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"center", "center"} } ))
-  local t6 = c6:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"center", "end"} } ))
-
-  local t7 = c7:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"end", "start"} } ))
-  local t8 = c8:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"end", "center"} } ))
-  local t9 = c9:addChild( lc:build("text", {width = "100", height="100", text = "Some text", textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = 20, marginLeft = 40, marginRight = 20, marginBottom = 40, paddingTop = 50, paddingLeft = 30, paddingRight = 70, paddingBottom = 10, gravity={"end", "end"} } ))
+  addtext(c1, {"start", "start"})
+  addtext(c2, {"start", "center"})
+  addtext(c3, {"start", "end"})
+  addtext(c4, {"center", "start"})
+  addtext(c5, {"center", "center"})
+  addtext(c6, {"center", "end"})
+  addtext(c7, {"end", "start"})
+  addtext(c8, {"end", "center"})
+  addtext(c9, {"end", "end"})
 
 
   root:layoutingPass()
 
   return root
+end
+
+function addtext(container, gravity)
+  local useMT = 5
+  local useML = 8
+  local useMR = 4
+  local useMB = 8
+  local usePT = 10
+  local usePL = 6
+  local usePR = 14
+  local usePB = 2
+  local width = 200
+  local height = 100
+  local text = "Some text"
+  
+  container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = useMT, marginLeft = useML, marginRight = useMR, marginBottom = useMB, paddingTop = usePT, paddingLeft = usePL, paddingRight = usePR, paddingBottom = usePB, gravity=gravity } ))
+  
 end
 
 return {

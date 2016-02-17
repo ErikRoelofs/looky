@@ -15,7 +15,7 @@ local  function baseLayout(width, height)
       if self.width == "fill" then
         return self.width
       elseif self.width == "wrap" then
-        local content = self:contentWidth()
+        local content = self:contentWidthWithPadding()
         if content == "fill" then
           return content
         else
@@ -29,7 +29,7 @@ local  function baseLayout(width, height)
       if self.height == "fill" then
         return self.height
       elseif self.height == "wrap" then
-        local content = self:contentHeight()
+        local content = self:contentHeightWithPadding()
         if content == "fill" then
           return content
         else
@@ -67,11 +67,17 @@ local  function baseLayout(width, height)
     contentHeight = function(self)
       return 0
     end,
+    contentWidthWithPadding = function(self)
+      return self:contentWidth() + self.paddingLeft + self.paddingRight
+    end,
+    contentHeightWithPadding = function(self)
+      return self:contentHeight() + self.paddingTop + self.paddingBottom
+    end,
     renderBackground = function(self)
       love.graphics.setColor(self.backgroundColor)
-      local width = self:grantedWidth() - (self.marginLeft + self.marginRight)
-      local height = self:grantedHeight() - (self.marginTop + self.marginBottom)
-      love.graphics.rectangle("fill", self.marginLeft, self.marginTop, width, height)    
+      local width = self:availableWidth()
+      local height = self:availableHeight()
+      love.graphics.rectangle("fill", 0, 0, width, height)    
     end
 
   }

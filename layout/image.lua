@@ -2,15 +2,15 @@ local renderImage = function(self)
   self:renderBackground()
   
   love.graphics.setColor(255,255,255,255)
-  love.graphics.draw(self.image, self.marginLeft + self.paddingLeft, self.marginTop + self.paddingTop)
+  love.graphics.draw(self.image, self.paddingLeft, self.paddingTop)
 end
 
 local function imageWidth(self)
-  return self.image:getWidth() + self.paddingLeft + self.paddingRight
+  return self.image:getWidth()
 end
 
 local function imageHeight(self)
-  return self.image:getHeight() + self.paddingTop + self.paddingBottom
+  return self.image:getHeight()
 end
 
 
