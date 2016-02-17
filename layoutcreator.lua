@@ -80,7 +80,16 @@ local  function baseLayout(width, height)
       love.graphics.setColor(self.backgroundColor)
       local width = self:availableWidth()
       local height = self:availableHeight()
-      love.graphics.rectangle("fill", 0, 0, width, height)    
+      love.graphics.rectangle("fill", 0, 0, width, height)
+      self:renderBorder()
+    end,
+    renderBorder = function(self)
+      love.graphics.setColor(self.border.color)
+      love.graphics.setLineWidth(self.border.thickness)
+      local width = self:availableWidth()
+      local height = self:availableHeight()
+      love.graphics.rectangle("line", self.border.thickness/2, self.border.thickness/2, width - self.border.thickness, height - self.border.thickness)
+      love.graphics.setLineWidth(1)
     end,
     startCoordsBasedOnGravity = function(self)
       local locX, locY
@@ -129,6 +138,7 @@ end
       start.marginRight = options.marginRight or 0
       start.marginBottom = options.marginBottom or 0
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
+      start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.layoutGravity = options.layoutGravity or "start"
       start.gravity = options.gravity or {"start","start"}
       return start
