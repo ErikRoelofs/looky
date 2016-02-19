@@ -114,13 +114,26 @@ local  function baseLayout(width, height)
 
   }
 end
-local paddingMarginHelper = function(left, top, right, bottom)
-  return {
-    left = left,
-    top = top,
-    right = right,
-    bottom = bottom
-  }
+
+paddingMarginHelper = function(left, top, right, bottom)
+  if left == nil and top == nil and right == nil and bottom == nil then
+    return paddingMarginHelper(0,0,0,0)
+  elseif top == nil and right == nil and bottom == nil then
+    if type(left) == "table" then
+      return paddingMarginHelper(left.left or 0, left.top or 0, left.right or 0, left.bottom or 0)
+    else
+      return paddingMarginHelper(left,left,left,left)
+    end
+  elseif right == nil and bottom == nil then
+    return paddingMarginHelper(left,top,left,top)  
+  else
+    return {
+      left = left,
+      top = top,
+      right = right,
+      bottom = bottom
+    }
+  end
 end
   
   return {

@@ -37,7 +37,7 @@ end
 
 return {
   root = mainview(),
-  update = function(self, dt) 
+  update = function(self, dt)
     self.root:update(dt)
   end,
   draw = function(self)
