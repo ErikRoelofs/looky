@@ -1,3 +1,5 @@
+-- rebuild margin/padding to take a table (a smart one?)
+
 function love.load()  
   if arg[#arg] == "-debug" then debug = true else debug = false end
   if debug then require("mobdebug").start() end

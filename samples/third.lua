@@ -46,19 +46,14 @@ function mainview()
 end
 
 function addimage(container, gravity)
-  local useMT = 5
-  local useML = 8
-  local useMR = 4
-  local useMB = 8
-  local usePT = 10
-  local usePL = 6
-  local usePR = 14
-  local usePB = 2
+  local padding = lc.padding(6, 10, 14, 2)
+  local margin = lc.margin(8,5,4,8)
+
   local width = 200
   local height = 100
   local image = "test.png"
   
-  container:addChild( lc:build("image", {width = width, height=height, file=image, backgroundColor={0,0,0,255}, marginTop = useMT, marginLeft = useML, marginRight = useMR, marginBottom = useMB, paddingTop = usePT, paddingLeft = usePL, paddingRight = usePR, paddingBottom = usePB, gravity=gravity } ))
+  container:addChild( lc:build("image", {width = width, height=height, file=image, backgroundColor={0,0,0,255}, padding = padding, margin = margin, gravity=gravity } ))
   
 end
 

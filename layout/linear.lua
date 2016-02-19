@@ -9,21 +9,21 @@ local renderChildren = function(self)
       love.graphics.translate(0, offset)
       offset = offset + v:grantedHeight()
       if v.layoutGravity == "start" then
-        love.graphics.translate( v.marginLeft, v.marginTop )
+        love.graphics.translate( v.margin.left, v.margin.top )
       elseif v.layoutGravity == "end" then
-        love.graphics.translate( self:availableWidth() - v:grantedWidth() - v.marginRight, v.marginTop )
+        love.graphics.translate( self:availableWidth() - v:grantedWidth() - v.margin.right, v.margin.top )
       elseif v.layoutGravity == "center" then
-        love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 - (v.marginLeft - v.marginRight) / 2, v.marginTop )
+        love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2, v.margin.top )
       end
     else
       love.graphics.translate(offset, 0)
       offset = offset + v:grantedWidth()
       if v.layoutGravity == "start" then
-        love.graphics.translate( v.marginLeft, v.marginTop )
+        love.graphics.translate( v.margin.left, v.margin.top )
       elseif v.layoutGravity == "end" then
-        love.graphics.translate( v.marginLeft, self:availableHeight() - v:grantedHeight() - v.marginBottom )
+        love.graphics.translate( v.margin.left, self:availableHeight() - v:grantedHeight() - v.margin.bottom )
       elseif v.layoutGravity == "center" then
-        love.graphics.translate( v.marginLeft, (self:availableHeight() - v:grantedHeight()) /2 - (v.marginTop - v.marginBottom) / 2)
+        love.graphics.translate( v.margin.left, (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2)
       end
     end
     

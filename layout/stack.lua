@@ -14,7 +14,7 @@ local renderChildren = function(self)
 
   for k, v in ipairs(self.children) do
     love.graphics.push()      
-    love.graphics.translate( v.marginLeft + tilt(k-1, 1), v.marginTop + tilt(k-1, 2))
+    love.graphics.translate( v.margin.left + tilt(k-1, 1), v.margin.top + tilt(k-1, 2))
     v:render()
     if debug then
       love.graphics.setColor(255,255,255,255)

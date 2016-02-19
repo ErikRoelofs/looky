@@ -46,19 +46,14 @@ function mainview()
 end
 
 function addtext(container, gravity)
-  local useMT = 5
-  local useML = 8
-  local useMR = 4
-  local useMB = 8
-  local usePT = 10
-  local usePL = 6
-  local usePR = 14
-  local usePB = 2
   local width = 200
   local height = 100
   local text = "Some text"
   
-  container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, marginTop = useMT, marginLeft = useML, marginRight = useMR, marginBottom = useMB, paddingTop = usePT, paddingLeft = usePL, paddingRight = usePR, paddingBottom = usePB, gravity=gravity } ))
+  local padding = lc.padding(6, 10, 14, 2)
+  local margin = lc.margin(8,5,4,8)
+  
+  container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, padding = padding, margin = margin, gravity=gravity } ))
   
 end
 

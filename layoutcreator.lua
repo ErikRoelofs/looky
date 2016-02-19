@@ -19,10 +19,10 @@ local  function baseLayout(width, height)
         if content == "fill" then
           return content
         else
-          return content + self.marginLeft + self.marginRight
+          return content + self.margin.left + self.margin.right
         end
       else
-        return self.width + self.marginLeft + self.marginRight
+        return self.width + self.margin.left + self.margin.right
       end
     end,
     desiredHeight = function(self)
@@ -33,10 +33,10 @@ local  function baseLayout(width, height)
         if content == "fill" then
           return content
         else
-          return content + self.marginTop + self.marginBottom
+          return content + self.margin.top + self.margin.bottom
         end
       else        
-        return self.height + self.marginTop + self.marginBottom
+        return self.height + self.margin.top + self.margin.bottom
       end
     end,
     grantedWidth = function(self)
@@ -50,10 +50,10 @@ local  function baseLayout(width, height)
       self.givenHeight = y
     end,
     availableWidth = function(self)
-      return self:grantedWidth() - self.marginLeft - self.marginRight
+      return self:grantedWidth() - self.margin.left - self.margin.right
     end,
     availableHeight = function(self)
-      return self:grantedHeight() - self.marginTop - self.marginBottom
+      return self:grantedHeight() - self.margin.top - self.margin.bottom
     end,
     layoutingPass = function(self)
       
@@ -71,10 +71,10 @@ local  function baseLayout(width, height)
       return 0
     end,
     contentWidthWithPadding = function(self)
-      return self:contentWidth() + self.paddingLeft + self.paddingRight
+      return self:contentWidth() + self.padding.left + self.padding.right
     end,
     contentHeightWithPadding = function(self)
-      return self:contentHeight() + self.paddingTop + self.paddingBottom
+      return self:contentHeight() + self.padding.top + self.padding.bottom
     end,
     renderBackground = function(self)
       love.graphics.setColor(self.backgroundColor)
@@ -94,18 +94,18 @@ local  function baseLayout(width, height)
     startCoordsBasedOnGravity = function(self)
       local locX, locY
       if self.gravity[1] == "start" then
-        locX = self.paddingLeft  
+        locX = self.padding.left
       elseif self.gravity[1] == "end" then
-        locX = self:availableWidth() - self:contentWidth() - self.paddingLeft
+        locX = self:availableWidth() - self:contentWidth() - self.padding.left
       elseif self.gravity[1] == "center" then
-        locX = (self:availableWidth() - self:contentWidth() - self.paddingLeft - self.paddingRight) / 2
+        locX = (self:availableWidth() - self:contentWidth() - self.padding.left - self.padding.right) / 2
       end
       if self.gravity[2] == "start" then
-        locY = self.paddingTop
+        locY = self.padding.top
       elseif self.gravity[2] == "end" then
-        locY = self:availableHeight() - self:contentHeight() - self.paddingBottom
+        locY = self:availableHeight() - self:contentHeight() - self.padding.bottom
       elseif self.gravity[2] == "center" then
-        locY = (self:availableHeight() - self:contentHeight() - self.paddingBottom - self.paddingTop) / 2 
+        locY = (self:availableHeight() - self:contentHeight() - self.padding.bottom - self.padding.top) / 2 
       end
       return locX, locY
     end
@@ -114,7 +114,14 @@ local  function baseLayout(width, height)
 
   }
 end
-
+local paddingMarginHelper = function(left, top, right, bottom)
+  return {
+    left = left,
+    top = top,
+    right = right,
+    bottom = bottom
+  }
+end
   
   return {
     kinds = {},
@@ -127,16 +134,23 @@ end
       assert(not self.kinds[name], "A layout named " .. name .. " was previously registered")
       self.kinds[name] = fn
     end,
+    padding = function(left, top, right, bottom)
+      return paddingMarginHelper(left, top, right, bottom)
+    end,
+    margin =  function(left, top, right, bottom)
+      return paddingMarginHelper(left, top, right, bottom)
+    end,
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)
-      start.paddingLeft = options.paddingLeft or 0
-      start.paddingTop = options.paddingTop or 0
-      start.paddingRight = options.paddingRight or 0
-      start.paddingBottom = options.paddingBottom or 0
-      start.marginLeft = options.marginLeft or 0
-      start.marginTop = options.marginTop or 0
-      start.marginRight = options.marginRight or 0
-      start.marginBottom = options.marginBottom or 0
+      if options.padding then
+        start.padding = self.padding(options.padding.left or 0, options.padding.top or 0, options.padding.right or 0, options.padding.bottom or 0)
+      else
+        start.padding = self.padding(0,0,0,0)
+      end
+      if options.margin then
+        start.margin = self.margin(options.margin.left or 0, options.margin.top or 0, options.margin.right or 0, options.margin.bottom or 0)      else
+        start.margin = self.margin(0,0,0,0)
+      end
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.layoutGravity = options.layoutGravity or "start"
