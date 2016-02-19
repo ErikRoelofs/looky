@@ -14,7 +14,7 @@ function love.load()
   lc:register("stack", require "layout/stack" )
   lc:register("freeform", require "layout/freeform" )
   
-  display = require "samples/fifth"
+  display = require "samples/sixth"
   
   
 end
@@ -30,6 +30,8 @@ function love.keypressed(key)
     display = require "samples/fourth"
   elseif key == "5" then
     display = require "samples/fifth"
+  elseif key == "6" then
+    display = require "samples/sixth"  
   end
 end
 

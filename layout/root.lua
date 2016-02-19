@@ -35,6 +35,9 @@ return function(base, options)
     end,
     update = function(self, dt)
       self.linear:update(dt)
+    end,
+    getChild = function(self, number)
+      return self.linear:getChild(number)
     end
   }
   root:setLinear(child)

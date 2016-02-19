@@ -108,10 +108,10 @@ local  function baseLayout(width, height)
         locY = (self:availableHeight() - self:contentHeight() - self.padding.bottom - self.padding.top) / 2 
       end
       return locX, locY
+    end,
+    getChild = function(self, number)
+      return self.children[number]
     end
-
-    
-
   }
 end
 
@@ -154,20 +154,14 @@ end
       return paddingMarginHelper(left, top, right, bottom)
     end,
     makeBaseLayout = function(self, options)
-      local start = baseLayout(options.width, options.height)
-      if options.padding then
-        start.padding = self.padding(options.padding.left or 0, options.padding.top or 0, options.padding.right or 0, options.padding.bottom or 0)
-      else
-        start.padding = self.padding(0,0,0,0)
-      end
-      if options.margin then
-        start.margin = self.margin(options.margin.left or 0, options.margin.top or 0, options.margin.right or 0, options.margin.bottom or 0)      else
-        start.margin = self.margin(0,0,0,0)
-      end
+      local start = baseLayout(options.width, options.height)      
+      start.padding = self.padding(options.padding)
+      start.margin = self.margin(options.margin)      
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.layoutGravity = options.layoutGravity or "start"
       start.gravity = options.gravity or {"start","start"}
+      start.weight = options.weight or 1
       return start
     end,
     mergeOptions = function (baseOptions, options)

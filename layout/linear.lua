@@ -59,12 +59,16 @@ local horizontalLayout = function(parent, children)
     end
   end
   if availableSize > 0 then
+    local sumWeight = 0
+    for k, v in ipairs(fills) do
+      sumWeight = sumWeight + v.weight
+    end    
     for k, v in ipairs(fills) do
       local height = v:desiredHeight()
       if height == "fill" then
         height = parent:grantedHeight()
       end
-      v:setDimensions(availableSize / #fills, height)
+      v:setDimensions(availableSize / sumWeight * v.weight, height)
     end
   end
   
@@ -94,12 +98,16 @@ local verticalLayout = function(parent, children)
     end
   end
   if availableSize > 0 then
+    local sumWeight = 0
+    for k, v in ipairs(fills) do
+      sumWeight = sumWeight + v.weight    
+    end
     for k, v in ipairs(fills) do
       local width = v:desiredWidth()
       if width == "fill" then
         width = parent:availableWidth()
       end
-      v:setDimensions(width, availableSize / #fills)
+      v:setDimensions(width, availableSize / sumWeight * v.weight)
     end
   end
   
