@@ -1,9 +1,9 @@
 function mainview()
   local root = lc:build("root", {direction = "v"})
  
-  root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 1, layoutGravity = "center" } ) )
+  root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 1 } ) )
   root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 2} ) )
-  root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 1, layoutGravity = "center" } ) )
+  root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 1 } ) )
   
   local middle = root:getChild(2)
  
@@ -33,7 +33,7 @@ function makestack()
 end
 
 function makeHand()
-  local stack = lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, backgroundColor={0,0,0,0} } )
+  local stack = lc:build("stack", {layoutGravity = "center", width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, backgroundColor={0,0,0,0} } )
   local i = 0
   return stack  
 end
