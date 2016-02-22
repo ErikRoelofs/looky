@@ -4,7 +4,6 @@ function mainview()
   root:addChild(makeHand())
   root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 2} ) )
   root:addChild(makeHand())
- 
   
   local middle = root:getChild(2)
  
@@ -64,6 +63,11 @@ local count = 0
 return {
   root = mainview(),
   update = function(self, dt)
+    
+    if love.keyboard.isDown("r") then
+      self.root = mainview()
+    end
+    
     count = count+dt
     if(count > 0.05) then
       count = count - 0.05      
@@ -85,7 +89,7 @@ return {
         self.root:layoutingPass()
       end
     end
-    self.root:update(dt)
+    initialPass(self.root)
   end,
   draw = function(self)
     self.root:render()

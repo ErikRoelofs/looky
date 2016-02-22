@@ -16,7 +16,6 @@ function love.load()
   
   display = require "samples/sixth"
   
-  
 end
 
 function love.keypressed(key)
