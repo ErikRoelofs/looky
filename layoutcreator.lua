@@ -112,8 +112,18 @@ local  function baseLayout(width, height)
     getChild = function(self, number)
       return self.children[number]
     end,
-    removeChild = function(self,number)
-      table.remove(self.children, number)
+    removeChild = function(self,target)
+      if type(target) == "number" then
+        table.remove(self.children, target)
+        return target
+      else
+        for k, v in ipairs(self.children) do
+          if v == target then
+            table.remove(self.children, k)
+            return k
+          end
+        end
+      end
     end
   }
 end
