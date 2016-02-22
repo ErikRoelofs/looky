@@ -9,12 +9,14 @@ local renderChildren = function(self)
       return 0
     elseif self.tiltDirection[direction] == "end" then
       return self.tiltAmount[direction] * number
-    end     
+    end
   end
+
+  local locX, locY = self:startCoordsBasedOnGravity()
 
   for k, v in ipairs(self.children) do
     love.graphics.push()      
-    love.graphics.translate( v.margin.left + tilt(k-1, 1), v.margin.top + tilt(k-1, 2))
+    love.graphics.translate( locX + tilt(k-1, 1), locY + v.margin.top + tilt(k-1, 2))
     v:render()
     if debug then
       love.graphics.setColor(255,255,255,255)
