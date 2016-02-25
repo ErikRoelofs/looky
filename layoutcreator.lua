@@ -4,8 +4,9 @@ local  function baseLayout(width, height)
     parent = nil,
     width = width,
     height = height,
-    addChild = function(self, child)
-      table.insert(self.children, child)
+    addChild = function(self, child, position)
+      local position = position or #self.children+1
+      table.insert(self.children, position, child)
       child:setParent(self)
     end,
     setParent = function(self, parent)

@@ -1,8 +1,8 @@
 return function(base, options)  
   local child = lc:build("linear", {direction=options.direction or "h", width="fill", height="fill", backgroundColor = options.backgroundColor or {0,0,0,0}})
   local root = {
-    addChild = function(self, child)
-      self.linear:addChild(child)
+    addChild = function(self, child, position)
+      self.linear:addChild(child, position)
     end,
     setLinear = function(self,child)
       self.linear = child
