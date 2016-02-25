@@ -1,6 +1,9 @@
 return function(base, options)  
-  local child = lc:build("linear", {direction=options.direction or "h", width="fill", height="fill", backgroundColor = options.backgroundColor or {0,0,0,0}})
+  
+  local baseOptions = {direction="h", width="fill", height="fill", backgroundColor = options.backgroundColor or {0,0,0,0}}
+  local child = lc:build("linear", lc.mergeOptions(baseOptions, options))
   local root = {
+    base = base,
     addChild = function(self, child, position)
       self.linear:addChild(child, position)
     end,
@@ -31,7 +34,10 @@ return function(base, options)
       self.linear:layoutingPass()
     end,
     render = function(self)
+      love.graphics.push()
+      love.graphics.translate(self.linear.margin.left, self.linear.margin.right)            
       self.linear:render()
+      love.graphics.pop()
     end,
     update = function(self, dt)
       self.linear:update(dt)

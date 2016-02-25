@@ -130,6 +130,7 @@ local  function baseLayout(width, height)
 end
 
 paddingMarginHelper = function(left, top, right, bottom)
+  assert( not (type(left) == "table" and top ~= nil), "Cannot pass both a table and other values to padding/margin. Did you accidentally call it as a method (ie lc:padding(10)) ?" )
   if left == nil and top == nil and right == nil and bottom == nil then
     return paddingMarginHelper(0,0,0,0)
   elseif top == nil and right == nil and bottom == nil then
