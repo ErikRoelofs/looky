@@ -1,0 +1,5 @@
+- relying on global font
+- root does not accept margins (and neither does its child)
+- needs LOADS of assertions and hints
+- margin/padding functions need to block if you :call them
+- need an "addChildAt"
