@@ -31,7 +31,7 @@ function addtext(container, text, gravity)
   local width = 200
   local height = 100
   
-  container:addChild( lc:build("text", {width = width, height=height, text = text, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, margin = margin, padding = padding, gravity=gravity, border={color={255,255,255,255}, thickness=2 }} ))
+  container:addChild( lc:build("text", {width = width, height=height, data = {value=text}, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, margin = margin, padding = padding, gravity=gravity, border={color={255,255,255,255}, thickness=2 }} ))
   
 end
 

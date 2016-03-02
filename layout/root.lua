@@ -44,6 +44,12 @@ return function(base, options)
     end,
     getChild = function(self, number)
       return self.linear:getChild(number)
+    end,
+    removeChild = function(self,target)
+      self.linear:removeChild(target)
+    end,
+    removeAllChildren = function(self)
+      self.linear:removeAllChildren()
     end
   }
   root:setLinear(child)

@@ -125,6 +125,9 @@ local  function baseLayout(width, height)
           end
         end
       end
+    end,
+    removeAllChildren = function(self)
+      self.children = {}
     end
   }
 end

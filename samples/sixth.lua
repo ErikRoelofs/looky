@@ -41,7 +41,7 @@ function makeCard(i)
   if i == 0 then
     backgroundColor = { 255, 0, 0, 255 }
   end
-  return lc:build("text", {text="C" .. i, width = 100, height = 100, backgroundColor=backgroundColor})
+  return lc:build("text", {data={value="C" .. i}, width = 100, height = 100, backgroundColor=backgroundColor})
 end
 
 function initialPass(root)

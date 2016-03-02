@@ -6,7 +6,7 @@ return function (base, options)
   
   for k, v in ipairs( options.texts ) do
     local toPass = merged
-    toPass.text = v
+    toPass.data = v
     container:addChild( lc:build( "text", toPass) )
   end
   return container
