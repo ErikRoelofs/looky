@@ -170,6 +170,5 @@ return {
     end
     return base
   end,
-  schema = {    
-  }
+  schema = lc:extendSchema("base", {direction = { required = false },})
 }

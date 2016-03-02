@@ -8,5 +8,5 @@
     
     return base
   end,
-  schema = lc:extendSchema("base", {})
+  schema = lc:extendSchema("base", { render = { required = false }, update = { required = false }})
 }

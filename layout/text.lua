@@ -24,5 +24,5 @@ return {
     base.contentHeight = textHeight  
     return base
   end,
-  schema = lc:extendSchema("base", {data = true})
+  schema = lc:extendSchema("base", {data = { required = true }, textColor = { required = false } })
 }

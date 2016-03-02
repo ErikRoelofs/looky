@@ -12,5 +12,5 @@ return {
     end
     return container
   end,
-  schema = lc:extendSchema("base", {})
+  schema = lc:extendSchema("base", {textOptions = { required = false }, texts = { required = false } })
 }

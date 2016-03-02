@@ -96,5 +96,5 @@ return {
     end
     return base
   end,
-  schema = lc:extendSchema("base", {})
+  schema = lc:extendSchema("base", {tiltAmount = { required = false }, tiltDirection = { required = false } })
 }

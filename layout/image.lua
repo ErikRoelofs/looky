@@ -23,5 +23,5 @@ return {
     base.contentHeight = imageHeight  
     return base
   end,
-  schema = lc:extendSchema("base", {})
+  schema = lc:extendSchema("base", {file = {required = true}})
 }

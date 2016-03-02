@@ -159,8 +159,15 @@ end
       base = { 
         build = function() assert(false, "Base cannot be instantiated") end,
         schema = {
-          width = true,
-          height = true
+          width = { required = true },
+          height = { required = true },
+          padding = { required = false },
+          margin = { required = false },
+          backgroundColor = { required = false },
+          layoutGravity = { required = false },
+          gravity = { required = false },
+          border = { required = false },
+          weight = { required = false }
         }
       }
     },
@@ -198,8 +205,12 @@ end
       return baseOptions   
     end,
     validate = function(self, kind, options)
-      for k, v in pairs(self.kinds[kind].schema) do
-        if v then
+      local schema = self.kinds[kind].schema
+      for k, v in pairs(options) do
+        assert(schema[k] ~= nil and schema[k] ~= false, "Unfamiliar option passed: " .. k .. " is not specified in the schema for " .. kind )
+      end
+      for k, v in pairs(schema) do
+        if v and v.required then
           assert( options[k], "Missing an option: " .. k .. " needed for kind: " .. kind )
         end
       end
