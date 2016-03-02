@@ -33,6 +33,8 @@ function love.keypressed(key)
     display = require "samples/sixth"  
   elseif key == "7" then
     display = require "samples/seventh"  
+  elseif key == "8" then
+    display = require "samples/eight"  
   end
 end
 

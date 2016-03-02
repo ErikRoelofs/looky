@@ -81,17 +81,20 @@ local function containerHeight(self)
   return height
 end
 
-return function (base, options)
-  base.render = renderChildren  
-  base.layoutingPass = function(self) layout(self, self.children) end  
-  base.contentWidth = containerWidth
-  base.contentHeight = containerHeight
-  base.tiltDirection = options.tiltDirection or {"none", "none"}
-  base.tiltAmount = options.tiltAmount or {0,0}
-  base.update = function(self, dt)
-    for k, v in ipairs(self.children) do
-      v:update(dt)
+return {
+  build = function (base, options)
+    base.render = renderChildren  
+    base.layoutingPass = function(self) layout(self, self.children) end  
+    base.contentWidth = containerWidth
+    base.contentHeight = containerHeight
+    base.tiltDirection = options.tiltDirection or {"none", "none"}
+    base.tiltAmount = options.tiltAmount or {0,0}
+    base.update = function(self, dt)
+      for k, v in ipairs(self.children) do
+        v:update(dt)
+      end
     end
-  end
-  return base
-end
+    return base
+  end,
+  schema = lc:extendSchema("base", {})
+}
