@@ -155,11 +155,20 @@ paddingMarginHelper = function(left, top, right, bottom)
 end
   
   return {
-    kinds = {},
-    build = function( self, kind, options )      
-      assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")
+    kinds = {
+      base = { 
+        build = function() assert(false, "Base cannot be instantiated") end,
+        schema = {
+          width = true,
+          height = true
+        }
+      }
+    },
+    build = function( self, kind, options )
+      assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
       local base = self:makeBaseLayout(options)
-      return self.kinds[kind](base, options)
+      self:validate(kind, options)
+      return self.kinds[kind].build(base, options)
     end,
     register = function( self, name, fn )
       assert(not self.kinds[name], "A layout named " .. name .. " was previously registered")
@@ -186,7 +195,26 @@ end
       for k, v in pairs(options) do
         baseOptions[k] = v
       end
-    return baseOptions
-end
+      return baseOptions   
+    end,
+    validate = function(self, kind, options)
+      for k, v in pairs(self.kinds[kind].schema) do
+        if v then
+          assert( options[k], "Missing an option: " .. k .. " needed for kind: " .. kind )
+        end
+      end
+    end,
+    extendSchema = function( self, startWith, andModifyWith )
+      local initial = self.kinds[startWith].schema
+      local schema = {}
+      for k, v in pairs(initial) do
+        schema[k] = v
+      end
+      for k, v in pairs(andModifyWith) do
+        schema[k] = v
+      end
+      return schema
+    end
 
   }
+

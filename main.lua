@@ -14,7 +14,7 @@ function love.load()
   lc:register("stack", require "layout/stack" )
   lc:register("freeform", require "layout/freeform" )
   
-  display = require "samples/seventh"
+  display = require "samples/eight"
   
 end
 
