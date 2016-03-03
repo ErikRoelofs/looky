@@ -167,10 +167,11 @@ end
           layoutGravity = { required = false },
           gravity = { required = false },
           border = { required = false },
-          weight = { required = false }
+          weight = { required = false, schematype = "number" }
         }
       }
     },
+    validator = require "validation/validator",
     build = function( self, kind, options )
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
       local base = self:makeBaseLayout(options)
@@ -205,15 +206,7 @@ end
       return baseOptions   
     end,
     validate = function(self, kind, options)
-      local schema = self.kinds[kind].schema
-      for k, v in pairs(options) do
-        assert(schema[k] ~= nil and schema[k] ~= false, "Unfamiliar option passed: " .. k .. " is not specified in the schema for " .. kind )
-      end
-      for k, v in pairs(schema) do
-        if v and v.required then
-          assert( options[k], "Missing an option: " .. k .. " needed for kind: " .. kind )
-        end
-      end
+      self.validator:validate(kind, self.kinds[kind].schema, options)
     end,
     extendSchema = function( self, startWith, andModifyWith )
       local initial = self.kinds[startWith].schema

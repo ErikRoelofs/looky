@@ -1,5 +1,5 @@
 function mainview()
-  local root = lc:build("root", {margin = lc.margin(100), padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}})
+  local root = lc:build("root", {margin = lc.margin(100), padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}, weight = 4.2 })
  
   ext = {value="First"}
  
