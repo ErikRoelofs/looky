@@ -5,5 +5,15 @@ return {
     container:addChild( lc:build( "text", {data = options.textdata, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
     return container
   end,
-  schema = lc:extendSchema("base", { file = { required = true }, textdata = { required = true } })
+  schema = lc:extendSchema("base", 
+    { 
+      file = { required = true, schemaType = "string" },       
+      textdata = { 
+        required = true, 
+        schemaType = "table", 
+        options = {
+          value = { required = true, schemaType = "string" }
+        } 
+      }
+    })
 }

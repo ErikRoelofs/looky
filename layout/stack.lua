@@ -96,5 +96,22 @@ return {
     end
     return base
   end,
-  schema = lc:extendSchema("base", {tiltAmount = { required = false }, tiltDirection = { required = false } })
+  schema = lc:extendSchema("base", {
+      tiltAmount = { 
+        required = false, 
+        schemaType = "table", 
+        options = { 
+          { required = true, schemaType = "number" }, 
+          { required = true, schemaType = "number" }, 
+        }
+      },
+      tiltDirection = { 
+        required = false, 
+        schemaType = "table", 
+        options = { 
+          { required = true, schemaType = "fromList", list = { "start", "none", "end" } }, 
+          { required = true, schemaType = "fromList", list = { "start", "none", "end" } } 
+        }
+      }
+    })
 }

@@ -159,15 +159,37 @@ end
       base = { 
         build = function() assert(false, "Base cannot be instantiated") end,
         schema = {
-          width = { required = true },
-          height = { required = true },
-          padding = { required = false },
-          margin = { required = false },
-          backgroundColor = { required = false },
-          layoutGravity = { required = false },
-          gravity = { required = false },
-          border = { required = false },
-          weight = { required = false, schematype = "number" }
+          width = { required = true, schemaType = "oneOf", possibilities = {
+            { schemaType = "fromList", list = {"wrap", "fill"} },
+            { schemaType = "number" }            
+          }},
+          height = { required = true, schemaType = "oneOf", possibilities = {
+            { schemaType = "fromList", list = {"wrap", "fill"} },
+            { schemaType = "number" }            
+          }},
+          padding = { required = false, schemaType = "table", options = {
+            left = { required = true, schemaType = "number" },
+            right = { required = true, schemaType = "number" },
+            bottom = { required = true, schemaType = "number" },
+            top = { required = true, schemaType = "number" },
+          }},
+          margin = { required = false, schemaType = "table", options = {
+            left = { required = true, schemaType = "number" },
+            right = { required = true, schemaType = "number" },
+            bottom = { required = true, schemaType = "number" },
+            top = { required = true, schemaType = "number" },          
+          }},          
+          backgroundColor = { required = false, schemaType = "color" },
+          layoutGravity = { required = false, schemaType = "fromList", list = { "start", "center", "end"}  },
+          gravity = { required = false, schemaType = "table", options = {
+            { schemaType = "fromList", list = { "start", "center", "end" } },
+            { schemaType = "fromList", list = { "start", "center", "end" } },
+          }},
+          border = { required = false, schemaType = "table", options = {
+            color = { required = true, schemaType = "color" },
+            thickness = { required = true, schemaType = "number" }
+          }},
+          weight = { required = false, schemaType = "number" }
         }
       }
     },

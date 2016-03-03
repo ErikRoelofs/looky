@@ -56,5 +56,5 @@ return {
     root:setLinear(child)
     return root
   end,
-  schema = lc:extendSchema("base", {width = false, height = false, direction = { required = false }})
+  schema = lc:extendSchema("base", {width = false, height = false, direction = { required = false, schemaType="fromList", list = { "h", "v" }}})
 }
