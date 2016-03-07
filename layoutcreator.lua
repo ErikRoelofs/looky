@@ -231,6 +231,7 @@ end
       self.validator:validate(kind, self.kinds[kind].schema, options)
     end,
     extendSchema = function( self, startWith, andModifyWith )
+      assert(self.kinds[startWith] and self.kinds[startWith].schema, "Trying to extend an unregistered schema: " .. startWith )
       local initial = self.kinds[startWith].schema
       local schema = {}
       for k, v in pairs(initial) do

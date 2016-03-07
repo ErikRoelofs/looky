@@ -15,13 +15,15 @@ local function imageHeight(self)
 end
 
 
-return {
-  build = function (base, options)
-    base.render = renderImage
-    base.image = love.graphics.newImage(options.file)
-    base.contentWidth = imageWidth
-    base.contentHeight = imageHeight  
-    return base
-  end,
-  schema = lc:extendSchema("base", {file = {required = true, schemaType = "string"}})
-}
+return function(lc)
+  return {
+    build = function (base, options)
+      base.render = renderImage
+      base.image = love.graphics.newImage(options.file)
+      base.contentWidth = imageWidth
+      base.contentHeight = imageHeight  
+      return base
+    end,
+    schema = lc:extendSchema("base", {file = {required = true, schemaType = "string"}})
+  }
+end

@@ -152,23 +152,25 @@ local function containerHeight(self)
   return height
 end
 
-return {
-  build = function (base, options)
-    base.render = renderChildren
-    base.direction = options.direction or "v"
-    if base.direction == "v" then
-      base.layoutingPass = function(self) verticalLayout(self, self.children) end  
-    else
-      base.layoutingPass = function(self) horizontalLayout(self, self.children) end  
-    end
-    base.contentWidth = containerWidth
-    base.contentHeight = containerHeight
-    base.update = function(self, dt)
-      for k, v in ipairs(self.children) do
-        v:update(dt)
+return function(lc)
+  return {
+    build = function (base, options)
+      base.render = renderChildren
+      base.direction = options.direction or "v"
+      if base.direction == "v" then
+        base.layoutingPass = function(self) verticalLayout(self, self.children) end  
+      else
+        base.layoutingPass = function(self) horizontalLayout(self, self.children) end  
       end
-    end
-    return base
-  end,
-  schema = lc:extendSchema("base", {direction = { required = false, schemaType = "fromList", list = { "v", "h" } },})
-}
+      base.contentWidth = containerWidth
+      base.contentHeight = containerHeight
+      base.update = function(self, dt)
+        for k, v in ipairs(self.children) do
+          v:update(dt)
+        end
+      end
+      return base
+    end,
+    schema = lc:extendSchema("base", {direction = { required = false, schemaType = "fromList", list = { "v", "h" } },})
+  }
+end

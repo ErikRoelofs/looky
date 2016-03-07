@@ -5,14 +5,14 @@ function love.load()
   font = love.graphics.newFont()
   
   lc = require "layoutcreator"
-  lc:register("linear", require "layout/linear" )
-  lc:register("text", require "layout/text" )
-  lc:register("image", require "layout/image" )  
-  lc:register("caption", require "layout/caption" )
-  lc:register("list", require "layout/list" )
-  lc:register("root", require "layout/root" )
-  lc:register("stack", require "layout/stack" )
-  lc:register("freeform", require "layout/freeform" )
+  lc:register("linear", require "layout/linear"(lc) )
+  lc:register("text", require "layout/text"(lc) )
+  lc:register("image", require "layout/image"(lc) )  
+  lc:register("caption", require "layout/caption"(lc) )
+  lc:register("list", require "layout/list"(lc) )
+  lc:register("root", require "layout/root"(lc) )
+  lc:register("stack", require "layout/stack"(lc) )
+  lc:register("freeform", require "layout/freeform"(lc) )
   
   display = require "samples/eight"
   

@@ -15,14 +15,16 @@ local textHeight = function (self)
   return font:getHeight()
 end
 
-return {
-  build = function(base, options)
-    base.render = renderText
-    base.data = options.data
-    base.textColor = options.textColor or {255,255,255,255}
-    base.contentWidth = textWidth
-    base.contentHeight = textHeight  
-    return base
-  end,
-  schema = lc:extendSchema("base", {data = { required = true, schemaType = "table", options = { value = { required = true, schemaType ="string" } } }, textColor = { required = false, schemaType = "color" } })
-}
+return function(lc)
+  return {
+    build = function(base, options)
+      base.render = renderText
+      base.data = options.data
+      base.textColor = options.textColor or {255,255,255,255}
+      base.contentWidth = textWidth
+      base.contentHeight = textHeight  
+      return base
+    end,
+    schema = lc:extendSchema("base", {data = { required = true, schemaType = "table", options = { value = { required = true, schemaType ="string" } } }, textColor = { required = false, schemaType = "color" } })
+  }
+end
