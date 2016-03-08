@@ -16,7 +16,10 @@ function mainview()
   container2:addChild(lc:build("text", {data={value="Cloaked"}, width="fill",height=50, visibility="cloaked"}))
   container2:addChild(lc:build("text", {data={value="Gone"}, width="fill",height=50, visibility="gone"}))
  
-  container2:addChild(lc:build("text", {data={value="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"}, width=50, height=50}))
+  container2:addChild(lc:build("text", {data={value="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"}, width=50, height=50, backgroundColor = {255,0,0,255}}))
+ 
+  container2:addChild(lc:build("image", {file="test-large.png", width=50, height="fill", backgroundColor = {255,0,0,255}, scale="crop"}))
+ 
  
   ext2 = root:getChild(1):getChild(2).data
  
