@@ -155,7 +155,7 @@ end
 return function(lc)
   return {
     build = function (base, options)
-      base.render = renderChildren
+      base.renderCustom = renderChildren
       base.direction = options.direction or "v"
       if base.direction == "v" then
         base.layoutingPass = function(self) verticalLayout(self, self.children) end  

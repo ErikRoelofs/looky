@@ -3,7 +3,7 @@ local  function baseLayout(width, height)
     children = {},
     parent = nil,
     width = width,
-    height = height,
+    height = height,    
     addChild = function(self, child, position)
       local position = position or #self.children+1
       table.insert(self.children, position, child)
@@ -13,6 +13,9 @@ local  function baseLayout(width, height)
       self.parent = parent
     end,
     desiredWidth = function(self)
+      if self.visibility == "gone" then
+        return 0
+      end
       if self.width == "fill" then
         return self.width
       elseif self.width == "wrap" then
@@ -27,6 +30,9 @@ local  function baseLayout(width, height)
       end
     end,
     desiredHeight = function(self)
+      if self.visibility == "gone" then
+        return 0
+      end
       if self.height == "fill" then
         return self.height
       elseif self.height == "wrap" then
@@ -60,7 +66,12 @@ local  function baseLayout(width, height)
       
     end,
     render = function(self)
-    
+      if self.visibility == "visible" then
+        self:renderCustom()
+      end
+    end,
+    renderCustom = function(self)
+      
     end,
     update = function(self, dt)
       
@@ -72,9 +83,15 @@ local  function baseLayout(width, height)
       return 0
     end,
     contentWidthWithPadding = function(self)
+      if self:contentWidth() == "fill" then
+        return self:contentWidth()
+      end
       return self:contentWidth() + self.padding.left + self.padding.right
     end,
     contentHeightWithPadding = function(self)
+      if self:contentHeight() == "fill" then
+        return self:contentHeight()
+      end
       return self:contentHeight() + self.padding.top + self.padding.bottom
     end,
     renderBackground = function(self)
@@ -189,7 +206,8 @@ end
             color = { required = true, schemaType = "color" },
             thickness = { required = true, schemaType = "number" }
           }},
-          weight = { required = false, schemaType = "number" }
+          weight = { required = false, schemaType = "number" },
+          visibility = { required = false, schemaType = "fromList", list = { "visible", "cloaked", "gone" } }
         }
       }
     },
@@ -219,6 +237,7 @@ end
       start.layoutGravity = options.layoutGravity or "start"
       start.gravity = options.gravity or {"start","start"}
       start.weight = options.weight or 1
+      start.visibility = options.visibility or "visible"
       return start
     end,
     mergeOptions = function (baseOptions, options)

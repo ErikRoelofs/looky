@@ -3,11 +3,20 @@ function mainview()
  
   ext = {value="First"}
  
-  root:addChild(lc:build("text", {data=ext, width="fill",height=50}))
-  root:addChild(lc:build("text", {data={value="Third"}, width="fill",height=50}))
-  root:addChild(lc:build("text", {data={value="Second"}, width="fill",height=50}), 2)
+  local container = lc:build("linear", { width = "wrap", height="fill", direction = "v" })
+  local container2 = lc:build("linear", { width = "wrap", height="fill", direction = "v" })
  
-  ext2 = root:getChild(2).data
+  root:addChild(container)
+  root:addChild(container2)
+  container:addChild(lc:build("text", {data=ext, width="fill",height=50}))
+  container:addChild(lc:build("text", {data={value="Third"}, width="fill",height=50}))
+  container:addChild(lc:build("text", {data={value="Second"}, width="fill",height=50}), 2)
+ 
+  container2:addChild(lc:build("text", {data={value="Visible"}, width="fill",height=50, visibility="visible"}))
+  container2:addChild(lc:build("text", {data={value="Cloaked"}, width="fill",height=50, visibility="cloaked"}))
+  container2:addChild(lc:build("text", {data={value="Gone"}, width="fill",height=50, visibility="gone"}))
+ 
+  ext2 = root:getChild(1):getChild(2).data
  
   root:layoutingPass()
 

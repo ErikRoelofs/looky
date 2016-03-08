@@ -18,7 +18,7 @@ end
 return function(lc)
   return {
     build = function (base, options)
-      base.render = renderImage
+      base.renderCustom = renderImage
       base.image = love.graphics.newImage(options.file)
       base.contentWidth = imageWidth
       base.contentHeight = imageHeight  

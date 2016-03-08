@@ -84,7 +84,7 @@ end
 return function(lc)
   return {
     build = function (base, options)
-      base.render = renderChildren  
+      base.renderCustom = renderChildren  
       base.layoutingPass = function(self) layout(self, self.children) end  
       base.contentWidth = containerWidth
       base.contentHeight = containerHeight

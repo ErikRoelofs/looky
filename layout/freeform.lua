@@ -5,7 +5,7 @@ return function(lc)
       base.contentHeight = options.contentHeight or function(self) return 0 end
       
       base.update = options.update or function(self, dt) end
-      base.render = options.render or function(self, dt) end
+      base.renderCustom = options.render or function(self, dt) end
       
       return base
     end,
