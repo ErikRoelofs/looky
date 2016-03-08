@@ -3,12 +3,21 @@ local renderText = function(self)
   
   local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(self.textColor or {255,255,255,255})
-  love.graphics.print(self.data.value,locX,locY)
+  if self:contentWidth() > self:grantedWidth() then
+    local toPrint = self.data.value
+    while self:contentWidth(toPrint) > self:grantedWidth() do
+      toPrint = toPrint:sub(0,-2)
+    end
+    love.graphics.print(toPrint,locX,locY)
+  else
+    love.graphics.print(self.data.value,locX,locY)
+  end
 
 end
 
-local textWidth = function (self)
-  return font:getWidth(self.data.value)
+local textWidth = function (self, str)
+  str = str or self.data.value
+  return font:getWidth(str)
 end
 
 local textHeight = function (self)

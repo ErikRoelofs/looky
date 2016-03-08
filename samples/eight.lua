@@ -16,6 +16,8 @@ function mainview()
   container2:addChild(lc:build("text", {data={value="Cloaked"}, width="fill",height=50, visibility="cloaked"}))
   container2:addChild(lc:build("text", {data={value="Gone"}, width="fill",height=50, visibility="gone"}))
  
+  container2:addChild(lc:build("text", {data={value="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"}, width=50, height=50}))
+ 
   ext2 = root:getChild(1):getChild(2).data
  
   root:layoutingPass()
