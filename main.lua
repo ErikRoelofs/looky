@@ -1,3 +1,7 @@
+--[[
+  content width needs to be dynamic?
+]]
+
 function love.load()  
   if arg[#arg] == "-debug" then debug = true else debug = false end
   if debug then require("mobdebug").start() end

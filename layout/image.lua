@@ -4,20 +4,21 @@ local renderImage = function(self)
   local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(255,255,255,255)
   
-  local function fit()
-    local scaleX = self:availableWidth() / self.image:getWidth()
-    local scaleY = self:availableHeight() / self.image:getHeight()
-    local scale = math.min(scaleX, scaleY)
-    love.graphics.draw(self.image, locX, locY, 0, scale, scale )    
+  local function fit(self)
+    local scaledX = self:availableWidth() / self.image:getWidth()
+    local scaledY = self:availableHeight() / self.image:getHeight()
+    local scale = math.min(scaledX, scaledY)
+    self.scaledX = scale
+    self.scaledY = scale    
   end
   
-  local function stretch()
+  local function stretch(self)
     local scaleX = self:availableWidth() / self.image:getWidth()
-    local scaleY = self:availableHeight() / self.image:getHeight()    
-    love.graphics.draw(self.image, locX, locY, 0, scaleX, scaleY )    
+    local scaleY = self:availableHeight() / self.image:getHeight()        
   end
   
-  local function crop()    
+  local function crop(self)
+    stretch(self)
     local canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
     love.graphics.setCanvas(canvas)
     love.graphics.push()
@@ -29,22 +30,26 @@ local renderImage = function(self)
   end
   
   if self.scale == "fit" then
-    fit()
+    fit(self)
+    love.graphics.draw(self.image, locX, locY, 0, self.scaledX, self.scaledY)
   elseif self.scale == "stretch" then
-    stretch()
+    stretch(self)
+    love.graphics.draw(self.image, locX, locY, 0, self.scaledX, self.scaledY)
   elseif self.scale == "crop" then
-    crop()
+    crop(self)
   end
+  
+  
   
 end
 
 
 local function imageWidth(self)
-  return self.image:getWidth()
+  return self.image:getWidth() * self.scaledX
 end
 
 local function imageHeight(self)
-  return self.image:getHeight()
+  return self.image:getHeight() * self.scaledY
 end
 
 
@@ -56,6 +61,8 @@ return function(lc)
       base.contentWidth = imageWidth
       base.contentHeight = imageHeight  
       base.scale = options.scale or "fit"
+      base.scaledX = 1
+      base.scaledY = 1
       return base
     end,
     schema = lc:extendSchema("base", 
@@ -70,7 +77,6 @@ return function(lc)
           list = {
             "fit", 
             "stretch",
-            "keep",
             "crop"
           }
         }
