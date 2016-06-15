@@ -1,4 +1,4 @@
-function mainview()
+function mainview(lc)
   local root = lc:build("root", {})
   
   local p1 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "v"})
@@ -29,15 +29,15 @@ function mainview()
   local c9 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "h"})
   p3:addChild(c9)
 
-  addimage(c1, {"start", "start"})
-  addimage(c2, {"start", "center"})
-  addimage(c3, {"start", "end"})
-  addimage(c4, {"center", "start"})
-  addimage(c5, {"center", "center"})
-  addimage(c6, {"center", "end"})
-  addimage(c7, {"end", "start"})
-  addimage(c8, {"end", "center"})
-  addimage(c9, {"end", "end"})
+  addimage(c1, {"start", "start"}, lc)
+  addimage(c2, {"start", "center"}, lc)
+  addimage(c3, {"start", "end"}, lc)
+  addimage(c4, {"center", "start"}, lc)
+  addimage(c5, {"center", "center"}, lc)
+  addimage(c6, {"center", "end"}, lc)
+  addimage(c7, {"end", "start"}, lc)
+  addimage(c8, {"end", "center"}, lc)
+  addimage(c9, {"end", "end"}, lc)
 
 
   root:layoutingPass()
@@ -45,7 +45,7 @@ function mainview()
   return root
 end
 
-function addimage(container, gravity)
+function addimage(container, gravity, lc)
   local padding = lc.padding(6, 10, 14, 2)
   local margin = lc.margin(8,5,4,8)
 
@@ -57,12 +57,14 @@ function addimage(container, gravity)
   
 end
 
-return {
-  root = mainview(),
-  update = function(self, dt) 
-    self.root:update(dt)
-  end,
-  draw = function(self)
-    self.root:render()
-  end
-}
+return function(lc)
+  return {
+    root = mainview(lc),
+    update = function(self, dt) 
+      self.root:update(dt)
+    end,
+    draw = function(self)
+      self.root:render()
+    end
+  }
+end

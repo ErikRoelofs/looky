@@ -1,4 +1,4 @@
-function mainview()
+function mainview(lc)
   local root = lc:build("root", {})
   
   local p1 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "v"})
@@ -29,15 +29,15 @@ function mainview()
   local c9 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "h"})
   p3:addChild(c9)
 
-  addtext(c1, {"start", "start"})
-  addtext(c2, {"start", "center"})
-  addtext(c3, {"start", "end"})
-  addtext(c4, {"center", "start"})
-  addtext(c5, {"center", "center"})
-  addtext(c6, {"center", "end"})
-  addtext(c7, {"end", "start"})
-  addtext(c8, {"end", "center"})
-  addtext(c9, {"end", "end"})
+  addtext(c1, {"start", "start"}, lc)
+  addtext(c2, {"start", "center"}, lc)
+  addtext(c3, {"start", "end"}, lc)
+  addtext(c4, {"center", "start"}, lc)
+  addtext(c5, {"center", "center"}, lc)
+  addtext(c6, {"center", "end"}, lc)
+  addtext(c7, {"end", "start"}, lc)
+  addtext(c8, {"end", "center"}, lc)
+  addtext(c9, {"end", "end"}, lc)
 
 
   root:layoutingPass()
@@ -45,7 +45,7 @@ function mainview()
   return root
 end
 
-function addtext(container, gravity)
+function addtext(container, gravity, lc)
   local width = 200
   local height = 100
   local text = "Some text"
@@ -57,12 +57,14 @@ function addtext(container, gravity)
   
 end
 
-return {
-  root = mainview(),
-  update = function(self, dt) 
-    self.root:update(dt)
-  end,
-  draw = function(self)
-    self.root:render()
-  end
-}
+return function(lc)
+  return {
+    root = mainview(lc),
+    update = function(self, dt) 
+      self.root:update(dt)
+    end,
+    draw = function(self)
+      self.root:render()
+    end
+  }
+end

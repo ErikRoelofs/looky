@@ -1,14 +1,15 @@
 --[[
   content width needs to be dynamic?
+  root will need to be a stack to allow dialogs
 ]]
-
 function love.load()  
   if arg[#arg] == "-debug" then debug = true else debug = false end
   if debug then require("mobdebug").start() end
 
   font = love.graphics.newFont()
   
-  lc = require "layoutcreator"
+  local lc = require "layoutcreator"
+  bargl = lc
   lc:register("linear", require "layout/linear"(lc) )
   lc:register("text", require "layout/text"(lc) )
   lc:register("image", require "layout/image"(lc) )  
@@ -18,27 +19,27 @@ function love.load()
   lc:register("stack", require "layout/stack"(lc) )
   lc:register("freeform", require "layout/freeform"(lc) )
   
-  display = require "samples/eight"
+  display = require "samples/eight"(lc)
   
 end
 
 function love.keypressed(key)
   if key == "1" then
-    display = require "samples/first"
+    display = require "samples/first"(bargl)
   elseif key == "2" then
-    display = require "samples/second"
+    display = require "samples/second"(bargl)
   elseif key == "3" then
-    display = require "samples/third"
+    display = require "samples/third"(bargl)
   elseif key == "4" then
-    display = require "samples/fourth"
+    display = require "samples/fourth"(bargl)
   elseif key == "5" then
-    display = require "samples/fifth"
+    display = require "samples/fifth"(bargl)
   elseif key == "6" then
-    display = require "samples/sixth"  
+    display = require "samples/sixth"(bargl)
   elseif key == "7" then
-    display = require "samples/seventh"  
+    display = require "samples/seventh"(bargl)  
   elseif key == "8" then
-    display = require "samples/eight"  
+    display = require "samples/eight"(bargl)
   end
 end
 

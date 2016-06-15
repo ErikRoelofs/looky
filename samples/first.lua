@@ -1,4 +1,4 @@
-function mainview()
+function mainview(lc)
   local root = lc:build("root", {})
   
   local layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, margin = lc.margin(20,0), direction = "v"})
@@ -44,7 +44,7 @@ function mainview()
   return root
 end
 
-function dialog()
+function dialog(lc)
   local dialogview = lc:build("root", { direction = "v", backgroundColor = { 100, 100, 100, 100 } } )
   
   dialogview:addChild( lc:build( "text", { data = {value= "Close"}, width = 400, height = "wrap", backgroundColor = { 0, 0, 255, 255 }, textColor = { 255,255,255,255 }, layoutGravity = "center", gravity = {"center","center"}, padding = lc.padding(0,5,0,5)} ) )
@@ -56,19 +56,21 @@ function dialog()
   return dialogview
 end
 
-return {
-  dialogview = dialog(),
-  root = mainview(),
-  update = function(self, dt) 
-    if love.keyboard.isDown("escape") then
-      self.dialogview = nil
+return function(lc)
+  return {
+    dialogview = dialog(lc),
+    root = mainview(lc),
+    update = function(self, dt) 
+      if love.keyboard.isDown("escape") then
+        self.dialogview = nil
+      end
+      self.root:update(dt)
+    end,
+    draw = function(self)
+      self.root:render()
+      if self.dialogview then
+        self.dialogview:render()
+      end
     end
-    self.root:update(dt)
-  end,
-  draw = function(self)
-    self.root:render()
-    if self.dialogview then
-      self.dialogview:render()
-    end
-  end
-}
+  }
+end

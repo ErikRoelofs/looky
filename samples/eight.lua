@@ -1,4 +1,4 @@
-function mainview()
+function mainview(lc)
   local root = lc:build("root", {margin = lc.margin(100), padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}, weight = 4.2 })
  
   ext = {value="First"}
@@ -28,15 +28,17 @@ function mainview()
   return root
 end
 
-return {
-  root = mainview(),
-  update = function(self, dt) 
-    self.root:update(dt)
-    ext.value = dt
-    ext2.value = dt
-    self.root:layoutingPass()
-  end,
-  draw = function(self)
-    self.root:render()
-  end
-}
+return function(lc)
+  return {
+    root = mainview(lc),
+    update = function(self, dt) 
+      self.root:update(dt)
+      ext.value = dt
+      ext2.value = dt
+      self.root:layoutingPass()
+    end,
+    draw = function(self)
+      self.root:render()
+    end
+  }
+end

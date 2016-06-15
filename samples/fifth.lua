@@ -1,4 +1,4 @@
-function mainview()
+function mainview(lc)
   
   local rf = function(self)
     self:renderBackground()
@@ -27,12 +27,14 @@ function mainview()
   return root
 end
 
-return {
-  root = mainview(),
-  update = function(self, dt) 
-    self.root:update(dt)
-  end,
-  draw = function(self)
-    self.root:render()
-  end
-}
+return function(lc)
+  return {
+    root = mainview(lc),
+    update = function(self, dt) 
+      self.root:update(dt)
+    end,
+    draw = function(self)
+      self.root:render()
+    end
+  }
+end
