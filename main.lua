@@ -6,8 +6,6 @@ function love.load()
   if arg[#arg] == "-debug" then debug = true else debug = false end
   if debug then require("mobdebug").start() end
 
-  font = love.graphics.newFont()
-  
   local lc = require "layoutcreator"
   bargl = lc
   lc:register("linear", require "layout/linear"(lc) )
@@ -19,7 +17,9 @@ function love.load()
   lc:register("stack", require "layout/stack"(lc) )
   lc:register("freeform", require "layout/freeform"(lc) )
   
-  display = require "samples/eight"(lc)
+  lc:registerFont("default", love.graphics.newFont(20))
+  
+  display = require "samples/second"(lc)
   
 end
 

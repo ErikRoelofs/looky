@@ -211,6 +211,9 @@ end
         }
       }
     },
+    fonts = {
+      base = love.graphics.newFont()
+    },
     validator = require "validation/validator",
     build = function( self, kind, options )
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
@@ -221,6 +224,14 @@ end
     register = function( self, name, fn )
       assert(not self.kinds[name], "A layout named " .. name .. " was previously registered")
       self.kinds[name] = fn
+    end,
+    registerFont = function( self, name, font )
+      assert(not self.fonts[name], "A font named " .. name .. " was previously registered")
+      self.fonts[name] = font
+    end,
+    getFont = function( self, name )
+      assert(self.fonts[name], "Requesting font " ..  name .. ", but I do not have it")
+      return self.fonts[name]
     end,
     padding = function(left, top, right, bottom)
       return paddingMarginHelper(left, top, right, bottom)

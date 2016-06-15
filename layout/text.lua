@@ -1,6 +1,6 @@
 local renderText = function(self)
   self:renderBackground()
-  
+  love.graphics.setFont(self.font)
   local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(self.textColor or {255,255,255,255})
   if self:contentWidth() > self:grantedWidth() then
@@ -17,11 +17,11 @@ end
 
 local textWidth = function (self, str)
   str = str or self.data.value
-  return font:getWidth(str)
+  return self.font:getWidth(str)
 end
 
 local textHeight = function (self)
-  return font:getHeight()
+  return self.font:getHeight()
 end
 
 return function(lc)
@@ -31,9 +31,10 @@ return function(lc)
       base.data = options.data
       base.textColor = options.textColor or {255,255,255,255}
       base.contentWidth = textWidth
-      base.contentHeight = textHeight  
+      base.contentHeight = textHeight
+      base.font = lc:getFont(options.font or "base")
       return base
     end,
-    schema = lc:extendSchema("base", {data = { required = true, schemaType = "table", options = { value = { required = true, schemaType ="string" } } }, textColor = { required = false, schemaType = "color" } })
+    schema = lc:extendSchema("base", {data = { required = true, schemaType = "table", options = { value = { required = true, schemaType ="string" } } }, textColor = { required = false, schemaType = "color" }, font = { required = false, schemaType = "string" } })
   }
 end
