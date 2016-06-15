@@ -1,6 +1,5 @@
 --[[
   content width needs to be dynamic?
-  root will need to be a stack to allow dialogs
 ]]
 function love.load()  
   if arg[#arg] == "-debug" then debug = true else debug = false end
@@ -16,6 +15,7 @@ function love.load()
   lc:register("root", require "layout/root"(lc) )
   lc:register("stack", require "layout/stack"(lc) )
   lc:register("freeform", require "layout/freeform"(lc) )
+  lc:register("stackroot", require "layout/stackroot"(lc) )
   
   lc:registerFont("default", love.graphics.newFont(20))
   
@@ -40,6 +40,8 @@ function love.keypressed(key)
     display = require "samples/seventh"(bargl)  
   elseif key == "8" then
     display = require "samples/eight"(bargl)
+  elseif key == "9" then
+    display = require "samples/ninth"(bargl)
   end
 end
 
