@@ -1,3 +1,6 @@
+local _NAME = ...
+local _PACKAGE = _NAME:sub(1, -15) -- I should probably clean this up...
+
 local  function baseLayout(width, height)
   return {
     children = {},
@@ -211,10 +214,11 @@ end
         }
       }
     },
+
     fonts = {
       base = love.graphics.newFont()
     },
-    validator = require "validation/validator",
+    validator = require ( _PACKAGE .. "/validation/validator" ),
     build = function( self, kind, options )
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
       local base = self:makeBaseLayout(options)
