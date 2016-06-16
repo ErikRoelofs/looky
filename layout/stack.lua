@@ -1,7 +1,22 @@
 local renderChildren = function(self) 
   self:renderBackground()
 
-  local hTilt, vTilt
+  local locX, locY = self:startCoordsBasedOnGravity()
+
+  for k, v in ipairs(self.children) do
+    love.graphics.push()      
+    love.graphics.translate( self.scaffold[v][1], self.scaffold[v][2])
+    v:render()
+    if debug then
+      love.graphics.setColor(255,255,255,255)
+      love.graphics.rectangle("line",0,0,v:availableWidth(),v:availableHeight())
+    end    
+    love.graphics.pop()
+  end
+end
+
+local function scaffoldViews(self)
+  local hTilt, vTilt  
   local tilt = function (number, direction)
     if self.tiltDirection[direction] == "start" then
       return (self.tiltAmount[direction] * (#self.children-1)) - (self.tiltAmount[direction] * number)
@@ -14,16 +29,10 @@ local renderChildren = function(self)
 
   local locX, locY = self:startCoordsBasedOnGravity()
 
-  for k, v in ipairs(self.children) do
-    love.graphics.push()      
-    love.graphics.translate( locX + tilt(k-1, 1), locY + v.margin.top + tilt(k-1, 2))
-    v:render()
-    if debug then
-      love.graphics.setColor(255,255,255,255)
-      love.graphics.rectangle("line",0,0,v:availableWidth(),v:availableHeight())
-    end    
-    love.graphics.pop()
+  for k, v in ipairs(self.children) do    
+    self.scaffold[v] = { locX + tilt(k-1, 1), locY + v.margin.top + tilt(k-1, 2) }
   end
+  
 end
 
 local function layout(self, children)
@@ -50,6 +59,7 @@ local function layout(self, children)
   for k, v in ipairs(children) do    
     v:layoutingPass()
   end
+  self:scaffoldViews()
 end
 
 local function containerWidth(self)  
@@ -90,6 +100,8 @@ return function(lc)
       base.contentHeight = containerHeight
       base.tiltDirection = options.tiltDirection or {"none", "none"}
       base.tiltAmount = options.tiltAmount or {0,0}
+      base.scaffoldViews = scaffoldViews
+      base.scaffold = {}
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)
