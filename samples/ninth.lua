@@ -18,6 +18,11 @@ function mainview(lc)
   addtext(p3, "second", {"start", "start"}, lc)
   addtext(p3, "third", {"start", "start"}, lc)
 
+  local drag = lc:build("dragbox", {offset = { 100, 200 }, width="fill", height="fill" })
+
+  root:addChild(drag)
+  
+  addtext(drag, "floating", { "start", "start" }, lc )
 
   root:layoutingPass()
 
