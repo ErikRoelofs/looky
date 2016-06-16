@@ -47,11 +47,17 @@ return function(lc)
         getChild = function(self, number)
           return self.linear:getChild(number)
         end,
+        getChildren = function(self)
+          return self.linear:getChildren()
+        end,
         removeChild = function(self,target)
           self.linear:removeChild(target)
         end,
         removeAllChildren = function(self)
           self.linear:removeAllChildren()
+        end,
+        clickedViews = function(self, x, y)
+          return self.linear:clickedViews(x, y)
         end
       }
       root:setLinear(child)

@@ -133,6 +133,9 @@ local  function baseLayout(width, height)
     getChild = function(self, number)
       return self.children[number]
     end,
+    getChildren = function(self)
+      return self.children
+    end,
     removeChild = function(self,target)
       if type(target) == "number" then
         table.remove(self.children, target)
@@ -148,6 +151,13 @@ local  function baseLayout(width, height)
     end,
     removeAllChildren = function(self)
       self.children = {}
+    end,
+    clickedViews = function(self, x, y)
+      if x > 0 and x < self:grantedWidth() and
+        y > 0 and y < self:grantedHeight() then
+         return { self } 
+      end
+      return {}
     end
   }
 end

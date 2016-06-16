@@ -39,8 +39,6 @@ local renderImage = function(self)
     crop(self)
   end
   
-  
-  
 end
 
 

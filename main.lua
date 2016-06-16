@@ -50,5 +50,5 @@ function love.update(dt)
 end
 
 function love.draw()
-  display:draw()
+  display:draw()  
 end

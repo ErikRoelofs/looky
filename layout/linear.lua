@@ -152,6 +152,57 @@ local function containerHeight(self)
   return height
 end
 
+local function clickedViews(self,x,y)
+  local clicked = {}
+  if x > 0 and x < self:grantedWidth()
+  and y > 0 and y < self:grantedHeight() then
+    
+      local offset = 0
+      local transX, transY = 0,0
+  
+      for k, v in ipairs(self.children) do
+        
+        if self.direction == "v" then 
+          transY = transY + offset          
+          offset = offset + v:grantedHeight()
+          if v.layoutGravity == "start" then
+            transX = transX + v.margin.left
+            transY = transY + v.margin.top            
+          elseif v.layoutGravity == "end" then
+            transX = transX + self:availableWidth() - v:grantedWidth() - v.margin.right
+            transY = transY + v.margin.top                        
+          elseif v.layoutGravity == "center" then
+            transX = transX + (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2
+            transY = transY + v.margin.top                        
+          end
+        else
+          transX = transX + offset
+          offset = offset + v:grantedWidth()
+          if v.layoutGravity == "start" then
+            transX = transX + v.margin.left
+            transY = transY + v.margin.top                        
+          elseif v.layoutGravity == "end" then
+            transX = transX + v.margin.left
+            transY = transY + self:availableHeight() - v:grantedHeight() - v.margin.bottom
+          elseif v.layoutGravity == "center" then
+            transX = transX + v.margin.left
+            transY = transY + (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2          
+          end
+        end
+        
+        for _, deeper in ipairs( v:clickedViews(x - transX, y - transY) ) do
+          table.insert( clicked, deeper )
+        end
+        
+        transX = 0
+        transY = 0
+      end    
+    
+    table.insert(clicked, self)    
+  end
+  return clicked
+end
+
 return function(lc)
   return {
     build = function (base, options)
@@ -164,6 +215,7 @@ return function(lc)
       end
       base.contentWidth = containerWidth
       base.contentHeight = containerHeight
+      base.clickedViews = clickedViews
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)
