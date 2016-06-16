@@ -1,13 +1,18 @@
 local renderDragbox = function(self)  
   if self:getChild(1) then
-    love.graphics.translate(self.offset[1], self.offset[2])
+    local offsetX = math.min( self.offset[1], self:grantedWidth() - self:getChild(1):grantedWidth() )
+    local offsetY = math.min( self.offset[2], self:grantedHeight() - self:getChild(1):grantedHeight() )
+    love.graphics.translate(offsetX, offsetY)
     self:getChild(1):render()
   end
 end
 
 local function layout(self, children)
   if self:getChild(1) then
-    self:getChild(1):setDimensions(self:getChild(1):desiredWidth(), self:getChild(1):desiredHeight())
+    local giveWidth = math.min( self:grantedWidth(), self:getChild(1):desiredWidth() )
+    local giveHeight = math.min( self:grantedHeight(), self:getChild(1):desiredHeight() )
+    
+    self:getChild(1):setDimensions(giveWidth, giveHeight)
     self:getChild(1):layoutingPass()
   end
 end
