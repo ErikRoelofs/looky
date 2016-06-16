@@ -15,6 +15,23 @@ local renderChildren = function(self)
   end
 end
 
+local function clickedViews(self,x,y)
+  local clicked = {}
+  if x > 0 and x < self:grantedWidth()
+  and y > 0 and y < self:grantedHeight() then
+  
+    for k, v in ipairs(self.children) do
+
+      for _, deeperClicked in ipairs( v:clickedViews(x - self.scaffold[v][1], y - self.scaffold[v][2]) ) do
+        table.insert( clicked, deeperClicked )
+      end
+    end    
+    
+    table.insert(clicked, self)    
+  end
+  return clicked
+end
+
 local function scaffoldViews(self)
   local hTilt, vTilt  
   local tilt = function (number, direction)
@@ -102,6 +119,7 @@ return function(lc)
       base.tiltAmount = options.tiltAmount or {0,0}
       base.scaffoldViews = scaffoldViews
       base.scaffold = {}
+      base.clickedViews = clickedViews
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)
