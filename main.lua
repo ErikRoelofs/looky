@@ -1,5 +1,8 @@
 --[[
-  content width needs to be dynamic?
+  layouts to include:
+    - numberAsImages
+    - numberAsCaption
+    - numberAsBar
 ]]
 function love.load()  
   if arg[#arg] == "-debug" then debug = true else debug = false end
