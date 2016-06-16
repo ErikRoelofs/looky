@@ -20,10 +20,11 @@ function love.load()
   lc:register("freeform", require "layout/freeform"(lc) )
   lc:register("stackroot", require "layout/stackroot"(lc) )
   lc:register("dragbox", require "layout/dragbox"(lc) )
+  lc:register("numberAsImage", require "layout/numberasimage"(lc) )
   
   lc:registerFont("default", love.graphics.newFont(20))
   
-  display = require "samples/ninth"(lc)
+  display = require "samples/second"(lc)
   
 end
 

@@ -1,4 +1,6 @@
 function mainview(lc)
+  totalClicked = 0
+  
   local root = lc:build("root", {})
   
   local p1 = lc:build("linear", {width = "fill", height = "fill", backgroundColor = {255,0,0,100}, direction = "v"})
@@ -37,7 +39,7 @@ function mainview(lc)
   addtext(c6, {"center", "end"}, lc)
   addtext(c7, {"end", "start"}, lc)
   addtext(c8, {"end", "center"}, lc)
-  addtext(c9, {"end", "end"}, lc)
+  c9:addChild(lc:build("numberAsImage",{ margin = lc.margin(10), padding = lc.padding(10), width = "wrap", height = "wrap", image = "images/heart.png", emptyImage = "images/emptyheart.png", maxValue = 5, value = function() return totalClicked end }))
 
 
   root:layoutingPass()
