@@ -4,29 +4,8 @@ local renderChildren = function(self)
   local offset = 0
   
   for k, v in ipairs(self.children) do
-    love.graphics.push()
-    if self.direction == "v" then 
-      love.graphics.translate(0, offset)
-      offset = offset + v:grantedHeight()
-      if v.layoutGravity == "start" then
-        love.graphics.translate( v.margin.left, v.margin.top )
-      elseif v.layoutGravity == "end" then
-        love.graphics.translate( self:availableWidth() - v:grantedWidth() - v.margin.right, v.margin.top )
-      elseif v.layoutGravity == "center" then
-        love.graphics.translate( (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2, v.margin.top )
-      end
-    else
-      love.graphics.translate(offset, 0)
-      offset = offset + v:grantedWidth()
-      if v.layoutGravity == "start" then
-        love.graphics.translate( v.margin.left, v.margin.top )
-      elseif v.layoutGravity == "end" then
-        love.graphics.translate( v.margin.left, self:availableHeight() - v:grantedHeight() - v.margin.bottom )
-      elseif v.layoutGravity == "center" then
-        love.graphics.translate( v.margin.left, (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2)
-      end
-    end
-    
+    love.graphics.push()    
+    love.graphics.translate(self.scaffold[v][1], self.scaffold[v][2])
     
     v:render()
     if debug then
@@ -38,7 +17,7 @@ local renderChildren = function(self)
   end
 end
 
-local horizontalLayout = function(parent, children)
+local horizontalLayout = function(parent, children)  
   local availableSize = parent:availableWidth()
   local fills = {}
   for k, v in ipairs(children) do
@@ -77,7 +56,7 @@ local horizontalLayout = function(parent, children)
   end
 end
 
-local verticalLayout = function(parent, children)
+local verticalLayout = function(parent, children)  
   local availableSize = parent:availableHeight()
   local fills = {}
   for k, v in ipairs(children) do
@@ -152,51 +131,60 @@ local function containerHeight(self)
   return height
 end
 
+local function scaffoldViews(self)
+    
+  local offset = 0
+  local transX, transY = 0,0
+
+  for k, v in ipairs(self:getChildren()) do
+    
+    if self.direction == "v" then 
+      transY = transY + offset          
+      offset = offset + v:grantedHeight()
+      if v.layoutGravity == "start" then
+        transX = transX + v.margin.left
+        transY = transY + v.margin.top            
+      elseif v.layoutGravity == "end" then
+        transX = transX + self:availableWidth() - v:grantedWidth() - v.margin.right
+        transY = transY + v.margin.top                        
+      elseif v.layoutGravity == "center" then
+        transX = transX + (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2
+        transY = transY + v.margin.top                        
+      end
+    else
+      transX = transX + offset
+      offset = offset + v:grantedWidth()
+      if v.layoutGravity == "start" then
+        transX = transX + v.margin.left
+        transY = transY + v.margin.top                        
+      elseif v.layoutGravity == "end" then
+        transX = transX + v.margin.left
+        transY = transY + self:availableHeight() - v:grantedHeight() - v.margin.bottom
+      elseif v.layoutGravity == "center" then
+        transX = transX + v.margin.left
+        transY = transY + (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2          
+      end
+    end
+    
+    self.scaffold[v] = {transX, transY}    
+    transX = 0
+    transY = 0
+  end    
+
+end
+
+
 local function clickedViews(self,x,y)
   local clicked = {}
   if x > 0 and x < self:grantedWidth()
   and y > 0 and y < self:grantedHeight() then
-    
-      local offset = 0
-      local transX, transY = 0,0
   
-      for k, v in ipairs(self.children) do
-        
-        if self.direction == "v" then 
-          transY = transY + offset          
-          offset = offset + v:grantedHeight()
-          if v.layoutGravity == "start" then
-            transX = transX + v.margin.left
-            transY = transY + v.margin.top            
-          elseif v.layoutGravity == "end" then
-            transX = transX + self:availableWidth() - v:grantedWidth() - v.margin.right
-            transY = transY + v.margin.top                        
-          elseif v.layoutGravity == "center" then
-            transX = transX + (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2
-            transY = transY + v.margin.top                        
-          end
-        else
-          transX = transX + offset
-          offset = offset + v:grantedWidth()
-          if v.layoutGravity == "start" then
-            transX = transX + v.margin.left
-            transY = transY + v.margin.top                        
-          elseif v.layoutGravity == "end" then
-            transX = transX + v.margin.left
-            transY = transY + self:availableHeight() - v:grantedHeight() - v.margin.bottom
-          elseif v.layoutGravity == "center" then
-            transX = transX + v.margin.left
-            transY = transY + (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2          
-          end
-        end
-        
-        for _, deeper in ipairs( v:clickedViews(x - transX, y - transY) ) do
-          table.insert( clicked, deeper )
-        end
-        
-        transX = 0
-        transY = 0
-      end    
+    for k, v in ipairs(self.children) do
+
+      for _, deeperClicked in ipairs( v:clickedViews(x - self.scaffold[v][1], y - self.scaffold[v][2]) ) do
+        table.insert( clicked, deeperClicked )
+      end
+    end    
     
     table.insert(clicked, self)    
   end
@@ -209,13 +197,21 @@ return function(lc)
       base.renderCustom = renderChildren
       base.direction = options.direction or "v"
       if base.direction == "v" then
-        base.layoutingPass = function(self) verticalLayout(self, self.children) end  
+        base.layoutingPass = function(self)           
+          verticalLayout(self, self.children) 
+          self:scaffoldViews()
+        end  
       else
-        base.layoutingPass = function(self) horizontalLayout(self, self.children) end  
+        base.layoutingPass = function(self)           
+          horizontalLayout(self, self.children) 
+          self:scaffoldViews()
+        end  
       end
       base.contentWidth = containerWidth
       base.contentHeight = containerHeight
       base.clickedViews = clickedViews
+      base.scaffoldViews = scaffoldViews
+      base.scaffold = {}
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)
