@@ -28,7 +28,7 @@ local renderImage = function(self)
     love.graphics.pop()
     love.graphics.draw(canvas, locX, locY)
   end
-  
+    
   if self.scale == "fit" then
     fit(self)
     love.graphics.draw(self.image, locX, locY, 0, self.scaledX, self.scaledY)
@@ -55,7 +55,11 @@ return function(lc)
   return {
     build = function (base, options)
       base.renderCustom = renderImage
-      base.image = love.graphics.newImage(options.file)
+      if type(options.file) == "string" then
+        base.image = love.graphics.newImage(options.file)
+      else
+        base.image = options.file
+      end
       base.contentWidth = imageWidth
       base.contentHeight = imageHeight  
       base.scale = options.scale or "fit"
@@ -65,9 +69,17 @@ return function(lc)
     end,
     schema = lc:extendSchema("base", 
       {
-        file = {
-          required = true, 
-          schemaType = "string"
+        file = {        
+          required = true,           
+          schemaType = "oneOf",
+          possibilities = {
+              {
+                schemaType = "string"
+              },
+              {
+                schemaType = "image"
+              }
+          }
         }, 
         scale = {
           required = false, 

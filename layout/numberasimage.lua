@@ -14,6 +14,16 @@ return function(lc)
       container.value = options.value
       container.maxValue = options.maxValue
       container.getValue = getValue      
+      if type(options.image) == "string" then
+        container.image = love.graphics.newImage(options.image)
+      else
+        container.image = options.image
+      end
+      if type(options.emptyImage) == "string" then
+        container.emptyImage = love.graphics.newImage(options.emptyImage)
+      else
+        container.emptyImage = options.emptyImage
+      end
       
       container.contentWidth = function(self) return options.maxValue * self:filledChild():contentWidth() end
       container.contentHeight = function(self) return self:filledChild():contentHeight() end
@@ -43,25 +53,41 @@ return function(lc)
       end
       
       container.filledChild = function(self)
-        return lc:build("image", { width = "wrap", height = "wrap", file = options.image } )
+        return lc:build("image", { width = "wrap", height = "wrap", file = self.image } )
       end
       
       container.emptyChild = function(self)
-        return lc:build("image", { width = "wrap", height = "wrap", file = options.emptyImage } )
+        return lc:build("image", { width = "wrap", height = "wrap", file = self.emptyImage } )
       end
       
       return container
     end,
     schema = lc:extendSchema("base", {
-        image = {
-          required = true,
-          schemaType = "string"
-        },
-        emptyImage = {
-          required = false,
-          schemaType = "string"
-        },
-        maxValue = {
+      image = {        
+        required = true,           
+        schemaType = "oneOf",
+        possibilities = {
+            {
+              schemaType = "string"
+            },
+            {
+              schemaType = "image"
+            }
+        }
+      }, 
+      emptyImage = {        
+        required = true,           
+        schemaType = "oneOf",
+        possibilities = {
+            {
+              schemaType = "string"
+            },
+            {
+              schemaType = "image"
+            }
+        }
+      }, 
+       maxValue = {
           required = true,
           schemaType = "number"
         },

@@ -37,6 +37,10 @@ local checkTable = function(kind, field, schema, option, validator)
   validator:validate( kind .. "." .. field, schema.options, option )
 end
 
+local checkImage = function(kind, field, schema, option, validator)
+  typecheck("userdata", kind, field, option)
+end
+
 local checkArray = function(kind, field, schema, option,validator)
   typecheck("table", kind, field, option)
   local fn = validator:tryGetValidatorFunction(kind, schema.item)
@@ -115,6 +119,7 @@ validator:addschemaType("number", checkNumber)
 validator:addschemaType("string", checkString)
 validator:addschemaType("function", checkFunction)
 validator:addschemaType("table", checkTable)
+validator:addschemaType("image", checkImage)
 validator:addschemaType("fromList", fromList)
 validator:addschemaType("oneOf", oneOf)
 validator:addschemaType("betweenNumbers", betweenNumbers)
