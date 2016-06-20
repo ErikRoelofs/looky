@@ -1,4 +1,4 @@
-- relying on global font
 - linear needs to accept padding
 - root needs to behave more like base
 - needs LOADS of assertions and hints
+- table schema allows undefined properties
