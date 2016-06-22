@@ -11,5 +11,6 @@ lc:register("stack", require( _NAME .. "/layout/stack" )(lc))
 lc:register("freeform", require( _NAME .. "/layout/freeform" )(lc))
 lc:register("stackroot", require( _NAME .. "/layout/stackroot" )(lc))
 lc:register("dragbox", require( _NAME .. "/layout/dragbox" )(lc))
+lc:register("numberasimage", require( _NAME .. "/layout/numberasimage" )(lc))
 
 return lc

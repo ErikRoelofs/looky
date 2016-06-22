@@ -10,7 +10,7 @@ return function(lc)
         end
       end
             
-      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, backgroundColor = {0,0,255,255}, margin = options.margin, padding = options.padding})
+      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, backgroundColor = options.backgroundColor, margin = options.margin, padding = options.padding})
       container.value = options.value
       container.maxValue = options.maxValue
       container.getValue = getValue      
@@ -26,12 +26,13 @@ return function(lc)
       end
       
       container.contentWidth = function(self) return options.maxValue * self:filledChild():contentWidth() end
-      container.contentHeight = function(self) return self:filledChild():contentHeight() end
+      container.contentHeight = function(self) return self:filledChild():contentHeight() end        
       
-      container.update = function(self, dt)
+      container.update = function(self, dt)        
         if self:getValue() ~= self.lastValue then
-          self:removeAllChildren()
+          self:removeAllChildren()          
           self.lastValue = self:getValue()
+          
           local toRender = math.max( math.min(self:getValue(), self.maxValue), 0 )
           local emptyToRender = 0
           if options.emptyImage then
@@ -48,6 +49,7 @@ return function(lc)
             i = i + 1
             self:addChild(self:emptyChild())
           end
+                
           self:layoutingPass()
         end
       end
@@ -76,7 +78,7 @@ return function(lc)
         }
       }, 
       emptyImage = {        
-        required = true,           
+        required = true,
         schemaType = "oneOf",
         possibilities = {
             {
