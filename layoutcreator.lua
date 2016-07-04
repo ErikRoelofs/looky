@@ -1,6 +1,15 @@
 local _NAME = ...
 local _PACKAGE = _NAME:sub(1, -15) -- I should probably clean this up...
 
+local function assertArg(typeToCheck, value, fieldName, extra)
+  if extra then
+    extra = "(" .. extra .. ") "
+  else
+    extra = ""
+  end
+  assert(type(value) == typeToCheck, extra .. fieldName .. " should be a " .. typeToCheck .. ", got a: " .. type(value))  
+end
+
 local  function baseLayout(width, height)
   return {
     children = {},
@@ -184,6 +193,7 @@ paddingMarginHelper = function(left, top, right, bottom)
   end
 end
   
+return function()
   return {
     kinds = {
       base = { 
@@ -235,11 +245,18 @@ end
       self:validate(kind, options)
       return self.kinds[kind].build(base, options)
     end,
-    register = function( self, name, fn )
+    registerLayout = function( self, name, layoutTable )
+      assertArg("string", name, "Name" )
+      assertArg("table", layoutTable, "layoutTable", name )
+      assertArg("function", layoutTable.build, "layoutTable.build", name )
+      assertArg("table", layoutTable.schema, "layoutTable.schema", name )      
       assert(not self.kinds[name], "A layout named " .. name .. " was previously registered")
-      self.kinds[name] = fn
+      
+      self.kinds[name] = layoutTable
     end,
     registerFont = function( self, name, font )
+      assertArg("string", name, "Name")
+      assertArg("userdata", font, "Font", name)
       assert(not self.fonts[name], "A font named " .. name .. " was previously registered")
       self.fonts[name] = font
     end,
@@ -288,4 +305,4 @@ end
     end
 
   }
-
+end

@@ -5,22 +5,26 @@
     - numberAsBar
 ]]
 function love.load()  
+  
   if arg[#arg] == "-debug" then debug = true else debug = false end
   if debug then require("mobdebug").start() end
 
-  local lc = require "layoutcreator"
+  test()
+  
+  local lcF = require "layoutcreator"
+  local lc = lcF()
   bargl = lc
-  lc:register("linear", require "layout/linear"(lc) )
-  lc:register("text", require "layout/text"(lc) )
-  lc:register("image", require "layout/image"(lc) )  
-  lc:register("caption", require "layout/caption"(lc) )
-  lc:register("list", require "layout/list"(lc) )
-  lc:register("root", require "layout/root"(lc) )
-  lc:register("stack", require "layout/stack"(lc) )
-  lc:register("freeform", require "layout/freeform"(lc) )
-  lc:register("stackroot", require "layout/stackroot"(lc) )
-  lc:register("dragbox", require "layout/dragbox"(lc) )
-  lc:register("numberAsImage", require "layout/numberasimage"(lc) )
+  lc:registerLayout("linear", require "layout/linear"(lc) )
+  lc:registerLayout("text", require "layout/text"(lc) )
+  lc:registerLayout("image", require "layout/image"(lc) )  
+  lc:registerLayout("caption", require "layout/caption"(lc) )
+  lc:registerLayout("list", require "layout/list"(lc) )
+  lc:registerLayout("root", require "layout/root"(lc) )
+  lc:registerLayout("stack", require "layout/stack"(lc) )
+  lc:registerLayout("freeform", require "layout/freeform"(lc) )
+  lc:registerLayout("stackroot", require "layout/stackroot"(lc) )
+  lc:registerLayout("dragbox", require "layout/dragbox"(lc) )
+  lc:registerLayout("numberAsImage", require "layout/numberasimage"(lc) )
   
   lc:registerFont("default", love.graphics.newFont(20))
   
@@ -56,4 +60,8 @@ end
 
 function love.draw()
   display:draw()  
+end
+
+function test() 
+  require("tests/layoutcreatortest")
 end
