@@ -135,7 +135,8 @@ local function scaffoldViews(self)
     
   local offset = 0
   local transX, transY = 0,0
-
+  self.scaffold = {}
+  
   for k, v in ipairs(self:getChildren()) do
     
     if self.direction == "v" then 
@@ -211,7 +212,6 @@ return function(lc)
       base.contentHeight = containerHeight
       base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
-      base.scaffold = {}
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)

@@ -7,7 +7,7 @@ end
 local checkRequired = function(kind, schema, options, validator)
   for k, v in pairs(schema) do
     if v and v.required then
-      assert( options[k], "Missing an option: " .. k .. " that is required for kind: " .. kind )
+      assert( options[k] ~= nil, "Missing an option: " .. k .. " that is required for kind: " .. kind )
     end
   end  
 end
