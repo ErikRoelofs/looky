@@ -291,6 +291,13 @@ return function()
     end,
     validate = function(self, kind, options)
       self.validator:validate(kind, self.kinds[kind].schema, options)
+    end,    
+    registerValidator = function(self, name, validator)
+      if type(validator) == "function" then
+        self.validator:addschemaType(name, validator)
+      else
+        self.validator:addPartialSchema(name, validator)
+      end
     end,
     extendSchema = function( self, startWith, andModifyWith )
       assert(self.kinds[startWith] and self.kinds[startWith].schema, "Trying to extend an unregistered schema: " .. startWith )

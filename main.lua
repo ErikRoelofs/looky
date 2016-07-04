@@ -1,3 +1,6 @@
+if arg[#arg] == "-debug" then debug = true else debug = false end
+if debug then require("mobdebug").start() end
+
 --[[
   layouts to include:
     - numberAsImages
@@ -6,8 +9,6 @@
 ]]
 function love.load()  
   
-  if arg[#arg] == "-debug" then debug = true else debug = false end
-  if debug then require("mobdebug").start() end
 
   test()
   
@@ -64,4 +65,14 @@ end
 
 function test() 
   require("tests/layoutcreatortest")
+end
+
+expandSchema = function(schema, validator)
+  for k, item in pairs(schema) do
+    if type(item) == "table" and type(validator.schemaTypes[item.schemaType]) == "table" then
+      for key, value in pairs(validator.schemaTypes[item.schemaType]) do
+        schema[k][key] = value
+      end
+    end
+  end  
 end

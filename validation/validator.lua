@@ -44,8 +44,7 @@ end
 local checkArray = function(kind, field, schema, option,validator)
   typecheck("table", kind, field, option)
   local fn = validator:tryGetValidatorFunction(kind, schema.item)
-  for key, value in ipairs(option) do
-    --validator:validate( kind .. "[" .. key .. "]", schema.item, value )
+  for key, value in ipairs(option) do    
     fn(kind, field .. "[" .. key .. "]", schema.item, value, validator )
   end
 end
@@ -61,10 +60,15 @@ end
 
 local oneOf = function(kind, field, schema, option, validator)
   for key, possibility in ipairs(schema.possibilities) do
-    local fn = validator:tryGetValidatorFunction(kind, possibility)
-    if pcall(fn, kind, field, possibility, option, validator) then
+    possibility.required = false
+    if pcall(validator:validate(kind, possibility, option)) then
       return
     end
+    
+    --local fn = validator:tryGetValidatorFunction(kind, possibility)
+    --if pcall(fn, kind, field, possibility, option, validator) then
+    --  return
+    --end
   end
   local triedOptions = {}
   for key, possibility in ipairs(schema.possibilities) do
@@ -92,8 +96,12 @@ end
 local validator = {
     schemaTypes = {},
     addschemaType = function(self, typename, fn)
-      assert(not self.schemaTypes[typename], "Option type" .. typename .. " already exists; cannot register twice")
+      assert(not self.schemaTypes[typename], "Option type " .. typename .. " already exists; cannot register twice")
       self.schemaTypes[typename] = fn
+    end,
+    addPartialSchema = function(self, typename, table)
+      assert(not self.schemaTypes[typename], "Option type " .. typename .. " already exists; cannot register twice")
+      self.schemaTypes[typename] = table
     end,
     tryGetValidatorFunction = function(self, kind, schema)
       if schema and schema.schemaType then
@@ -104,6 +112,7 @@ local validator = {
     validate = function(self, kind, schema, options)
       checkUnfamiliar(kind, schema, options, self)
       checkRequired(kind, schema, options, self)
+      expandSchema(schema, self)
       
       for field, schemaDescription in pairs(schema) do                
         local fn = self:tryGetValidatorFunction(kind, schemaDescription)
