@@ -146,7 +146,6 @@ tests = {
     v, e = pcall(function() lc:build("test", { name = {}} )end)
     assert(v == false, "Should not have been allowed to call it with a table.")
     
-    
   end
   
 }

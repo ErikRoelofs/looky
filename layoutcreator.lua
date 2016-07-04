@@ -294,7 +294,7 @@ return function()
     end,    
     registerValidator = function(self, name, validator)
       if type(validator) == "function" then
-        self.validator:addschemaType(name, validator)
+        self.validator:addSchemaType(name, validator)
       else
         self.validator:addPartialSchema(name, validator)
       end

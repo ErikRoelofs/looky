@@ -43,6 +43,7 @@ end
 
 local checkArray = function(kind, field, schema, option,validator)
   typecheck("table", kind, field, option)
+  expandSchema(schema.item, validator)
   local fn = validator:tryGetValidatorFunction(kind, schema.item)
   for key, value in ipairs(option) do    
     fn(kind, field .. "[" .. key .. "]", schema.item, value, validator )
@@ -60,15 +61,11 @@ end
 
 local oneOf = function(kind, field, schema, option, validator)
   for key, possibility in ipairs(schema.possibilities) do
-    possibility.required = false
-    if pcall(validator:validate(kind, possibility, option)) then
+    expandSchema(schema.possibilities, validator)
+    local fn = validator:tryGetValidatorFunction(kind, possibility)
+    if pcall(fn, kind, field, possibility, option, validator) then
       return
     end
-    
-    --local fn = validator:tryGetValidatorFunction(kind, possibility)
-    --if pcall(fn, kind, field, possibility, option, validator) then
-    --  return
-    --end
   end
   local triedOptions = {}
   for key, possibility in ipairs(schema.possibilities) do
@@ -84,18 +81,9 @@ local betweenNumbers = function(kind, field, schema, option, validator)
   end
 end
 
-local color = function(kind, field, schema, option, validator)
-  local useSchema = {required = "true", schemaType="betweenNumbers", min = 0, max = 255}
-  local fn = validator:tryGetValidatorFunction(kind, { schemaType = "betweenNumbers" } )
-  fn(kind, field .. "[1]", useSchema, option[1], self)
-  fn(kind, field .. "[2]", useSchema, option[2], self)
-  fn(kind, field .. "[3]", useSchema, option[3], self)
-  fn(kind, field .. "[4]", useSchema, option[4], self)
-end
-
 local validator = {
     schemaTypes = {},
-    addschemaType = function(self, typename, fn)
+    addSchemaType = function(self, typename, fn)
       assert(not self.schemaTypes[typename], "Option type " .. typename .. " already exists; cannot register twice")
       self.schemaTypes[typename] = fn
     end,
@@ -116,6 +104,16 @@ local validator = {
       
       for field, schemaDescription in pairs(schema) do                
         local fn = self:tryGetValidatorFunction(kind, schemaDescription)
+        if type(fn) == "table" then
+          for k, v in pairs(fn) do
+            local out = ""
+            if type(v) ~= "table" and type(v) ~= "function" then
+              out = v
+            end
+            print(k .. " -> " .. out)
+          end
+        end
+        
         if options[field] ~= nil and fn then
           fn(kind, field, schemaDescription, options[field], self)
         end
@@ -123,16 +121,23 @@ local validator = {
     end
 }
 
-validator:addschemaType("boolean", checkBoolean)
-validator:addschemaType("number", checkNumber)
-validator:addschemaType("string", checkString)
-validator:addschemaType("function", checkFunction)
-validator:addschemaType("table", checkTable)
-validator:addschemaType("image", checkImage)
-validator:addschemaType("fromList", fromList)
-validator:addschemaType("oneOf", oneOf)
-validator:addschemaType("betweenNumbers", betweenNumbers)
-validator:addschemaType("color", color)
-validator:addschemaType("array", checkArray)
+validator:addSchemaType("boolean", checkBoolean)
+validator:addSchemaType("number", checkNumber)
+validator:addSchemaType("string", checkString)
+validator:addSchemaType("function", checkFunction)
+validator:addSchemaType("table", checkTable)
+validator:addSchemaType("image", checkImage)
+validator:addSchemaType("fromList", fromList)
+validator:addSchemaType("oneOf", oneOf)
+validator:addSchemaType("betweenNumbers", betweenNumbers)
+validator:addSchemaType("array", checkArray)
+
+validator:addPartialSchema("color", { schemaType = "table", options = {
+    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+  }
+})
 
 return validator
