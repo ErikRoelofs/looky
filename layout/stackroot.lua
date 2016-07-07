@@ -11,7 +11,6 @@ return function(lc)
         end,
         setLinear = function(self,child)
           self.stack = child
-          self.stack:setParent(self)
         end,
         desiredWidth = function(self)
           return love.graphics.getWidth()

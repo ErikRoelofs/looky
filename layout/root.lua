@@ -10,8 +10,7 @@ return function(lc)
           self.linear:addChild(child, position)
         end,
         setLinear = function(self,child)
-          self.linear = child
-          self.linear:setParent(self)
+          self.linear = child          
         end,
         desiredWidth = function(self)
           return love.graphics.getWidth()

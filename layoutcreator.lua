@@ -13,17 +13,12 @@ end
 local  function baseLayout(width, height)
   return {
     children = {},
-    parent = nil,
     width = width,
     height = height,    
     addChild = function(self, child, position)
       assert(child, "No child was passed to addChild")
       local position = position or #self.children+1
-      table.insert(self.children, position, child)
-      child:setParent(self)
-    end,
-    setParent = function(self, parent)
-      self.parent = parent
+      table.insert(self.children, position, child)      
     end,
     desiredWidth = function(self)
       if self.visibility == "gone" then
