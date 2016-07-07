@@ -64,6 +64,7 @@ function love.draw()
 end
 
 function test() 
+  require("tests/validation/validatortest")
   require("tests/layoutcreatortest")
 end
 

@@ -239,7 +239,7 @@ return function()
     fonts = {
       base = love.graphics.newFont()
     },
-    validator = require ( _PACKAGE .. "/validation/validator" ),
+    validator = require ( _PACKAGE .. "/validation/validator" )(),
     build = function( self, kind, options )
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
       local base = self:makeBaseLayout(options)

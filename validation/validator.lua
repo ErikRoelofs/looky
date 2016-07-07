@@ -1,3 +1,4 @@
+-- I think this needs a rework, it stores validators, schemas and partials in one table
 local checkUnfamiliar = function(kind, schema, options, validator)
   for k, v in pairs(options) do
     assert(schema[k] ~= nil and schema[k] ~= false, "Unfamiliar option passed: " .. k .. " is not specified in the schema for " .. kind )
@@ -81,9 +82,11 @@ local betweenNumbers = function(kind, field, schema, option, validator)
   end
 end
 
-local validator = {
+
+return function() 
+  local validator = {
     schemaTypes = {},
-    addSchemaType = function(self, typename, fn)
+    addSchemaType = function(self, typename, fn)      
       assert(not self.schemaTypes[typename], "Option type " .. typename .. " already exists; cannot register twice")
       self.schemaTypes[typename] = fn
     end,
@@ -94,6 +97,7 @@ local validator = {
     tryGetValidatorFunction = function(self, kind, schema)
       if schema and schema.schemaType then
         assert( self.schemaTypes[ schema.schemaType ], "Unknown schema type " .. schema.schemaType .. " from viewtype " .. kind .. ", please register it with the validator." )
+        assert( type(self.schemaTypes[ schema.schemaType ]) == "function", "Schema for type " .. schema.schemaType .. " is not a function, but a " .. type(self.schemaTypes[ schema.schemaType ]) )
         return self.schemaTypes[ schema.schemaType ]
       end
     end,
@@ -119,25 +123,27 @@ local validator = {
         end
       end
     end
-}
-
-validator:addSchemaType("boolean", checkBoolean)
-validator:addSchemaType("number", checkNumber)
-validator:addSchemaType("string", checkString)
-validator:addSchemaType("function", checkFunction)
-validator:addSchemaType("table", checkTable)
-validator:addSchemaType("image", checkImage)
-validator:addSchemaType("fromList", fromList)
-validator:addSchemaType("oneOf", oneOf)
-validator:addSchemaType("betweenNumbers", betweenNumbers)
-validator:addSchemaType("array", checkArray)
-
-validator:addPartialSchema("color", { schemaType = "table", options = {
-    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
-    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
-    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
-    { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
   }
-})
 
-return validator
+  
+  validator:addSchemaType("boolean", checkBoolean)
+  validator:addSchemaType("number", checkNumber)
+  validator:addSchemaType("string", checkString)
+  validator:addSchemaType("function", checkFunction)
+  validator:addSchemaType("table", checkTable)
+  validator:addSchemaType("image", checkImage)
+  validator:addSchemaType("fromList", fromList)
+  validator:addSchemaType("oneOf", oneOf)
+  validator:addSchemaType("betweenNumbers", betweenNumbers)
+  validator:addSchemaType("array", checkArray)
+
+  validator:addPartialSchema("color", { schemaType = "table", options = {
+      { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+      { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+      { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+      { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },
+    }
+  })
+
+  return validator
+end
