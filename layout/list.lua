@@ -15,7 +15,9 @@ return function(lc)
     end,
     schema = lc:extendSchema("base", {
         textOptions = { 
-          required = false }, 
+          required = false,
+          schemaType = "table",
+          options = lc:extendSchema("text", {width = false, height = false, data = false})}, 
         texts = { 
           required = true, 
           schemaType = "array", 

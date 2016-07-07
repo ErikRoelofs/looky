@@ -305,7 +305,17 @@ return function()
         schema[k] = v
       end
       return schema
-    end
+    end,
+    getSchema = function(self, startWith)
+      assert(self.kinds[startWith] and self.kinds[startWith].schema, "Trying to get an unregistered schema: " .. startWith )
+      local initial = self.kinds[startWith].schema
+      local schema = {}
+      for k, v in pairs(initial) do
+        schema[k] = v
+      end
+      return schema
+    end,
+    
 
   }
 end
