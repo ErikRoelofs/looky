@@ -64,7 +64,7 @@ function love.draw()
 end
 
 function test() 
-  --require("tests/layoutcreatortest")
+  require("tests/layoutcreatortest")
 end
 
 expandSchema = function(schema, validator)
