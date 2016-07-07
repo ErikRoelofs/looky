@@ -1,5 +1,4 @@
 - linear and stack need to accept padding (and margin?) for themselves?
 - root needs to behave more like base
 - needs LOADS of assertions and hints
-- table schema allows undefined properties
-- schematypes need to be more easily reusable
+- think about margin/layoutgravity. I don't think they belong on the child.

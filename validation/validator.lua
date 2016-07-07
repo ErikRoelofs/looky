@@ -106,20 +106,16 @@ return function()
       checkRequired(kind, schema, options, self)
       expandSchema(schema, self)
       
-      for field, schemaDescription in pairs(schema) do                
-        local fn = self:tryGetValidatorFunction(kind, schemaDescription)
-        if type(fn) == "table" then
-          for k, v in pairs(fn) do
-            local out = ""
-            if type(v) ~= "table" and type(v) ~= "function" then
-              out = v
+      for field, schemaDescription in pairs(schema) do
+        if schemaDescription ~= false then
+          local fn = self:tryGetValidatorFunction(kind, schemaDescription)                
+          if options[field] ~= nil and fn then
+            fn(kind, field, schemaDescription, options[field], self)
+          else
+            if not fn then
+              error("Could not find the validation function for: " .. field .. ", in layout: " .. kind)
             end
-            print(k .. " -> " .. out)
           end
-        end
-        
-        if options[field] ~= nil and fn then
-          fn(kind, field, schemaDescription, options[field], self)
         end
       end
     end

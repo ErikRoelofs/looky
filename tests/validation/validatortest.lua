@@ -284,6 +284,12 @@ local tests = {
       val:validate("test", schema, {string = "hi", number = 15, table = { t_value = true }})
       
     end,
+    it_should_reject_entries_without_schematype = function(val)
+      local schema = { item = {} }    
+      v, e = pcall(function() val:validate("test", schema, {item = "the_test_case"}) end)
+      assert(v == false, "No schematype should be rejected")
+      
+    end,
 }
 
 for _, test in pairs(tests) do
