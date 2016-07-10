@@ -18,6 +18,7 @@ end
 
 local textWidth = function (self, str)
   str = str or self:getData()
+  assert( type(str) == "string", "A text view is trying to determine the width of a non-string (type: " .. type(str) )
   return self.font:getWidth(str)
 end
 

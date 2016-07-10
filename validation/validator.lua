@@ -1,4 +1,14 @@
 -- I think this needs a rework, it stores validators, schemas and partials in one table
+local expandSchema = function(schema, validator)
+  for k, item in pairs(schema) do
+    if type(item) == "table" and type(validator.schemaTypes[item.schemaType]) == "table" then
+      for key, value in pairs(validator.schemaTypes[item.schemaType]) do
+        schema[k][key] = value
+      end
+    end
+  end  
+end
+
 local checkUnfamiliar = function(kind, schema, options, validator)
   for k, v in pairs(options) do
     assert(schema[k] ~= nil and schema[k] ~= false, "Unfamiliar option passed: " .. k .. " is not specified in the schema for " .. kind )
@@ -35,6 +45,7 @@ end
 
 local checkTable = function(kind, field, schema, option, validator)
   typecheck("table", kind, field, option)
+  assert(schema.options, "When using a Table schema, you must also provide the table's options.")
   validator:validate( kind .. "." .. field, schema.options, option )
 end
 

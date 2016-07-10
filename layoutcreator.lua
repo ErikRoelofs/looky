@@ -14,11 +14,13 @@ local  function baseLayout(width, height)
   return {
     children = {},
     width = width,
-    height = height,    
+    height = height,
+    outside = {},
     addChild = function(self, child, position)
       assert(child, "No child was passed to addChild")
       local position = position or #self.children+1
-      table.insert(self.children, position, child)      
+      table.insert(self.children, position, child)
+      table.insert(child.outside, self)
     end,
     desiredWidth = function(self)
       if self.visibility == "gone" then
@@ -163,6 +165,19 @@ local  function baseLayout(width, height)
          return { self } 
       end
       return {}
+    end,
+    signalChildren = function(self, signal, payload)
+      for i, c in ipairs(self.children) do
+        c:receiveSignal(signal, payload)
+      end
+    end,
+    receiveSignal = function(self, signal, payload)
+      self:signalChildren(signal, payload)
+    end,
+    messageOut = function(self, signal, payload)
+      for i, o in ipairs(self.outside) do
+        o:receiveSignal(signal, payload)
+      end
     end
   }
 end

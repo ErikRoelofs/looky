@@ -53,8 +53,17 @@ return function(lc)
           self.stack:removeAllChildren()
         end,
         clickedViews = function(self, x, y)
-          return self.linear:clickedViews(x, y)
-        end
+          return self.stack:clickedViews(x, y)
+        end,
+        receiveSignal = function(self, signal, payload)
+          return self.stack:receiveSignal(signal, payload)
+        end,
+        signalChildren = function(self, signal, payload)
+          return self.stack:signalChildren(signal, payload)
+        end,
+        messageOut = function(self, signal, payload)
+          return self.stack:messageOut(signal, payload)
+        end,
       }
       root:setLinear(child)
       return root

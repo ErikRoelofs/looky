@@ -6,10 +6,12 @@ if debug then require("mobdebug").start() end
     - numberAsImages
     - numberAsCaption
     - numberAsBar
+    - aquarium
+    - scroll-something
+    - canvas
 ]]
 function love.load()  
   
-
   test()
   
   local lcF = require "layoutcreator"
