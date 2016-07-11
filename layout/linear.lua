@@ -192,6 +192,25 @@ local function clickedViews(self,x,y)
   return clicked
 end
 
+local function getLocationOffset(self, child)
+  return self.scaffold[child][1], self.scaffold[child][2]
+end
+
+local function myChild(self, child)
+  return self.scaffold[child]
+end
+
+local function signalTargetedChildren(self, signal, payload)
+  local other = self:clickedViews(payload.x, payload.y)
+  for i, v in ipairs(other) do
+    if v ~= self and myChild(self, v) then
+      local offsetX, offsetY = self:getLocationOffset(v)
+      local thisPayload = { x = payload.x - offsetX , y = payload.y - offsetY }
+      v:receiveSignal(signal, thisPayload)
+    end
+  end
+end
+
 return function(lc)
   return {
     build = function (base, options)
@@ -212,6 +231,8 @@ return function(lc)
       base.contentHeight = containerHeight
       base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
+      base.getLocationOffset = getLocationOffset      
+      base.signalHandlers.leftclick = signalTargetedChildren
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)

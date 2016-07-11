@@ -10,7 +10,13 @@ local function assertArg(typeToCheck, value, fieldName, extra)
   assert(type(value) == typeToCheck, extra .. fieldName .. " should be a " .. typeToCheck .. ", got a: " .. type(value))  
 end
 
-local  function baseLayout(width, height)
+local signalChildren = function(self, signal, payload)
+  for i, c in ipairs(self.children) do
+    c:receiveSignal(signal, payload)
+  end
+end
+
+local function baseLayout(width, height)
   return {
     children = {},
     width = width,
@@ -166,14 +172,20 @@ local  function baseLayout(width, height)
       end
       return {}
     end,
-    signalChildren = function(self, signal, payload)
-      for i, c in ipairs(self.children) do
-        c:receiveSignal(signal, payload)
+    signalChildren = signalChildren,
+    receiveSignal = function(self, signal, payload)
+      if self.signalHandlers[signal] then
+        self.signalHandlers[signal](self, signal, payload)
+      else
+        if self.defaultHandler then
+          self.defaultHandler(self, signal, payload)
+        end
       end
     end,
-    receiveSignal = function(self, signal, payload)
-      self:signalChildren(signal, payload)
-    end,
+    signalHandlers = {
+            
+    },
+    defaultHandler = signalChildren,    
     messageOut = function(self, signal, payload)
       for i, o in ipairs(self.outside) do
         o:receiveSignal(signal, payload)
