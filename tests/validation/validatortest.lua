@@ -274,6 +274,18 @@ local tests = {
     it_should_validate_images = function(val)
       -- actually it doesn't, it just checks for userdata. need to fix.
     end,
+    it_should_validate_dictionaries = function(val)
+      local schema = {
+        dict = { required = true, schemaType = "dict", keyValidator = "string", valueValidator = "function" }
+      }
+      local toCheck = {
+        dict = {
+          string = function() end
+        }
+      }
+      
+      val:validate("test", schema, toCheck)
+    end,
     it_should_validate_complex_schemas = function(val)
       local schema = {
         string = { required = true, schemaType = "string" },

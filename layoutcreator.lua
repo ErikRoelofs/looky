@@ -182,9 +182,7 @@ local function baseLayout(width, height)
         end
       end
     end,
-    signalHandlers = {
-            
-    },
+    signalHandlers = {},
     defaultHandler = signalChildren,    
     messageOut = function(self, signal, payload)
       for i, o in ipairs(self.outside) do
@@ -253,7 +251,13 @@ return function()
             thickness = { required = true, schemaType = "number" }
           }},
           weight = { required = false, schemaType = "number" },
-          visibility = { required = false, schemaType = "fromList", list = { "visible", "cloaked", "gone" } }
+          visibility = { required = false, schemaType = "fromList", list = { "visible", "cloaked", "gone" } },
+          signalHandlers = {
+            required = false,
+            schemaType = "dict",
+            keyValidator = "string",
+            valueValidator = "function",
+          }
         }
       }
     },
@@ -303,6 +307,7 @@ return function()
       start.gravity = options.gravity or {"start","start"}
       start.weight = options.weight or 1
       start.visibility = options.visibility or "visible"
+      start.signalHandlers = options.signalHandlers or {}
       return start
     end,
     mergeOptions = function (baseOptions, options)
@@ -341,8 +346,6 @@ return function()
         schema[k] = v
       end
       return schema
-    end,
-    
-
+    end,    
   }
 end

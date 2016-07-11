@@ -231,8 +231,15 @@ return function(lc)
       base.contentHeight = containerHeight
       base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
-      base.getLocationOffset = getLocationOffset      
-      base.signalHandlers.leftclick = signalTargetedChildren
+      base.getLocationOffset = getLocationOffset
+      
+      if not options.signalHandlers then
+        options.signalHandlers = {}
+        if not options.signalHandlers.leftclick then
+          options.signalHandlers.leftclick = signalTargetedChildren
+        end
+      end
+      base.signalHandlers = options.signalHandlers      
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)
