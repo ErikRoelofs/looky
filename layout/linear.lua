@@ -18,7 +18,7 @@ local renderChildren = function(self)
 end
 
 local horizontalLayout = function(parent, children)  
-  local availableSize = parent:availableWidth()
+  local availableSize = parent:availableWidth() - parent:spacingNeeded()
   local fills = {}
   for k, v in ipairs(children) do
     if v:desiredWidth() == "fill" then
@@ -29,7 +29,7 @@ local horizontalLayout = function(parent, children)
         height = parent:availableHeight()
       end
       if v:desiredWidth() < availableSize then
-        availableSize = availableSize - v:desiredWidth()            
+        availableSize = availableSize - v:desiredWidth()
         v:setDimensions(v:desiredWidth(), height)
       else
         v:setDimensions(availableSize, height)
@@ -57,7 +57,7 @@ local horizontalLayout = function(parent, children)
 end
 
 local verticalLayout = function(parent, children)  
-  local availableSize = parent:availableHeight()
+  local availableSize = parent:availableHeight() - parent:spacingNeeded()
   local fills = {}
   for k, v in ipairs(children) do
     if v:desiredHeight() == "fill" then
@@ -140,8 +140,8 @@ local function scaffoldViews(self)
   for k, v in ipairs(self:getChildren()) do
     
     if self.direction == "v" then 
-      transY = transY + offset          
-      offset = offset + v:grantedHeight()
+      transY = transY + offset
+      offset = offset + v:grantedHeight() + self.childSpacing
       if v.layoutGravity == "start" then
         transX = transX
         transY = transY
@@ -154,7 +154,7 @@ local function scaffoldViews(self)
       end
     else
       transX = transX + offset
-      offset = offset + v:grantedWidth()
+      offset = offset + v:grantedWidth() + self.childSpacing
       if v.layoutGravity == "start" then
         transX = transX
         transY = transY
@@ -211,6 +211,11 @@ local function signalTargetedChildren(self, signal, payload)
   end
 end
 
+local function spacingNeeded(self)
+  local inc = math.min( #self:getChildren() - 1, 0 )
+  return inc * self.childSpacing
+end
+
 return function(lc)
   return {
     build = function (base, options)
@@ -232,7 +237,8 @@ return function(lc)
       base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
       base.getLocationOffset = getLocationOffset
-      
+      base.childSpacing = options.childSpacing or 0
+      base.spacingNeeded = spacingNeeded
       if not options.signalHandlers then
         options.signalHandlers = {}
         if not options.signalHandlers.leftclick then
@@ -247,6 +253,11 @@ return function(lc)
       end
       return base
     end,
-    schema = lc:extendSchema("base", {direction = { required = false, schemaType = "fromList", list = { "v", "h" } },})
+    schema = lc:extendSchema("base", 
+      {
+        direction = { required = false, schemaType = "fromList", list = { "v", "h" } },
+        childSpacing = { required = false, schemaType = "number" }
+      }
+    )
   }
 end
