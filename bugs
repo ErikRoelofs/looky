@@ -1,4 +1,3 @@
-- linear and stack need to accept padding for themselves
 - can we REALLY have two copies of the same view? what about width/height granted, for example?
   - should those be separate instances, then?
   - or should the width/height info not be stored on the child either? (but passed to draw?)

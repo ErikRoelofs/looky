@@ -18,26 +18,36 @@ local renderChildren = function(self)
 end
 
 local horizontalLayout = function(parent, children)  
-  local availableSize = parent:availableWidth() - parent:spacingNeeded()
+  local availableSize = parent:availableWidth()
   local fills = {}
-  for k, v in ipairs(children) do
+  local oneExists = false
+  for k, v in ipairs(children) do    
     if v:desiredWidth() == "fill" then
       table.insert(fills, v)
     else
+      oneExists = true
       local height = v:desiredHeight()
       if height == "fill" then
         height = parent:availableHeight()
       end
-      if v:desiredWidth() < availableSize then
-        availableSize = availableSize - v:desiredWidth()
+      if v:desiredWidth() + parent.childSpacing < availableSize then
+        availableSize = availableSize - v:desiredWidth() - parent.childSpacing
         v:setDimensions(v:desiredWidth(), height)
       else
-        v:setDimensions(availableSize, height)
+        if availableSize <= 0 then
+          v.visibility = "gone"
+        end
+        v:setDimensions(math.max(availableSize, 0), height)
         availableSize = 0
       end
     end
   end
-  if availableSize > 0 then
+  local inc = #fills
+  if not oneExists then
+    inc = inc - 1 -- we don't need extra spacing for the first element, since there is nothing yet
+  end      
+  local sizeForSpacing = inc * parent.childSpacing    
+  if availableSize > sizeForSpacing and #fills > 0 then
     local sumWeight = 0
     for k, v in ipairs(fills) do
       sumWeight = sumWeight + v.weight
@@ -46,8 +56,13 @@ local horizontalLayout = function(parent, children)
       local height = v:desiredHeight()
       if height == "fill" then
         height = parent:grantedHeight()
-      end
-      v:setDimensions(availableSize / sumWeight * v.weight, height)
+      end      
+      v:setDimensions((availableSize - sizeForSpacing)/ sumWeight * v.weight, height)
+    end
+  else
+    for k, v in ipairs(fills) do
+      v:setDimensions(0,0)
+      v.visibility = "gone"
     end
   end
   
@@ -57,26 +72,36 @@ local horizontalLayout = function(parent, children)
 end
 
 local verticalLayout = function(parent, children)  
-  local availableSize = parent:availableHeight() - parent:spacingNeeded()
+  local availableSize = parent:availableHeight()
   local fills = {}
+  local oneExists = false
   for k, v in ipairs(children) do
     if v:desiredHeight() == "fill" then
       table.insert(fills, v)
     else
       local width = v:desiredWidth()
+      local oneExists = true
       if width == "fill" then
         width = parent:availableWidth()
       end
-      if v:desiredHeight() < availableSize then
-        availableSize = availableSize - v:desiredHeight()            
+      if v:desiredHeight() + parent.childSpacing < availableSize then
+        availableSize = availableSize - v:desiredHeight() - parent.childSpacing
         v:setDimensions(width, v:desiredHeight())
       else
-        v:setDimensions(width, availableSize)
-        availableSize = 0
+        if availableSize <= 0 then
+          v.visibility = "gone"
+        end
+        v:setDimensions(width, math.max(availableSize, 0))
+        availableSize = 0        
       end
     end
   end
-  if availableSize > 0 then
+  local inc = #fills
+  if not oneExists then
+    inc = inc - 1 -- we don't need extra spacing for the first element, since there is nothing yet
+  end      
+  local sizeForSpacing = inc * parent.childSpacing    
+  if availableSize > sizeForSpacing and #fills > 0 then
     local sumWeight = 0
     for k, v in ipairs(fills) do
       sumWeight = sumWeight + v.weight    
@@ -86,7 +111,12 @@ local verticalLayout = function(parent, children)
       if width == "fill" then
         width = parent:availableWidth()
       end
-      v:setDimensions(width, availableSize / sumWeight * v.weight)
+      v:setDimensions(width, (availableSize - sizeForSpacing ) / sumWeight * v.weight)
+    end
+  else
+    for k, v in ipairs(fills) do
+      v:setDimensions(0,0)
+      v.visibility = "gone"
     end
   end
   
@@ -211,11 +241,6 @@ local function signalTargetedChildren(self, signal, payload)
   end
 end
 
-local function spacingNeeded(self)
-  local inc = math.min( #self:getChildren() - 1, 0 )
-  return inc * self.childSpacing
-end
-
 return function(lc)
   return {
     build = function (base, options)
@@ -237,8 +262,7 @@ return function(lc)
       base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
       base.getLocationOffset = getLocationOffset
-      base.childSpacing = options.childSpacing or 0
-      base.spacingNeeded = spacingNeeded
+      base.childSpacing = options.childSpacing or 0      
       if not options.signalHandlers then
         options.signalHandlers = {}
         if not options.signalHandlers.leftclick then
