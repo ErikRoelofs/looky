@@ -35,10 +35,7 @@ return function(lc)
           self.stack:layoutingPass()
         end,
         render = function(self)
-          love.graphics.push()
-          love.graphics.translate(self.stack.margin.left, self.stack.margin.right)            
           self.stack:render()
-          love.graphics.pop()
         end,
         update = function(self, dt)
           self.stack:update(dt)

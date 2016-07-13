@@ -143,27 +143,27 @@ local function scaffoldViews(self)
       transY = transY + offset          
       offset = offset + v:grantedHeight()
       if v.layoutGravity == "start" then
-        transX = transX + v.margin.left
-        transY = transY + v.margin.top            
+        transX = transX
+        transY = transY
       elseif v.layoutGravity == "end" then
-        transX = transX + self:availableWidth() - v:grantedWidth() - v.margin.right
-        transY = transY + v.margin.top                        
+        transX = transX + self:availableWidth() - v:grantedWidth()
+        transY = transY
       elseif v.layoutGravity == "center" then
-        transX = transX + (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2
-        transY = transY + v.margin.top                        
+        transX = transX + (self:availableWidth() - v:grantedWidth()) /2
+        transY = transY
       end
     else
       transX = transX + offset
       offset = offset + v:grantedWidth()
       if v.layoutGravity == "start" then
-        transX = transX + v.margin.left
-        transY = transY + v.margin.top                        
+        transX = transX
+        transY = transY
       elseif v.layoutGravity == "end" then
-        transX = transX + v.margin.left
-        transY = transY + self:availableHeight() - v:grantedHeight() - v.margin.bottom
+        transX = transX
+        transY = transY + self:availableHeight() - v:grantedHeight()
       elseif v.layoutGravity == "center" then
-        transX = transX + v.margin.left
-        transY = transY + (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2          
+        transX = transX
+        transY = transY + (self:availableHeight() - v:grantedHeight()) /2
       end
     end
     

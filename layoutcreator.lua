@@ -35,14 +35,9 @@ local function baseLayout(width, height)
       if self.width == "fill" then
         return self.width
       elseif self.width == "wrap" then
-        local content = self:contentWidthWithPadding()
-        if content == "fill" then
-          return content
-        else
-          return content + self.margin.left + self.margin.right
-        end
+        return self:contentWidthWithPadding()
       else
-        return self.width + self.margin.left + self.margin.right
+        return self.width
       end
     end,
     desiredHeight = function(self)
@@ -52,14 +47,9 @@ local function baseLayout(width, height)
       if self.height == "fill" then
         return self.height
       elseif self.height == "wrap" then
-        local content = self:contentHeightWithPadding()
-        if content == "fill" then
-          return content
-        else
-          return content + self.margin.top + self.margin.bottom
-        end
+        return self:contentHeightWithPadding()
       else        
-        return self.height + self.margin.top + self.margin.bottom
+        return self.height
       end
     end,
     grantedWidth = function(self)
@@ -73,10 +63,10 @@ local function baseLayout(width, height)
       self.givenHeight = y
     end,
     availableWidth = function(self)
-      return self:grantedWidth() - self.margin.left - self.margin.right
+      return self:grantedWidth()
     end,
     availableHeight = function(self)
-      return self:grantedHeight() - self.margin.top - self.margin.bottom
+      return self:grantedHeight()
     end,
     layoutingPass = function(self)
       
@@ -249,12 +239,6 @@ return function()
             bottom = { required = true, schemaType = "number" },
             top = { required = true, schemaType = "number" },
           }},
-          margin = { required = false, schemaType = "table", options = {
-            left = { required = true, schemaType = "number" },
-            right = { required = true, schemaType = "number" },
-            bottom = { required = true, schemaType = "number" },
-            top = { required = true, schemaType = "number" },          
-          }},          
           backgroundColor = { required = false, schemaType = "color" },
           layoutGravity = { required = false, schemaType = "fromList", list = { "start", "center", "end"}  },
           gravity = { required = false, schemaType = "table", options = {
@@ -314,13 +298,9 @@ return function()
     padding = function(left, top, right, bottom)
       return paddingMarginHelper(left, top, right, bottom)
     end,
-    margin =  function(left, top, right, bottom)
-      return paddingMarginHelper(left, top, right, bottom)
-    end,
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)      
-      start.padding = self.padding(options.padding)
-      start.margin = self.margin(options.margin)      
+      start.padding = self.padding(options.padding)      
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.layoutGravity = options.layoutGravity or "start"

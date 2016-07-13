@@ -35,10 +35,7 @@ return function(lc)
           self.linear:layoutingPass()
         end,
         render = function(self)
-          love.graphics.push()
-          love.graphics.translate(self.linear.margin.left, self.linear.margin.right)            
           self.linear:render()
-          love.graphics.pop()
         end,
         update = function(self, dt)
           self.linear:update(dt)

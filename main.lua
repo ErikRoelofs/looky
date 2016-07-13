@@ -31,7 +31,7 @@ function love.load()
   
   lc:registerFont("default", love.graphics.newFont(20))
   
-  display = require "samples/second"(lc)
+  display = require "samples/first"(lc)
   
 end
 
