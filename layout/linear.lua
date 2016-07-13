@@ -168,8 +168,8 @@ local function scaffoldViews(self)
     end
     
     self.scaffold[v] = {transX, transY}    
-    transX = 0
-    transY = 0
+    transX = self.padding.left
+    transY = self.padding.top
   end    
 
 end
