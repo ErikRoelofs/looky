@@ -1,6 +1,6 @@
 Creating a new layout type:
 
-- must be registered to creator: lc:register(name, layout)
+- must be registered to creator: lc:registerLayout(name, layout)
 - layout must be a table with a 'build' and 'schema' method
 
 Build:
@@ -24,7 +24,7 @@ Schema:
   - should return a schema table
   - should PROBABLY extend from an existing schema
   - should detail exactly what is and is not valid in terms of passed options
-  - if you need a new schema validator, add it to the validator.lua
+  - if you need a new schema validator or partial schema, register it: lc:registerValidator()
   
 
 Setting up a layout:
@@ -39,6 +39,7 @@ Setting up a layout:
 - if you want a view to re-layout its children, call layoutingPass() on it again
 - if you want a view to re-size ITSELF, call layoutingPass() on its parent! Views cannot control their own size.
 - to detect what is clicked, call clickedViews on a view: view:clickedViews(x,y). This will return a table with all views that exist on those coordinates relative to the topleft of the view you called it on
+- something something signals
 
 Fonts:
 
