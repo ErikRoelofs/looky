@@ -1,0 +1,47 @@
+working example:
+
+- issue
+- options
+
+----
+
+- issue view
+  - options container
+    - options view
+    
+----
+
+options can be "clicked". this should unselect the current option, then select the clicked option
+but:
+- option-view should be separate from option-model
+- option-view is made by and controlled by issue-view
+- issue-view should be separate from issue-model
+- main controller knows nothing about option-view, only about issue-view
+- main controller knows where to send the clicked
+
+-> click can only go to issue-view
+-> issue-view can pass it on to options-view
+-> options-view can call a callback?
+  -> then issue-view needs to receive that callback on creation
+  -> and issue-view must pass it on to each options-view
+  -> which works kinda like how selection works.
+  -> then basically, options-view has an onClick handler. is that what we want?
+  -> or do we want more like an onAction handler?
+  -> how does that work with context-based actions, anyway?
+  -> how do we tell apart "select", "confirm" when both are done by left-click?
+  -> that is probably the job of an input system? because context is determined by model state? or is it?
+  
+-> main controller sends a click
+-> issue view receives the click, passes it to its children
+-> 
+  
+keyboard input should be passed to views. does it go to every view? should views implement something like "selected" state?
+can multiple views pick up keyboard input? (probably?)
+does keyboard input have a hidden location component? (that would be weird?)
+should we transmit keyboard inputs, or custom input triggers? (that sounds better)
+same for mouse, and button modes?
+
+should we have two input modes:
+- targeted (x, y, signal)
+- global (signal)
+that are custom defined by users (default definitions like "hover", "drag", "left", "right" for mouse keys or "a", "b" for keys, but also "shoot" or "jump", either as targeted or global signals created by the user)

@@ -1,7 +1,18 @@
-- linear and stack need to accept padding (and margin?) for themselves?
+- linear and stack need to accept padding for themselves
+- can we REALLY have two copies of the same view? what about width/height granted, for example?
+  - should those be separate instances, then?
+  - or should the width/height info not be stored on the child either? (but passed to draw?)
+  - is this an architecture difference, or a performance difference only? < will definitely hit performance.
+
+- add core viewtypes:
+  - aquarium
 - needs LOADS of assertions and hints
+
 - think about margin/layoutgravity. I don't think they belong on the child.
 - all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)
 - think about themes and styles
 - think about animation
 - need a complete default signaling-setup for clicks/keys
+- support image backgrounds
+- move drawing of border/background to base
+- now that margin is gone, move borders into the padding entirely
