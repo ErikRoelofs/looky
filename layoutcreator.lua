@@ -174,8 +174,23 @@ local function baseLayout(width, height)
     end,
     signalChildren = signalChildren,
     receiveSignal = function(self, signal, payload)
-      if self.signalHandlers[signal] then
-        self.signalHandlers[signal](self, signal, payload)
+      local handler = self.signalHandlers[signal]
+      if handler then
+        if type(handler) == "function" then
+          self.signalHandlers[signal](self, signal, payload)
+        elseif type(handler) == "string" then
+          if handler == "o" then
+            self.messageOut(self, signal, payload)
+          elseif handler == "c" then
+            self.signalChildren(self, signal, payload)
+          else
+            error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
+          end
+        elseif type(handler) == "number" then
+          self.getChildren()[handler]:receiveSignal(signal, payload)
+        elseif type(handler) == "table" then
+          handler:receiveSignal(signal, payload)        
+        end
       else
         if self.defaultHandler then
           self.defaultHandler(self, signal, payload)
@@ -255,8 +270,13 @@ return function()
           signalHandlers = {
             required = false,
             schemaType = "dict",
-            keyValidator = "string",
-            valueValidator = "function",
+            keyValidator = { schemaType = "string" },
+            valueValidator = { schemaType = "oneOf", possibilities = {
+              { schemaType = "function" },
+              { schemaType = "fromList", list = { "o", "c" } },
+              { schemaType = "number" },
+              { schemaType = "table" },
+            }},
           }
         }
       }

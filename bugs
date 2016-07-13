@@ -3,3 +3,7 @@
 - needs LOADS of assertions and hints
 - think about margin/layoutgravity. I don't think they belong on the child.
 - all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)
+- think about themes and styles
+- think about animation
+- need default signal-handlers for common cases (to children, to out, to specific child)
+- need a complete default signaling-setup for clicks/keys
