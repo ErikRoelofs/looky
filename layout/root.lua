@@ -25,13 +25,13 @@ return function(lc)
           return love.graphics.getHeight()
         end,
         availableWidth = function(self)
-          return love.graphics.getWidth()
+          return love.graphics.getWidth() - self.padding.left - self.padding.right
         end,
         availableHeight = function(self)
-          return love.graphics.getHeight()
+          return love.graphics.getHeight() - self.padding.top - self.padding.bottom
         end,
         layoutingPass = function(self)
-          self.linear:setDimensions( self:availableWidth(), self:availableHeight() )
+          self.linear:setDimensions( self:grantedWidth(), self:grantedHeight() )
           self.linear:layoutingPass()
         end,
         render = function(self)

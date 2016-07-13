@@ -63,10 +63,10 @@ local function baseLayout(width, height)
       self.givenHeight = y
     end,
     availableWidth = function(self)
-      return self:grantedWidth()
+      return self:grantedWidth() - self.padding.left - self.padding.right
     end,
     availableHeight = function(self)
-      return self:grantedHeight()
+      return self:grantedHeight() - self.padding.top - self.padding.bottom
     end,
     layoutingPass = function(self)
       
@@ -102,16 +102,16 @@ local function baseLayout(width, height)
     end,
     renderBackground = function(self)
       love.graphics.setColor(self.backgroundColor)
-      local width = self:availableWidth()
-      local height = self:availableHeight()
+      local width = self:grantedWidth()
+      local height = self:grantedHeight()
       love.graphics.rectangle("fill", 0, 0, width, height)
       self:renderBorder()
     end,
     renderBorder = function(self)
       love.graphics.setColor(self.border.color)
       love.graphics.setLineWidth(self.border.thickness)
-      local width = self:availableWidth()
-      local height = self:availableHeight()
+      local width = self:grantedWidth()
+      local height = self:grantedHeight()
       love.graphics.rectangle("line", self.border.thickness/2, self.border.thickness/2, width - self.border.thickness, height - self.border.thickness)
       love.graphics.setLineWidth(1)
     end,
@@ -120,16 +120,16 @@ local function baseLayout(width, height)
       if self.gravity[1] == "start" then
         locX = self.padding.left
       elseif self.gravity[1] == "end" then
-        locX = self:availableWidth() - self:contentWidth() - self.padding.left
+        locX = self:grantedWidth() - self:contentWidth() - self.padding.left
       elseif self.gravity[1] == "center" then
-        locX = (self:availableWidth() - self:contentWidth() - self.padding.left - self.padding.right) / 2
+        locX = (self:availableWidth() - self:contentWidth()) / 2
       end
       if self.gravity[2] == "start" then
         locY = self.padding.top
       elseif self.gravity[2] == "end" then
-        locY = self:availableHeight() - self:contentHeight() - self.padding.bottom
+        locY = self:grantedHeight() - self:contentHeight() - self.padding.bottom
       elseif self.gravity[2] == "center" then
-        locY = (self:availableHeight() - self:contentHeight() - self.padding.bottom - self.padding.top) / 2 
+        locY = (self:availableHeight() - self:contentHeight()) / 2 
       end
       return locX, locY
     end,
