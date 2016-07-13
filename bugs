@@ -2,3 +2,4 @@
 - root needs to behave more like base
 - needs LOADS of assertions and hints
 - think about margin/layoutgravity. I don't think they belong on the child.
+- all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)

@@ -63,9 +63,10 @@ return function(lc)
         end,
         messageOut = function(self, signal, payload)
           return self.stack:messageOut(signal, payload)
-        end,
+        end,        
       }
       root:setLinear(child)
+      root.signalHandlers = root.stack.signalHandlers
       return root
     end,
     schema = lc:extendSchema("base", {width = false, height = false})

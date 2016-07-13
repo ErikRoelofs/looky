@@ -180,7 +180,7 @@ local function clickedViews(self,x,y)
   if x > 0 and x < self:grantedWidth()
   and y > 0 and y < self:grantedHeight() then
   
-    for k, v in ipairs(self.children) do
+    for k, v in ipairs(self:getChildren()) do
 
       for _, deeperClicked in ipairs( v:clickedViews(x - self.scaffold[v][1], y - self.scaffold[v][2]) ) do
         table.insert( clicked, deeperClicked )
