@@ -35,14 +35,9 @@ local function baseLayout(width, height)
       if self.width == "fill" then
         return self.width
       elseif self.width == "wrap" then
-        local content = self:contentWidthWithPadding()
-        if content == "fill" then
-          return content
-        else
-          return content + self.margin.left + self.margin.right
-        end
+        return self:contentWidthWithPadding()
       else
-        return self.width + self.margin.left + self.margin.right
+        return self.width
       end
     end,
     desiredHeight = function(self)
@@ -52,14 +47,9 @@ local function baseLayout(width, height)
       if self.height == "fill" then
         return self.height
       elseif self.height == "wrap" then
-        local content = self:contentHeightWithPadding()
-        if content == "fill" then
-          return content
-        else
-          return content + self.margin.top + self.margin.bottom
-        end
+        return self:contentHeightWithPadding()
       else        
-        return self.height + self.margin.top + self.margin.bottom
+        return self.height
       end
     end,
     grantedWidth = function(self)
@@ -73,16 +63,17 @@ local function baseLayout(width, height)
       self.givenHeight = y
     end,
     availableWidth = function(self)
-      return self:grantedWidth() - self.margin.left - self.margin.right
+      return self:grantedWidth() - self.padding.left - self.padding.right
     end,
     availableHeight = function(self)
-      return self:grantedHeight() - self.margin.top - self.margin.bottom
+      return self:grantedHeight() - self.padding.top - self.padding.bottom
     end,
     layoutingPass = function(self)
       
     end,
     render = function(self)
       if self.visibility == "visible" then
+        self:renderBackground()
         self:renderCustom()
       end
     end,
@@ -112,16 +103,16 @@ local function baseLayout(width, height)
     end,
     renderBackground = function(self)
       love.graphics.setColor(self.backgroundColor)
-      local width = self:availableWidth()
-      local height = self:availableHeight()
+      local width = self:grantedWidth()
+      local height = self:grantedHeight()
       love.graphics.rectangle("fill", 0, 0, width, height)
       self:renderBorder()
     end,
     renderBorder = function(self)
       love.graphics.setColor(self.border.color)
       love.graphics.setLineWidth(self.border.thickness)
-      local width = self:availableWidth()
-      local height = self:availableHeight()
+      local width = self:grantedWidth()
+      local height = self:grantedHeight()
       love.graphics.rectangle("line", self.border.thickness/2, self.border.thickness/2, width - self.border.thickness, height - self.border.thickness)
       love.graphics.setLineWidth(1)
     end,
@@ -130,16 +121,16 @@ local function baseLayout(width, height)
       if self.gravity[1] == "start" then
         locX = self.padding.left
       elseif self.gravity[1] == "end" then
-        locX = self:availableWidth() - self:contentWidth() - self.padding.left
+        locX = self:grantedWidth() - self:contentWidth() - self.padding.left
       elseif self.gravity[1] == "center" then
-        locX = (self:availableWidth() - self:contentWidth() - self.padding.left - self.padding.right) / 2
+        locX = (self:availableWidth() - self:contentWidth()) / 2
       end
       if self.gravity[2] == "start" then
         locY = self.padding.top
       elseif self.gravity[2] == "end" then
-        locY = self:availableHeight() - self:contentHeight() - self.padding.bottom
+        locY = self:grantedHeight() - self:contentHeight() - self.padding.bottom
       elseif self.gravity[2] == "center" then
-        locY = (self:availableHeight() - self:contentHeight() - self.padding.bottom - self.padding.top) / 2 
+        locY = (self:availableHeight() - self:contentHeight()) / 2 
       end
       return locX, locY
     end,
@@ -151,13 +142,14 @@ local function baseLayout(width, height)
     end,
     removeChild = function(self,target)
       if type(target) == "number" then
+        local view = self.children[target]
         table.remove(self.children, target)
-        return target
+        return view
       else
         for k, v in ipairs(self.children) do
           if v == target then
             table.remove(self.children, k)
-            return k
+            return target
           end
         end
       end
@@ -249,12 +241,6 @@ return function()
             bottom = { required = true, schemaType = "number" },
             top = { required = true, schemaType = "number" },
           }},
-          margin = { required = false, schemaType = "table", options = {
-            left = { required = true, schemaType = "number" },
-            right = { required = true, schemaType = "number" },
-            bottom = { required = true, schemaType = "number" },
-            top = { required = true, schemaType = "number" },          
-          }},          
           backgroundColor = { required = false, schemaType = "color" },
           layoutGravity = { required = false, schemaType = "fromList", list = { "start", "center", "end"}  },
           gravity = { required = false, schemaType = "table", options = {
@@ -314,13 +300,9 @@ return function()
     padding = function(left, top, right, bottom)
       return paddingMarginHelper(left, top, right, bottom)
     end,
-    margin =  function(left, top, right, bottom)
-      return paddingMarginHelper(left, top, right, bottom)
-    end,
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)      
-      start.padding = self.padding(options.padding)
-      start.margin = self.margin(options.margin)      
+      start.padding = self.padding(options.padding)      
       start.backgroundColor = options.backgroundColor or {0,0,0,0}
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.layoutGravity = options.layoutGravity or "start"

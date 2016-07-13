@@ -1,7 +1,28 @@
 function mainview(lc)
   local root = lc:build("root", {})
   
-  local layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, margin = lc.margin(20,0), direction = "v"})
+  local layout = lc:build("linear", {width = 150, height = 500,padding = lc.padding(15), backgroundColor = {100,200,50,100}, direction = "v", childSpacing = 40})
+  root:addChild(layout)
+  layout:addChild( lc:build("text", {width = "fill", height = 100, data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
+  
+  layout:addChild( lc:build("text", {width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0), layoutGravity = "end"}) )
+  
+  
+  local layout2 = lc:build("linear", {width = 150, height = 150,padding = lc.padding(15), backgroundColor = {100,200,50,100}, direction = "v", childSpacing = 40})
+  root:addChild(layout2)
+  layout2:addChild( lc:build("text", {width = "fill", height = 50, data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
+  
+  layout2:addChild( lc:build("text", {width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0), layoutGravity = "end"}) )
+  
+  layout2:addChild( lc:build("text", {width = "fill", height = "fill", data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
+  
+  layout2:addChild( lc:build("text", {width = "fill", height = "fill", data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
+  
+  layout2:addChild( lc:build("text", {width = "fill", height = "fill", data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
+  
+  
+  --[[
+  local layout = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, direction = "v"})
   root:addChild(layout)
   
   local caption = lc:build("caption", {width="wrap", height = "wrap", textdata = {value= "this is a caption"}, file="test.png"})
@@ -10,11 +31,11 @@ function mainview(lc)
   local list = lc:build("list", {width="wrap", height="fill", texts = { {value ="derp"}, {value="merp"}, {value="lots of merp"} }, textOptions = { padding = lc.padding(0,15,0,0), backgroundColor = {255,255,255,255}}})
   root:addChild(list)
   
-  local layout3 = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, margin = lc.margin({left = 20, right = 20}), direction = "v"})
+  local layout3 = lc:build("linear", {width = 150, height = "fill", backgroundColor = {100,200,50,100}, direction = "v"})
   root:addChild(layout3)
   
   
-  local imageLayout = lc:build("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", margin = lc.margin(25,30,0,0), padding = lc.padding(25,25,10,5)})
+  local imageLayout = lc:build("image", {width = "wrap", height = "wrap", backgroundColor = {0, 0, 255, 200}, file = "test.png", padding = lc.padding(25,25,10,5)})
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
   layout3:addChild(imageLayout)
@@ -38,7 +59,7 @@ function mainview(lc)
   subContainer:addChild( lc:build("text", {width = "fill", height = 100, data = {value= "check"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
   subContainer:addChild( lc:build("text", {width = "fill", height = 100, data = {value="check"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
   subContainer:addChild( lc:build("text", {width = "fill", height = 100, data = {value="check"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
-  
+  --]]
   root:layoutingPass()
 
   return root

@@ -1,5 +1,4 @@
-local renderText = function(self)
-  self:renderBackground()
+local renderText = function(self)  
   love.graphics.setFont(self.font)
   local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(self.textColor or {255,255,255,255})

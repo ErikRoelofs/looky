@@ -1,4 +1,3 @@
-- linear and stack need to accept padding for themselves
 - can we REALLY have two copies of the same view? what about width/height granted, for example?
   - should those be separate instances, then?
   - or should the width/height info not be stored on the child either? (but passed to draw?)
@@ -8,7 +7,7 @@
   - aquarium
 - needs LOADS of assertions and hints
 
-- think about margin/layoutgravity. I don't think they belong on the child.
+- think about layoutgravity. I don't think it belongs on the child.
 - all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)
 - think about themes and styles
 - think about animation
@@ -16,3 +15,4 @@
 - support image backgrounds
 - move drawing of border/background to base
 - now that margin is gone, move borders into the padding entirely
+- clickviews violates principles

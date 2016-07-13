@@ -1,5 +1,5 @@
 function mainview(lc)
-  local root = lc:build("root", {margin = lc.margin(100), padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}, weight = 4.2 })
+  local root = lc:build("root", {padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}, weight = 4.2 })
  
   ext = {value="First"}
  
@@ -33,8 +33,8 @@ return function(lc)
     root = mainview(lc),
     update = function(self, dt) 
       self.root:update(dt)
-      ext.value = dt
-      ext2.value = dt
+      ext.value = dt .. "dt"
+      ext2.value = dt .. "dt"
       self.root:layoutingPass()
     end,
     draw = function(self)

@@ -9,7 +9,7 @@ local renderChildren = function(self)
     v:render()
     if debug then
       love.graphics.setColor(255,255,255,255)
-      love.graphics.rectangle("line",0,0,v:availableWidth(),v:availableHeight())
+      love.graphics.rectangle("line",0,0,v:grantedWidth(),v:grantedHeight())
     end    
     love.graphics.pop()
   end
@@ -47,7 +47,7 @@ local function scaffoldViews(self)
   local locX, locY = self:startCoordsBasedOnGravity()
 
   for k, v in ipairs(self.children) do    
-    self.scaffold[v] = { locX + tilt(k-1, 1), locY + v.margin.top + tilt(k-1, 2) }
+    self.scaffold[v] = { locX + tilt(k-1, 1), locY + tilt(k-1, 2) }
   end
   
 end

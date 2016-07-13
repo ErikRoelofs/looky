@@ -1,16 +1,15 @@
 local renderChildren = function(self) 
-  self:renderBackground()
 
   local offset = 0
   
-  for k, v in ipairs(self.children) do
+  for k, v in ipairs(self.visibleChildren) do
     love.graphics.push()    
     love.graphics.translate(self.scaffold[v][1], self.scaffold[v][2])
     
     v:render()
     if debug then
       love.graphics.setColor(255,255,255,255)
-      love.graphics.rectangle("line",0,0,v:availableWidth(),v:availableHeight())
+      love.graphics.rectangle("line",0,0,v:grantedWidth(),v:grantedHeight())
     end
     
     love.graphics.pop()
@@ -20,24 +19,36 @@ end
 local horizontalLayout = function(parent, children)  
   local availableSize = parent:availableWidth()
   local fills = {}
-  for k, v in ipairs(children) do
+  local oneExists = false
+  local toShow = {}
+  for k, v in ipairs(children) do    
     if v:desiredWidth() == "fill" then
-      table.insert(fills, v)
+      table.insert(fills, v)      
     else
+      oneExists = true
       local height = v:desiredHeight()
       if height == "fill" then
         height = parent:availableHeight()
       end
-      if v:desiredWidth() < availableSize then
-        availableSize = availableSize - v:desiredWidth()            
+      if v:desiredWidth() + parent.childSpacing < availableSize then
+        availableSize = availableSize - v:desiredWidth() - parent.childSpacing
         v:setDimensions(v:desiredWidth(), height)
+        toShow[v] = true
       else
-        v:setDimensions(availableSize, height)
+        if availableSize > 0 then
+          toShow[v] = true
+        end
+        v:setDimensions(math.max(availableSize, 0), height)
         availableSize = 0
       end
     end
   end
-  if availableSize > 0 then
+  local inc = #fills
+  if not oneExists then
+    inc = inc - 1 -- we don't need extra spacing for the first element, since there is nothing yet
+  end      
+  local sizeForSpacing = inc * parent.childSpacing    
+  if availableSize > sizeForSpacing and #fills > 0 then
     local sumWeight = 0
     for k, v in ipairs(fills) do
       sumWeight = sumWeight + v.weight
@@ -47,11 +58,20 @@ local horizontalLayout = function(parent, children)
       if height == "fill" then
         height = parent:grantedHeight()
       end
-      v:setDimensions(availableSize / sumWeight * v.weight, height)
+      v:setDimensions((availableSize - sizeForSpacing)/ sumWeight * v.weight, height)
+      toShow[v] = true
+    end
+  else
+    for k, v in ipairs(fills) do
+      v:setDimensions(0,0)
     end
   end
   
-  for k, v in ipairs(children) do    
+  parent.visibleChildren = {}
+  for k, v in ipairs(children) do
+    if toShow[v] then
+      table.insert(parent.visibleChildren, v)
+    end
     v:layoutingPass()
   end
 end
@@ -59,24 +79,36 @@ end
 local verticalLayout = function(parent, children)  
   local availableSize = parent:availableHeight()
   local fills = {}
+  local oneExists = false
+  local toShow = {}
   for k, v in ipairs(children) do
     if v:desiredHeight() == "fill" then
       table.insert(fills, v)
     else
       local width = v:desiredWidth()
+      local oneExists = true
       if width == "fill" then
         width = parent:availableWidth()
       end
-      if v:desiredHeight() < availableSize then
-        availableSize = availableSize - v:desiredHeight()            
+      if v:desiredHeight() + parent.childSpacing < availableSize then
+        availableSize = availableSize - v:desiredHeight() - parent.childSpacing
         v:setDimensions(width, v:desiredHeight())
+        toShow[v] = true
       else
-        v:setDimensions(width, availableSize)
-        availableSize = 0
+        if availableSize > 0 then
+          toShow[v] = true
+        end
+        v:setDimensions(width, math.max(availableSize, 0))
+        availableSize = 0        
       end
     end
   end
-  if availableSize > 0 then
+  local inc = #fills
+  if not oneExists then
+    inc = inc - 1 -- we don't need extra spacing for the first element, since there is nothing yet
+  end      
+  local sizeForSpacing = inc * parent.childSpacing    
+  if availableSize > sizeForSpacing and #fills > 0 then
     local sumWeight = 0
     for k, v in ipairs(fills) do
       sumWeight = sumWeight + v.weight    
@@ -86,11 +118,19 @@ local verticalLayout = function(parent, children)
       if width == "fill" then
         width = parent:availableWidth()
       end
-      v:setDimensions(width, availableSize / sumWeight * v.weight)
+      toShow[v] = true
+      v:setDimensions(width, (availableSize - sizeForSpacing ) / sumWeight * v.weight)
     end
-  end
-  
-  for k, v in ipairs(children) do    
+  else
+    for k, v in ipairs(fills) do
+      v:setDimensions(0,0)      
+    end
+  end 
+  parent.visibleChildren = {}
+  for k, v in ipairs(children) do
+    if toShow[v] then
+      table.insert(parent.visibleChildren, v)
+    end
     v:layoutingPass()
   end
 end
@@ -134,44 +174,42 @@ end
 local function scaffoldViews(self)
     
   local offset = 0
-  local transX, transY = 0,0
+  local transX, transY = self.padding.left,self.padding.top
   self.scaffold = {}
   
-  for k, v in ipairs(self:getChildren()) do
-    
+  for k, v in ipairs(self.visibleChildren) do    
     if self.direction == "v" then 
-      transY = transY + offset          
-      offset = offset + v:grantedHeight()
+      transY = transY + offset
+      offset = offset + v:grantedHeight() + self.childSpacing
       if v.layoutGravity == "start" then
-        transX = transX + v.margin.left
-        transY = transY + v.margin.top            
+        transX = transX
+        transY = transY
       elseif v.layoutGravity == "end" then
-        transX = transX + self:availableWidth() - v:grantedWidth() - v.margin.right
-        transY = transY + v.margin.top                        
+        transX = transX + self:availableWidth() - v:grantedWidth()
+        transY = transY
       elseif v.layoutGravity == "center" then
-        transX = transX + (self:availableWidth() - v:grantedWidth()) /2 - (v.margin.left - v.margin.right) / 2
-        transY = transY + v.margin.top                        
+        transX = transX + (self:availableWidth() - v:grantedWidth()) /2
+        transY = transY
       end
     else
       transX = transX + offset
-      offset = offset + v:grantedWidth()
+      offset = offset + v:grantedWidth() + self.childSpacing
       if v.layoutGravity == "start" then
-        transX = transX + v.margin.left
-        transY = transY + v.margin.top                        
+        transX = transX
+        transY = transY
       elseif v.layoutGravity == "end" then
-        transX = transX + v.margin.left
-        transY = transY + self:availableHeight() - v:grantedHeight() - v.margin.bottom
+        transX = transX
+        transY = transY + self:availableHeight() - v:grantedHeight()
       elseif v.layoutGravity == "center" then
-        transX = transX + v.margin.left
-        transY = transY + (self:availableHeight() - v:grantedHeight()) /2 - (v.margin.top - v.margin.bottom) / 2          
+        transX = transX
+        transY = transY + (self:availableHeight() - v:grantedHeight()) /2
       end
     end
     
     self.scaffold[v] = {transX, transY}    
-    transX = 0
-    transY = 0
-  end    
-
+    transX = self.padding.left
+    transY = self.padding.top  
+  end
 end
 
 
@@ -180,7 +218,7 @@ local function clickedViews(self,x,y)
   if x > 0 and x < self:grantedWidth()
   and y > 0 and y < self:grantedHeight() then
   
-    for k, v in ipairs(self:getChildren()) do
+    for k, v in ipairs(self.visibleChildren) do
 
       for _, deeperClicked in ipairs( v:clickedViews(x - self.scaffold[v][1], y - self.scaffold[v][2]) ) do
         table.insert( clicked, deeperClicked )
@@ -232,7 +270,18 @@ return function(lc)
       base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
       base.getLocationOffset = getLocationOffset
-      
+      base.childSpacing = options.childSpacing or 0      
+      base.visibleChildren = {}
+      base._removeChild = base.removeChild
+      base.removeChild = function(self, child)      
+        local search = self:_removeChild(child)        
+        -- clean up the view from the visible views, or it will remain on the screen
+        for k, v in ipairs(self.visibleChildren) do
+          if v == search then
+            table.remove(self.visibleChildren, k)
+          end
+        end
+      end
       if not options.signalHandlers then
         options.signalHandlers = {}
         if not options.signalHandlers.leftclick then
@@ -247,6 +296,11 @@ return function(lc)
       end
       return base
     end,
-    schema = lc:extendSchema("base", {direction = { required = false, schemaType = "fromList", list = { "v", "h" } },})
+    schema = lc:extendSchema("base", 
+      {
+        direction = { required = false, schemaType = "fromList", list = { "v", "h" } },
+        childSpacing = { required = false, schemaType = "number" }
+      }
+    )
   }
 end

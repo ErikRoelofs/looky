@@ -39,7 +39,7 @@ function mainview(lc)
   addtext(c6, {"center", "end"}, lc)
   addtext(c7, {"end", "start"}, lc)
   addtext(c8, {"end", "center"}, lc)
-  c9:addChild(lc:build("numberAsImage",{ margin = lc.margin(10), padding = lc.padding(10), width = "wrap", height = "wrap", image = love.graphics.newImage( "images/heart.png" ), emptyImage = "images/emptyheart.png", maxValue = 5, value = function() return totalClicked end }))
+  c9:addChild(lc:build("numberAsImage",{ padding = lc.padding(10), width = "wrap", height = "wrap", image = love.graphics.newImage( "images/heart.png" ), emptyImage = "images/emptyheart.png", maxValue = 5, value = function() return totalClicked end }))
 
 
   root:layoutingPass()
@@ -53,10 +53,9 @@ function addtext(container, gravity, lc)
   local text = "Some text"
   local f = function() return "hovered: " .. totalClicked end
   
-  local padding = lc.padding(6, 10, 14, 2)
-  local margin = lc.margin(8,5,4,8)
+  local padding = lc.padding(6, 10, 14, 2)  
   
-  container:addChild( lc:build("text", {width = width, height=height, data = f, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, padding = padding, margin = margin, gravity=gravity, font = "default" } ))
+  container:addChild( lc:build("text", {width = width, height=height, data = f, textColor = {255,255,255,255}, backgroundColor={0,0,0,255}, padding = padding, gravity=gravity, font = "default" } ))
   
 end
 

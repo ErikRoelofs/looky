@@ -25,20 +25,17 @@ return function(lc)
           return love.graphics.getHeight()
         end,
         availableWidth = function(self)
-          return love.graphics.getWidth()
+          return love.graphics.getWidth() - self.padding.left - self.padding.right
         end,
         availableHeight = function(self)
-          return love.graphics.getHeight()
+          return love.graphics.getHeight() - self.padding.top - self.padding.bottom
         end,
         layoutingPass = function(self)
-          self.stack:setDimensions( self:availableWidth(), self:availableHeight() )
+          self.stack:setDimensions( self:grantedWidth(), self:grantedHeight() )
           self.stack:layoutingPass()
         end,
         render = function(self)
-          love.graphics.push()
-          love.graphics.translate(self.stack.margin.left, self.stack.margin.right)            
           self.stack:render()
-          love.graphics.pop()
         end,
         update = function(self, dt)
           self.stack:update(dt)
