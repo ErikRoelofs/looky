@@ -20,7 +20,7 @@ local horizontalLayout = function(parent, children)
   local availableSize = parent:availableWidth()
   local fills = {}
   local oneExists = false
-  parent.visibleChildren = {}
+  local toShow = {}
   for k, v in ipairs(children) do    
     if v:desiredWidth() == "fill" then
       table.insert(fills, v)      
@@ -33,10 +33,10 @@ local horizontalLayout = function(parent, children)
       if v:desiredWidth() + parent.childSpacing < availableSize then
         availableSize = availableSize - v:desiredWidth() - parent.childSpacing
         v:setDimensions(v:desiredWidth(), height)
-        table.insert(parent.visibleChildren, v)        
+        toShow[v] = true
       else
         if availableSize > 0 then
-          table.insert(parent.visibleChildren, v)
+          toShow[v] = true
         end
         v:setDimensions(math.max(availableSize, 0), height)
         availableSize = 0
@@ -59,7 +59,7 @@ local horizontalLayout = function(parent, children)
         height = parent:grantedHeight()
       end
       v:setDimensions((availableSize - sizeForSpacing)/ sumWeight * v.weight, height)
-      table.insert(parent.visibleChildren, v)
+      toShow[v] = true
     end
   else
     for k, v in ipairs(fills) do
@@ -67,7 +67,11 @@ local horizontalLayout = function(parent, children)
     end
   end
   
-  for k, v in ipairs(children) do    
+  parent.visibleChildren = {}
+  for k, v in ipairs(children) do
+    if toShow[v] then
+      table.insert(parent.visibleChildren, v)
+    end
     v:layoutingPass()
   end
 end
@@ -76,7 +80,7 @@ local verticalLayout = function(parent, children)
   local availableSize = parent:availableHeight()
   local fills = {}
   local oneExists = false
-  parent.visibleChildren = {}
+  local toShow = {}
   for k, v in ipairs(children) do
     if v:desiredHeight() == "fill" then
       table.insert(fills, v)
@@ -89,10 +93,10 @@ local verticalLayout = function(parent, children)
       if v:desiredHeight() + parent.childSpacing < availableSize then
         availableSize = availableSize - v:desiredHeight() - parent.childSpacing
         v:setDimensions(width, v:desiredHeight())
-        table.insert(parent.visibleChildren, v)
+        toShow[v] = true
       else
         if availableSize > 0 then
-          table.insert(parent.visibleChildren, v)
+          toShow[v] = true
         end
         v:setDimensions(width, math.max(availableSize, 0))
         availableSize = 0        
@@ -114,16 +118,19 @@ local verticalLayout = function(parent, children)
       if width == "fill" then
         width = parent:availableWidth()
       end
-      table.insert(parent.visibleChildren, v)
+      toShow[v] = true
       v:setDimensions(width, (availableSize - sizeForSpacing ) / sumWeight * v.weight)
     end
   else
     for k, v in ipairs(fills) do
       v:setDimensions(0,0)      
     end
-  end
-  
-  for k, v in ipairs(children) do    
+  end 
+  parent.visibleChildren = {}
+  for k, v in ipairs(children) do
+    if toShow[v] then
+      table.insert(parent.visibleChildren, v)
+    end
     v:layoutingPass()
   end
 end
