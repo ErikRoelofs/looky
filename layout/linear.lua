@@ -1,5 +1,4 @@
 local renderChildren = function(self) 
-  self:renderBackground()
 
   local offset = 0
   

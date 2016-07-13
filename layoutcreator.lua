@@ -73,6 +73,7 @@ local function baseLayout(width, height)
     end,
     render = function(self)
       if self.visibility == "visible" then
+        self:renderBackground()
         self:renderCustom()
       end
     end,

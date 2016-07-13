@@ -1,6 +1,4 @@
 local renderImage = function(self)
-  self:renderBackground()
-  
   local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(255,255,255,255)
   

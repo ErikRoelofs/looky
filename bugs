@@ -17,3 +17,4 @@
 - move drawing of border/background to base
 - now that margin is gone, move borders into the padding entirely
 
+- clickviews violates principles
