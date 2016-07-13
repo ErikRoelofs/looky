@@ -264,6 +264,17 @@ return function(lc)
       base.scaffoldViews = scaffoldViews
       base.getLocationOffset = getLocationOffset
       base.childSpacing = options.childSpacing or 0      
+      base.visibleChildren = {}
+      base._removeChild = base.removeChild
+      base.removeChild = function(self, child)      
+        local search = self:_removeChild(child)        
+        -- clean up the view from the visible views, or it will remain on the screen
+        for k, v in ipairs(self.visibleChildren) do
+          if v == search then
+            table.remove(self.visibleChildren, k)
+          end
+        end
+      end
       if not options.signalHandlers then
         options.signalHandlers = {}
         if not options.signalHandlers.leftclick then
