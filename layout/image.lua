@@ -51,7 +51,8 @@ end
 
 return function(lc)
   return {
-    build = function (base, options)
+    build = function (options)
+      local base = lc:makeBaseLayout(options)
       base.renderCustom = renderImage
       if type(options.file) == "string" then
         base.image = love.graphics.newImage(options.file)

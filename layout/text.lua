@@ -27,7 +27,8 @@ end
 
 return function(lc)
   return {
-    build = function(base, options)
+    build = function(options)
+      local base = lc:makeBaseLayout(options)
       base.renderCustom = renderText
       base.data = options.data
       base.textColor = options.textColor or {255,255,255,255}

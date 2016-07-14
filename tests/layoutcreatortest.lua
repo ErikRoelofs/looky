@@ -62,7 +62,7 @@ tests = {
     assert(v == false, "Should not be able to build unknown layout")        
   end,
   it_should_validate_before_building = function(lc)
-    lc:registerLayout("test", { build = function(base, options) return options.name end, schema = {name = { required = true, schemaType = "string" } } } )
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "string" } } } )
     v, e = pcall( function() local layout = lc:build("test", {}) end )
     assert(v == false, "Should throw an error when building with a missing validation option")    
   
@@ -70,7 +70,7 @@ tests = {
     assert( layout == "cookies", "Should have returned the passed option" )
   end,
   it_should_extend_schemas = function(lc) 
-    lc:registerLayout("test", { build = function(base, options) return options.name end, schema = {name = { required = true, schemaType = "string" } } } )
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "string" } } } )
     local schema = lc:extendSchema("test", {cookies = { required = true, schemaType = "number"} } )
         
     assert(schema.name.required == true, "Schema should still have a required name option.")
@@ -98,7 +98,7 @@ tests = {
       wasCalledWith = option
     end
     lc:registerValidator("test", val)
-    lc:registerLayout("test", { build = function(base, options) return options.name end, schema = {name = { required = true, schemaType = "test" } } } )
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "test" } } } )
     
     lc:build("test",{ name = "passedValue" })
     assert(wasCalledWith == "passedValue", "Should have called the validator")
@@ -112,7 +112,7 @@ tests = {
       },
     }
     lc:registerValidator("testExpansive", configTable)
-    lc:registerLayout("test", { build = function(base, options) return options.name end, schema = {name = { required = true, schemaType = "testExpansive" } } } )
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "testExpansive" } } } )
     
     assert( lc:build("test",{ name = "aString" }) == "aString", "Should be allowed to build with a string and have it as return value")
     assert(lc:build("test",{ name = 123 }) == 123, "Should be allowed to build with a number and have it as return value")
@@ -137,7 +137,7 @@ tests = {
     lc:registerValidator("recursive1", configTable)
     lc:registerValidator("recursive2", configTable2)
     
-    lc:registerLayout("test", { build = function(base, options) return options.name end, schema = {name = { required = true, schemaType = "recursive2" } } } )
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "recursive2" } } } )
     
     assert( lc:build("test",{ name = "aString" }) == "aString", "Should be allowed to build with a string and have it as return value")
     assert(lc:build("test",{ name = 123 }) == 123, "Should be allowed to build with a number and have it as return value")

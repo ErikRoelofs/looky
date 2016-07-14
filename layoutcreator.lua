@@ -102,10 +102,12 @@ local function baseLayout(width, height)
       return self:contentHeight() + self.padding.top + self.padding.bottom
     end,
     renderBackground = function(self)
-      love.graphics.setColor(self.backgroundColor)
-      local width = self:grantedWidth()
-      local height = self:grantedHeight()
-      love.graphics.rectangle("fill", 0, 0, width, height)
+      if self.backgroundColor then
+        love.graphics.setColor(self.backgroundColor)
+        local width = self:grantedWidth()
+        local height = self:grantedHeight()
+        love.graphics.rectangle("fill", 0, 0, width, height)
+      end
       self:renderBorder()
     end,
     renderBorder = function(self)
@@ -273,9 +275,9 @@ return function()
     validator = require ( _PACKAGE .. "/validation/validator" )(),
     build = function( self, kind, options )
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
-      local base = self:makeBaseLayout(options)
+      --local base = self:makeBaseLayout(options)
       self:validate(kind, options)
-      return self.kinds[kind].build(base, options)
+      return self.kinds[kind].build(options)
     end,
     registerLayout = function( self, name, layoutTable )
       assertArg("string", name, "Name" )
@@ -302,7 +304,7 @@ return function()
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)      
       start.padding = self.padding(options.padding)      
-      start.backgroundColor = options.backgroundColor or {0,0,0,0}
+      start.backgroundColor = options.backgroundColor
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.layoutGravity = options.layoutGravity or "start"
       start.gravity = options.gravity or {"start","start"}

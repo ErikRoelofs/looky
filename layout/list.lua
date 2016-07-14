@@ -1,6 +1,6 @@
 return function(lc)
   return {
-    build = function (base, options)
+    build = function (options)
       local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
       
       local base = {width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}

@@ -242,7 +242,8 @@ end
 
 return function(lc)
   return {
-    build = function (base, options)
+    build = function (options)
+      local base = lc:makeBaseLayout(options)
       base.renderCustom = renderChildren
       base.direction = options.direction or "v"
       if base.direction == "v" then

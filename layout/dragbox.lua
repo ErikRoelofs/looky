@@ -19,7 +19,8 @@ end
 
 return function(lc)
   return {
-    build = function(base, options)      
+    build = function(options)      
+      local base = lc:makeBaseLayout(options)
       base.renderCustom = renderDragbox
       base.oldAddChild = base.addChild
       base.offset = options.offset or { 0, 0 }      

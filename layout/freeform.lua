@@ -1,6 +1,7 @@
 return function(lc) 
   return { 
-    build = function(base, options)  
+    build = function(options)  
+      local base = lc:makeBaseLayout(options)
       base.contentWidth = options.contentWidth or function(self) return 0 end
       base.contentHeight = options.contentHeight or function(self) return 0 end
       

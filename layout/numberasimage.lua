@@ -1,6 +1,6 @@
 return function(lc)
   return {
-    build = function (base, options)      
+    build = function (options)      
       
       local getValue = function(self)
         if type(self.value) == "function" then

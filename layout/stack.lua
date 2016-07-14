@@ -129,7 +129,8 @@ end
 
 return function(lc)
   return {
-    build = function (base, options)
+    build = function (options)
+      local base = lc:makeBaseLayout(options)
       base.renderCustom = renderChildren  
       base.layoutingPass = function(self) layout(self, self.children) end  
       base.contentWidth = containerWidth
