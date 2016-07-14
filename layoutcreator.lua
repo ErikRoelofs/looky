@@ -223,7 +223,7 @@ paddingMarginHelper = function(left, top, right, bottom)
 end
   
 return function()
-  return {
+  local lc = {
     kinds = {
       base = { 
         build = function() assert(false, "Base cannot be instantiated") end,
@@ -274,8 +274,7 @@ return function()
     },
     validator = require ( _PACKAGE .. "/validation/validator" )(),
     build = function( self, kind, options )
-      assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")      
-      --local base = self:makeBaseLayout(options)
+      assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")            
       self:validate(kind, options)
       return self.kinds[kind].build(options)
     end,
@@ -351,4 +350,24 @@ return function()
       return schema
     end,    
   }
+  lc.registerStyledLayout = function( self, newName, oldName, defaultOptions  )
+    local schema = lc:extendSchema(oldName, {})
+    for key, value in pairs(schema) do
+      if defaultOptions[key] ~= nil then
+        schema[key].required = false
+      end
+    end    
+    local layout = {
+      build = function(options)
+        local base = lc:build(oldName, defaultOptions)
+        for k, v in pairs(options) do
+          base[k] = v
+        end
+        return base
+      end,
+      schema = schema
+    }
+    lc:registerLayout(newName, layout)
+  end
+  return lc
 end

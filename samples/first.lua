@@ -1,11 +1,16 @@
 function mainview(lc)
+  
+  lc:registerStyledLayout("my_text", "text", { width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0), layoutGravity = "end" })
+  
+  
+  
   local root = lc:build("root", {})
   
   local layout = lc:build("linear", {width = 150, height = 500,padding = lc.padding(15), backgroundColor = {100,200,50,100}, direction = "v", childSpacing = 40})
   root:addChild(layout)
-  layout:addChild( lc:build("text", {width = "fill", height = 100, data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
+  layout:addChild( lc:build("my_text", {height = 100, data = {value="list 1"}, textColor = {255,255,0,255}, padding = lc.padding(5,5,0,0)}) )
   
-  layout:addChild( lc:build("text", {width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0), layoutGravity = "end"}) )
+  layout:addChild( lc:build("my_text", {}) )
   
   
   local layout2 = lc:build("linear", {width = 150, height = 150,padding = lc.padding(15), backgroundColor = {100,200,50,100}, direction = "v", childSpacing = 40})
