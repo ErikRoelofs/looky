@@ -359,11 +359,14 @@ return function()
     end    
     local layout = {
       build = function(options)
-        local base = lc:build(oldName, defaultOptions)
-        for k, v in pairs(options) do
-          base[k] = v
+        -- need to merge defaultOptions and options before building.
+        for k, v in pairs(defaultOptions) do
+          if options[k] == nil then
+            options[k] = v
+          end
         end
-        return base
+        
+        return lc:build(oldName, options)
       end,
       schema = schema
     }

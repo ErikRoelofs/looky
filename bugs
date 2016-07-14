@@ -5,11 +5,13 @@
 
 - add core viewtypes:
   - aquarium
+  - boundary
+  - scrollables
 - needs LOADS of assertions and hints
 
 - think about layoutgravity. I don't think it belongs on the child.
 - all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)
-- think about themes and styles
+- think about themes and styles < does styledLayout fix it?
 - think about animation
 - need a complete default signaling-setup for clicks/keys
 

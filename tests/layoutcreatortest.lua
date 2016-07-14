@@ -146,7 +146,24 @@ tests = {
     v, e = pcall(function() lc:build("test", { name = {}} )end)
     assert(v == false, "Should not have been allowed to call it with a table.")
     
-  end
+  end,
+  it_should_allow_making_styled_views = function(lc)
+    lc:registerLayout("test", { build = function(options) return { name = options.name, name2 = options.name2 } end, schema = {name = { required = true, schemaType = "string" }, name2 = { required = true, schemaType = "string" } } } )
+    lc:registerStyledLayout("s-test", "test", { name2 = "fixed" })
+    
+    local view = lc:build("s-test", { name = "set", name2 = "overruled" })
+    
+    assert(view.name == "set", "The options passed to the view should be there")
+    assert(view.name2 == "overruled", "The options passed to the view should be there")
+    
+    local view = lc:build("s-test", { name = "set" })
+    
+    assert(view.name == "set", "The options passed to the view should be there")
+    assert(view.name2 == "fixed", "The options not passed to the view should go to default (even if required)")
+    
+    
+    
+  end,
   
 }
 
