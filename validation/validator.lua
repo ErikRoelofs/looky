@@ -46,7 +46,7 @@ end
 local checkTable = function(kind, field, schema, option, validator)
   typecheck("table", kind, field, option)
   assert(schema.options, "When using a Table schema, you must also provide the table's options.")
-  validator:validate( kind .. "." .. field, schema.options, option )
+  validator:validate( kind .. "." .. field, schema.options, option, schema.allowOther )
 end
 
 local checkDictionary = function(kind, field, schema, option, validator)
@@ -117,8 +117,10 @@ return function()
         return self.schemaTypes[ schema.schemaType ]
       end
     end,
-    validate = function(self, kind, schema, options)
-      checkUnfamiliar(kind, schema, options, self)
+    validate = function(self, kind, schema, options, ignoreUnfamiliar)
+      if not ignoreUnfamiliar then
+        checkUnfamiliar(kind, schema, options, self)
+      end
       checkRequired(kind, schema, options, self)
       expandSchema(schema, self)
       

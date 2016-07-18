@@ -27,11 +27,12 @@ function love.load()
   lc:registerLayout("freeform", require "layout/freeform"(lc) )
   lc:registerLayout("stackroot", require "layout/stackroot"(lc) )
   lc:registerLayout("dragbox", require "layout/dragbox"(lc) )
+  lc:registerLayout("4pane", require "layout/4pane"(lc) )
   lc:registerLayout("numberAsImage", require "layout/numberasimage"(lc) )
   
   lc:registerFont("default", love.graphics.newFont(20))
   
-  display = require "samples/first"(lc)
+  display = require "samples/4pane"(lc)
   
 end
 

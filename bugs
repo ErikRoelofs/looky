@@ -7,13 +7,14 @@
   - aquarium
   - boundary
   - scrollables
+  - fourpane
 - needs LOADS of assertions and hints
 
 - think about layoutgravity. I don't think it belongs on the child.
 - all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)
+- or each parent needs to convert coordinates passed by its children to its idea of world coordinates?
 - think about themes and styles < does styledLayout fix it?
 - think about animation
 - need a complete default signaling-setup for clicks/keys
 - support image backgrounds
 - now that margin is gone, move borders into the padding entirely
-- clickviews violates principles

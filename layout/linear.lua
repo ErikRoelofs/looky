@@ -225,7 +225,7 @@ local function clickedViews(self,x,y)
       end
     end    
     
-    table.insert(clicked, self)    
+    table.insert(clicked, self)
   end
   return clicked
 end
