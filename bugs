@@ -18,3 +18,5 @@
 - need a complete default signaling-setup for clicks/keys
 - support image backgrounds
 - now that margin is gone, move borders into the padding entirely
+- linear might need some extra layout options if it's the base layout
+- or maybe even just add a few layouting-wrappers (boundary, layouted-boundary, margin-simulators)
