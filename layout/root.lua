@@ -52,9 +52,6 @@ return function(lc)
         removeAllChildren = function(self)
           self.linear:removeAllChildren()
         end,
-        clickedViews = function(self, x, y)
-          return self.linear:clickedViews(x, y)
-        end
       }
       root:setLinear(child)
       return root

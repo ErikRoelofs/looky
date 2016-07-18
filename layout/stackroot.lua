@@ -49,9 +49,6 @@ return function(lc)
         removeAllChildren = function(self)
           self.stack:removeAllChildren()
         end,
-        clickedViews = function(self, x, y)
-          return self.stack:clickedViews(x, y)
-        end,
         receiveSignal = function(self, signal, payload)
           return self.stack:receiveSignal(signal, payload)
         end,

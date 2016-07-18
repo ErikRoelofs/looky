@@ -91,12 +91,10 @@ return function(lc)
           self.root:layoutingPass()
         end
       end
-      initialPass(self.root, self.lc)
-      totalClicked = #self.root:clickedViews(love.mouse.getX(),love.mouse.getY())
+      initialPass(self.root, self.lc)      
     end,
     draw = function(self)
       self.root:render()
-      love.graphics.print(totalClicked, 0, 0 )
     end
   }
 end

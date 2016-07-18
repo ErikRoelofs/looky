@@ -230,20 +230,17 @@ local function clickedViews(self,x,y)
   return clicked
 end
 
-local function getLocationOffset(self, child)
-  return self.scaffold[child][1], self.scaffold[child][2]
+local function clickShouldTargetChild(self, x, y, child)
+  local relativeX = x - self.scaffold[v][1]
+  local relativeY = y - self.scaffold[v][2]
+  return relativeX > 0 and relativeY > 0 and 
+    relativeX < child:getGrantedWidth() and relativeY < child:getGrantedHeight()
 end
 
-local function myChild(self, child)
-  return self.scaffold[child]
-end
-
-local function signalTargetedChildren(self, signal, payload)
-  local other = self:clickedViews(payload.x, payload.y)
-  for i, v in ipairs(other) do
-    if v ~= self and myChild(self, v) then
-      local offsetX, offsetY = self:getLocationOffset(v)
-      local thisPayload = { x = payload.x - offsetX , y = payload.y - offsetY }
+local function signalTargetedChildren(self, signal, payload)  
+  for i, v in ipairs(self:getChildren()) do
+    if clickShouldTargetChild(self, payload.x, payload.y, child) then
+      local thisPayload = { x = payload.x - self.scaffold[child][1] , y = payload.y - self.scaffold[child][2] }
       v:receiveSignal(signal, thisPayload)
     end
   end
@@ -268,9 +265,7 @@ return function(lc)
       end
       base.contentWidth = containerWidth
       base.contentHeight = containerHeight
-      base.clickedViews = clickedViews
       base.scaffoldViews = scaffoldViews
-      base.getLocationOffset = getLocationOffset
       base.childSpacing = options.childSpacing or 0      
       base.visibleChildren = {}
       base._removeChild = base.removeChild

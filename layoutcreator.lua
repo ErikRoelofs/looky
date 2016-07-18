@@ -159,13 +159,6 @@ local function baseLayout(width, height)
     removeAllChildren = function(self)
       self.children = {}
     end,
-    clickedViews = function(self, x, y)
-      if x > 0 and x < self:grantedWidth() and
-        y > 0 and y < self:grantedHeight() then
-         return { self } 
-      end
-      return {}
-    end,
     signalChildren = signalChildren,
     receiveSignal = function(self, signal, payload)
       local handler = self.signalHandlers[signal]

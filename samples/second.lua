@@ -51,7 +51,7 @@ function addtext(container, gravity, lc)
   local width = 200
   local height = 100
   local text = "Some text"
-  local f = function() return "hovered: " .. totalClicked end
+  local f = function() return "hovered: "  end
   
   local padding = lc.padding(6, 10, 14, 2)  
   
@@ -64,7 +64,6 @@ return function(lc)
     root = mainview(lc),
     update = function(self, dt)       
       self.root:update(dt)
-      totalClicked = #self.root:clickedViews(love.mouse.getX(),love.mouse.getY())
     end,
     draw = function(self)
       self.root:render()
