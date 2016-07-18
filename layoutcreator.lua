@@ -144,13 +144,14 @@ local function baseLayout(width, height)
     end,
     removeChild = function(self,target)
       if type(target) == "number" then
+        local view = self.children[target]
         table.remove(self.children, target)
-        return target
+        return view
       else
         for k, v in ipairs(self.children) do
           if v == target then
             table.remove(self.children, k)
-            return k
+            return target
           end
         end
       end

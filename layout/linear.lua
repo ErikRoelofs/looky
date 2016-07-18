@@ -2,7 +2,7 @@ local renderChildren = function(self)
 
   local offset = 0
   
-  for k, v in ipairs(self.children) do
+  for k, v in ipairs(self.visibleChildren) do
     love.graphics.push()    
     love.graphics.translate(self.scaffold[v][1], self.scaffold[v][2])
     
@@ -20,9 +20,10 @@ local horizontalLayout = function(parent, children)
   local availableSize = parent:availableWidth()
   local fills = {}
   local oneExists = false
+  local toShow = {}
   for k, v in ipairs(children) do    
     if v:desiredWidth() == "fill" then
-      table.insert(fills, v)
+      table.insert(fills, v)      
     else
       oneExists = true
       local height = v:desiredHeight()
@@ -32,9 +33,10 @@ local horizontalLayout = function(parent, children)
       if v:desiredWidth() + parent.childSpacing < availableSize then
         availableSize = availableSize - v:desiredWidth() - parent.childSpacing
         v:setDimensions(v:desiredWidth(), height)
+        toShow[v] = true
       else
-        if availableSize <= 0 then
-          v.visibility = "gone"
+        if availableSize > 0 then
+          toShow[v] = true
         end
         v:setDimensions(math.max(availableSize, 0), height)
         availableSize = 0
@@ -55,17 +57,21 @@ local horizontalLayout = function(parent, children)
       local height = v:desiredHeight()
       if height == "fill" then
         height = parent:grantedHeight()
-      end      
+      end
       v:setDimensions((availableSize - sizeForSpacing)/ sumWeight * v.weight, height)
+      toShow[v] = true
     end
   else
     for k, v in ipairs(fills) do
       v:setDimensions(0,0)
-      v.visibility = "gone"
     end
   end
   
-  for k, v in ipairs(children) do    
+  parent.visibleChildren = {}
+  for k, v in ipairs(children) do
+    if toShow[v] then
+      table.insert(parent.visibleChildren, v)
+    end
     v:layoutingPass()
   end
 end
@@ -74,6 +80,7 @@ local verticalLayout = function(parent, children)
   local availableSize = parent:availableHeight()
   local fills = {}
   local oneExists = false
+  local toShow = {}
   for k, v in ipairs(children) do
     if v:desiredHeight() == "fill" then
       table.insert(fills, v)
@@ -86,9 +93,10 @@ local verticalLayout = function(parent, children)
       if v:desiredHeight() + parent.childSpacing < availableSize then
         availableSize = availableSize - v:desiredHeight() - parent.childSpacing
         v:setDimensions(width, v:desiredHeight())
+        toShow[v] = true
       else
-        if availableSize <= 0 then
-          v.visibility = "gone"
+        if availableSize > 0 then
+          toShow[v] = true
         end
         v:setDimensions(width, math.max(availableSize, 0))
         availableSize = 0        
@@ -110,16 +118,19 @@ local verticalLayout = function(parent, children)
       if width == "fill" then
         width = parent:availableWidth()
       end
+      toShow[v] = true
       v:setDimensions(width, (availableSize - sizeForSpacing ) / sumWeight * v.weight)
     end
   else
     for k, v in ipairs(fills) do
-      v:setDimensions(0,0)
-      v.visibility = "gone"
+      v:setDimensions(0,0)      
     end
-  end
-  
-  for k, v in ipairs(children) do    
+  end 
+  parent.visibleChildren = {}
+  for k, v in ipairs(children) do
+    if toShow[v] then
+      table.insert(parent.visibleChildren, v)
+    end
     v:layoutingPass()
   end
 end
@@ -166,8 +177,7 @@ local function scaffoldViews(self)
   local transX, transY = self.padding.left,self.padding.top
   self.scaffold = {}
   
-  for k, v in ipairs(self:getChildren()) do
-    
+  for k, v in ipairs(self.visibleChildren) do    
     if self.direction == "v" then 
       transY = transY + offset
       offset = offset + v:grantedHeight() + self.childSpacing
@@ -198,9 +208,8 @@ local function scaffoldViews(self)
     
     self.scaffold[v] = {transX, transY}    
     transX = self.padding.left
-    transY = self.padding.top
-  end    
-
+    transY = self.padding.top  
+  end
 end
 
 
@@ -209,7 +218,7 @@ local function clickedViews(self,x,y)
   if x > 0 and x < self:grantedWidth()
   and y > 0 and y < self:grantedHeight() then
   
-    for k, v in ipairs(self:getChildren()) do
+    for k, v in ipairs(self.visibleChildren) do
 
       for _, deeperClicked in ipairs( v:clickedViews(x - self.scaffold[v][1], y - self.scaffold[v][2]) ) do
         table.insert( clicked, deeperClicked )
@@ -263,6 +272,17 @@ return function(lc)
       base.scaffoldViews = scaffoldViews
       base.getLocationOffset = getLocationOffset
       base.childSpacing = options.childSpacing or 0      
+      base.visibleChildren = {}
+      base._removeChild = base.removeChild
+      base.removeChild = function(self, child)      
+        local search = self:_removeChild(child)        
+        -- clean up the view from the visible views, or it will remain on the screen
+        for k, v in ipairs(self.visibleChildren) do
+          if v == search then
+            table.remove(self.visibleChildren, k)
+          end
+        end
+      end
       if not options.signalHandlers then
         options.signalHandlers = {}
         if not options.signalHandlers.leftclick then

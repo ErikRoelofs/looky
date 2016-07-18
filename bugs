@@ -14,9 +14,7 @@
 - think about themes and styles < does styledLayout fix it?
 - think about animation
 - need a complete default signaling-setup for clicks/keys
-
 - support image backgrounds
 - move drawing of border/background to base
 - now that margin is gone, move borders into the padding entirely
-
 - clickviews violates principles
