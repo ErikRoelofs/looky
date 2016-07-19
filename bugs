@@ -6,18 +6,16 @@
 - add core viewtypes:
   - aquarium
   - boundary
-  - scrollables
-  - fourpane
-  - empty
+  - scrollables (?)
+  - grid
 - needs LOADS of assertions and hints
 
-- think about layoutgravity. I don't think it belongs on the child.
-- all views need a translation function to convert screen-coords to local-coords and the other way around (from their parent)
-- or each parent needs to convert coordinates passed by its children to its idea of world coordinates?
-- think about themes and styles < does styledLayout fix it?
-- think about animation
-- need a complete default signaling-setup for clicks/keys
-- support image backgrounds
-- now that margin is gone, move borders into the padding entirely
+- remove layout-gravity. should be handled with border-views
+- think about animation -> this should probably be layouting-wrappers
+- need a complete default signaling-setup for clicks/keys -> once signaling works properly
+- support image backgrounds -> also gradient ones?
 - linear might need some extra layout options if it's the base layout
-- or maybe even just add a few layouting-wrappers (boundary, layouted-boundary, margin-simulators)
+  - or maybe even just add a few layouting-wrappers (boundary, layouted-boundary, margin-simulators
+
+- there NEEDs to be a split between externalSignalHandlers and childSignalHandlers
+  - but they need to work the same and probably should be mostly in separate tables (duplicated)
