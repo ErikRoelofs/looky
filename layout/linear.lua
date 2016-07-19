@@ -181,29 +181,9 @@ local function scaffoldViews(self)
     if self.direction == "v" then 
       transY = transY + offset
       offset = offset + v:grantedHeight() + self.childSpacing
-      if v.layoutGravity == "start" then
-        transX = transX
-        transY = transY
-      elseif v.layoutGravity == "end" then
-        transX = transX + self:availableWidth() - v:grantedWidth()
-        transY = transY
-      elseif v.layoutGravity == "center" then
-        transX = transX + (self:availableWidth() - v:grantedWidth()) /2
-        transY = transY
-      end
     else
       transX = transX + offset
       offset = offset + v:grantedWidth() + self.childSpacing
-      if v.layoutGravity == "start" then
-        transX = transX
-        transY = transY
-      elseif v.layoutGravity == "end" then
-        transX = transX
-        transY = transY + self:availableHeight() - v:grantedHeight()
-      elseif v.layoutGravity == "center" then
-        transX = transX
-        transY = transY + (self:availableHeight() - v:grantedHeight()) /2
-      end
     end
     
     self.scaffold[v] = {transX, transY}    

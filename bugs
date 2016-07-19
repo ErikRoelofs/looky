@@ -5,12 +5,10 @@
 
 - add core viewtypes:
   - aquarium
-  - boundary
   - scrollables (?)
   - grid
 - needs LOADS of assertions and hints
 
-- remove layout-gravity. should be handled with border-views
 - think about animation -> this should probably be layouting-wrappers
 - need a complete default signaling-setup for clicks/keys -> once signaling works properly
 - support image backgrounds -> also gradient ones?

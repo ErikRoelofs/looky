@@ -240,7 +240,6 @@ return function()
             top = { required = true, schemaType = "number" },
           }},
           backgroundColor = { required = false, schemaType = "color" },
-          layoutGravity = { required = false, schemaType = "fromList", list = { "start", "center", "end"}  },
           gravity = { required = false, schemaType = "table", options = {
             { schemaType = "fromList", list = { "start", "center", "end" } },
             { schemaType = "fromList", list = { "start", "center", "end" } },
@@ -302,7 +301,6 @@ return function()
       start.padding = self.padding(options.padding)      
       start.backgroundColor = options.backgroundColor
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
-      start.layoutGravity = options.layoutGravity or "start"
       start.gravity = options.gravity or {"start","start"}
       start.weight = options.weight or 1
       start.visibility = options.visibility or "visible"

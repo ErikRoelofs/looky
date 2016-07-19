@@ -29,11 +29,11 @@ function makestack(lc)
 end
 
 function makeHand(lc)
-  return lc:build("stack", {layoutGravity = "center", width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, backgroundColor={0,0,0,0} } )
+  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, backgroundColor={0,0,0,0} } )
 end
 
 function makeVerticalHand(lc)
-  return lc:build("stack", {layoutGravity = "center", width = "wrap", height = "wrap", tiltDirection = { "none", "end" }, tiltAmount = {0,25}, backgroundColor={0,0,0,0} } )    
+  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "none", "end" }, tiltAmount = {0,25}, backgroundColor={0,0,0,0} } )    
 end
 
 function makeCard(i, lc)

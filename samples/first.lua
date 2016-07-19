@@ -1,6 +1,6 @@
 function mainview(lc)
   
-  lc:registerStyledLayout("my_text", "text", { width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0), layoutGravity = "end" })
+  lc:registerStyledLayout("my_text", "text", { width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0) })
   
   
   
@@ -17,7 +17,7 @@ function mainview(lc)
   root:addChild(layout2)
   layout2:addChild( lc:build("text", {width = "fill", height = 50, data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
   
-  layout2:addChild( lc:build("text", {width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0), layoutGravity = "end"}) )
+  layout2:addChild( lc:build("text", {width = "wrap", height = "fill", data = {value = "list 2"}, textColor = {255,0,0,255}, backgroundColor = {255,255,255,255}, padding = lc.padding(5,5,0,0)}) )
   
   layout2:addChild( lc:build("text", {width = "fill", height = "fill", data = {value="list 1"}, textColor = {255,0,0,255}, padding = lc.padding(5,5,0,0)}) )
   
@@ -34,9 +34,9 @@ end
 function dialog(lc)
   local dialogview = lc:build("root", { direction = "v", backgroundColor = { 100, 100, 100, 100 } } )
   
-  dialogview:addChild( lc:build( "text", { data = {value= "Close"}, width = 400, height = "wrap", backgroundColor = { 0, 0, 255, 255 }, textColor = { 255,255,255,255 }, layoutGravity = "center", gravity = {"center","center"}, padding = lc.padding(0,5,0,5)} ) )
+  dialogview:addChild( lc:build( "text", { data = {value= "Close"}, width = 400, height = "wrap", backgroundColor = { 0, 0, 255, 255 }, textColor = { 255,255,255,255 }, gravity = {"center","center"}, padding = lc.padding(0,5,0,5)} ) )
   
-  dialogview:addChild( lc:build( "text", { data = {value= "This is a dialog overlay"}, width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 }, layoutGravity = "center", gravity = {"center", "center"} } ) )
+  dialogview:addChild( lc:build( "text", { data = {value= "This is a dialog overlay"}, width = 400, height = 400, backgroundColor = { 255, 255, 255, 255 }, textColor = { 0,0,0,255 }, gravity = {"center", "center"} } ) )
   
   dialogview:layoutingPass()
   
