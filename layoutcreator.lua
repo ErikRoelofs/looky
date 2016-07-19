@@ -21,15 +21,15 @@ local function baseLayout(width, height)
     children = {},
     width = width,
     height = height,
-    outside = {},
-    addOutsider = function(self, outsider)
-      table.insert(self.outside, outsider)
+    listeners = {},
+    addListener = function(self, listener, method)
+      table.insert(self.listeners, { target = listener, method = method })
     end,
     addChild = function(self, child, position)
       assert(child, "No child was passed to addChild")
       position = position or #self.children+1
       table.insert(self.children, position, child)
-      child:addOutsider(self)
+      child:addListener(self, "receiveChildMessage")
     end,
     desiredWidth = function(self)
       if self.visibility == "gone" then
@@ -163,11 +163,11 @@ local function baseLayout(width, height)
       self.children = {}
     end,
     signalChildren = signalChildren,
-    receiveSignal = function(self, signal, payload)
-      local handler = self.signalHandlers[signal]
+    receiveOutsideSignal = function(self, signal, payload)
+      local handler = self.externalSignalHandlers[signal]
       if handler then
         if type(handler) == "function" then
-          self.signalHandlers[signal](self, signal, payload)
+          self.externalSignalHandlers[signal](self, signal, payload)
         elseif type(handler) == "string" then
           if handler == "o" then
             self.messageOut(self, signal, payload)
@@ -177,9 +177,9 @@ local function baseLayout(width, height)
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
         elseif type(handler) == "number" then
-          self.getChildren()[handler]:receiveSignal(signal, payload)
+          self.getChildren()[handler]:receiveOutsideSignal(signal, payload)
         elseif type(handler) == "table" then
-          handler:receiveSignal(signal, payload)        
+          handler:receiveOutsideSignal(signal, payload)        
         end
       else
         if self.defaultHandler then
@@ -187,11 +187,35 @@ local function baseLayout(width, height)
         end
       end
     end,
-    signalHandlers = {},
-    defaultHandler = nil,
+    receiveChildSignal = function(self, signal, payload)
+      local handler = self.childSignalHandlers[signal]
+      if handler then
+        if type(handler) == "function" then
+          self.childSignalHandlers[signal](self, signal, payload)
+        elseif type(handler) == "string" then
+          if handler == "o" then
+            self.messageOut(self, signal, payload)
+          elseif handler == "c" then
+            self.signalChildren(self, signal, payload)
+          else
+            error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
+          end
+        elseif type(handler) == "number" then
+          self.getChildren()[handler]:receiveOutsideSignal(signal, payload)
+        elseif type(handler) == "table" then
+          handler:receiveOutsideSignal(signal, payload)        
+        end
+      else
+        if self.defaultHandler then
+          self.defaultHandler(self, signal, payload)
+        end
+      end      
+    end,
+    externalSignalHandlers = {},
+    defaultExternalHandler = nil,
     messageOut = function(self, signal, payload)
-      for i, o in ipairs(self.outside) do
-        o:receiveSignal(signal, payload)
+      for i, listener in ipairs(self.listeners) do
+        listener.target[listener.method](signal, payload)
       end
     end
   }
