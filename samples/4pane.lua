@@ -17,7 +17,7 @@ function mainview(lc)
     })
       
   local topLeft = lc:build("border", { left = "fill", right = 25, leftWeight = 5, top = 20, bottom = 10, backgroundColor = { 255, 0, 0, 255} })
-  topLeft:addChild( lc:build("text", { width = "fill", height = "fill", data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 } }) )
+  topLeft:addChild( lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 } } ) )
       
   local options = {
     width = love.graphics.getWidth(),
