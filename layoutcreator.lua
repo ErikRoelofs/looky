@@ -22,18 +22,21 @@ local function baseLayout(width, height)
     width = width,
     height = height,
     outside = {},
+    addOutsider = function(self, outsider)
+      table.insert(self.outside, outsider)
+    end,
     addChild = function(self, child, position)
       assert(child, "No child was passed to addChild")
-      local position = position or #self.children+1
+      position = position or #self.children+1
       table.insert(self.children, position, child)
-      table.insert(child.outside, self)
+      child:addOutsider(self)
     end,
     desiredWidth = function(self)
       if self.visibility == "gone" then
         return 0
       end
       if self.width == "fill" then
-        return self.width
+        return "fill"
       elseif self.width == "wrap" then
         return self:contentWidthWithPadding()
       else
@@ -44,7 +47,7 @@ local function baseLayout(width, height)
       if self.visibility == "gone" then
         return 0
       end
-      if self.height == "fill" then
+      if self:contentHeight() == "fill" then
         return self.height
       elseif self.height == "wrap" then
         return self:contentHeightWithPadding()

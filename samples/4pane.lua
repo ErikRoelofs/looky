@@ -16,11 +16,14 @@ function mainview(lc)
     end
     })
       
+  local topLeft = lc:build("border", { left = "fill", right = 25, leftWeight = 5, top = 20, bottom = 10, backgroundColor = { 255, 0, 0, 255} })
+  topLeft:addChild( lc:build("text", { width = "fill", height = "fill", data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 } }) )
+      
   local options = {
     width = love.graphics.getWidth(),
     height = love.graphics.getHeight(),
     back = back,
-    topleft = lc:build("text", { width = "fill", height = "fill", data = function() return "topleft" end, gravity = { "start", "start" } }),
+    topleft = topLeft,
     topright = lc:build("text", { width = "fill", height = "fill", data = function() return "topright" end, gravity = { "end", "start" } }),
     bottomleft = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomleft" end, gravity = { "start", "end" } }),
     bottomright = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomright" end, gravity = { "end", "end" } }),    

@@ -29,7 +29,7 @@ function love.load()
   lc:registerLayout("dragbox", require "layout/dragbox"(lc) )
   lc:registerLayout("4pane", require "layout/4pane"(lc) )
   lc:registerLayout("numberAsImage", require "layout/numberasimage"(lc) )
-  
+  lc:registerLayout("border", require "layout/bordered"(lc))
   lc:registerFont("default", love.graphics.newFont(20))
   
   display = require "samples/4pane"(lc)
