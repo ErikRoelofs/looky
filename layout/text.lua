@@ -35,6 +35,9 @@ return function(lc)
       base.contentWidth = textWidth
       base.contentHeight = textHeight
       base.font = lc:getFont(options.font or "base")
+      if options.externalSignalHandlers then
+        base.externalSignalHandlers = options.externalSignalHandlers
+      end
       base.getData = function(self) 
         if type(self.data) == "function" then
           return self.data()

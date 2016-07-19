@@ -12,7 +12,7 @@ end
 
 local signalChildren = function(self, signal, payload)  
     for i, c in ipairs(self:getChildren()) do
-      c:receiveSignal(signal, payload)
+      c:receiveOutsideSignal(signal, payload)
     end
 end
 
@@ -29,7 +29,7 @@ local function baseLayout(width, height)
       assert(child, "No child was passed to addChild")
       position = position or #self.children+1
       table.insert(self.children, position, child)
-      child:addListener(self, "receiveChildMessage")
+      child:addListener(self, "receiveChildSignal")
     end,
     desiredWidth = function(self)
       if self.visibility == "gone" then
@@ -165,6 +165,9 @@ local function baseLayout(width, height)
     signalChildren = signalChildren,
     receiveOutsideSignal = function(self, signal, payload)
       local handler = self.externalSignalHandlers[signal]
+      if not handler then
+        handler = self.defaultExternalHandler
+      end
       if handler then
         if type(handler) == "function" then
           self.externalSignalHandlers[signal](self, signal, payload)
@@ -180,15 +183,14 @@ local function baseLayout(width, height)
           self.getChildren()[handler]:receiveOutsideSignal(signal, payload)
         elseif type(handler) == "table" then
           handler:receiveOutsideSignal(signal, payload)        
-        end
-      else
-        if self.defaultHandler then
-          self.defaultHandler(self, signal, payload)
-        end
+        end    
       end
     end,
     receiveChildSignal = function(self, signal, payload)
       local handler = self.childSignalHandlers[signal]
+      if not handler then
+        handler = self.defaultChildHandler
+      end
       if handler then
         if type(handler) == "function" then
           self.childSignalHandlers[signal](self, signal, payload)
@@ -205,17 +207,15 @@ local function baseLayout(width, height)
         elseif type(handler) == "table" then
           handler:receiveOutsideSignal(signal, payload)        
         end
-      else
-        if self.defaultHandler then
-          self.defaultHandler(self, signal, payload)
-        end
       end      
     end,
     externalSignalHandlers = {},
-    defaultExternalHandler = nil,
+    childSignalHandlers = {},
+    defaultExternalHandler = "c",
+    defaultChildHandler = "o",
     messageOut = function(self, signal, payload)
       for i, listener in ipairs(self.listeners) do
-        listener.target[listener.method](signal, payload)
+        listener.target[listener.method](listener.target, signal, payload)
       end
     end
   }
@@ -274,7 +274,7 @@ return function()
           }},
           weight = { required = false, schemaType = "number" },
           visibility = { required = false, schemaType = "fromList", list = { "visible", "cloaked", "gone" } },
-          signalHandlers = {
+          externalSignalHandlers = {
             required = false,
             schemaType = "dict",
             keyValidator = { schemaType = "string" },
@@ -284,7 +284,18 @@ return function()
               { schemaType = "number" },
               { schemaType = "table" },
             }},
-          }
+          },
+          childSignalHandlers = {
+            required = false,
+            schemaType = "dict",
+            keyValidator = { schemaType = "string" },
+            valueValidator = { schemaType = "oneOf", possibilities = {
+              { schemaType = "function" },
+              { schemaType = "fromList", list = { "o", "c" } },
+              { schemaType = "number" },
+              { schemaType = "table" },
+            }},
+          }          
         }
       }
     },

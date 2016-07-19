@@ -17,8 +17,11 @@ function mainview(lc)
     })
       
   local topLeft = lc:build("border", { left = "fill", right = 25, leftWeight = 5, top = 20, bottom = 10, backgroundColor = { 255, 0, 0, 255} })
-  topLeft:addChild( lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 } } ) )
-      
+  topLeft:addChild( lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 }, externalSignalHandlers = { signal = function(self, signal, payload ) print "Oh hai, text receiving message." self:messageOut( "response", { test = "test"}) end } } ) )
+  
+  topLeft.defaultExternalHandler = "c"
+  topLeft.defaultChildHandler = "o"
+  
   local options = {
     width = love.graphics.getWidth(),
     height = love.graphics.getHeight(),
@@ -30,9 +33,13 @@ function mainview(lc)
   }
   
   root = lc:build("root",{})
-  root:addChild(lc:build("4pane", options))
+  pane = lc:build("4pane", options)
+  pane.childSignalHandlers.response = function(self, signal, payload) print( "This is 4pane, receiving: " .. signal ) end
+  root:addChild(pane)
   
   root:layoutingPass()
+
+  topLeft:receiveOutsideSignal("signal", {test = "test"})
 
   return root
 end

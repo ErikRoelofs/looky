@@ -76,7 +76,9 @@ return function(lc)
       for k, v in pairs(options) do
         base[k] = v
       end
-
+      base.addListener = function(self, listener, method)
+        table.insert(self.listeners, { target = listener, method = method })
+      end
       base.renderCustom = renderBordered
       base.oldAddChild = base.addChild
       base.offset = options.offset or { 0, 0 }      
@@ -125,7 +127,7 @@ return function(lc)
         if #base:getChildren() >= 1 then
           error( "A borderer layout can only have 1 child." )
         end
-        base:oldAddChild(child)        
+        base:oldAddChild(child)
       end        
       return base
     end,

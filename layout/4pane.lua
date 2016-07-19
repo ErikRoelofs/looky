@@ -10,14 +10,14 @@ return function(lc)
       local column2 = lc:build("linear", {width = "fill", height = "fill", direction = "v" })
         
       local topleft = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
-      if options.topleft then        
+      if options.topleft then
         topleft:addChild(options.topleft)
       end
       local bottomleft = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
       if options.bottomleft then
         bottomleft:addChild(options.bottomleft)
       end
-      column1:addChild(topleft)      
+      column1:addChild(topleft)
       column1:addChild(bottomleft)
         
       local topright = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
