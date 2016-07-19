@@ -1,19 +1,11 @@
-- can we REALLY have two copies of the same view? what about width/height granted, for example?
-  - should those be separate instances, then?
-  - or should the width/height info not be stored on the child either? (but passed to draw?)
-  - is this an architecture difference, or a performance difference only? < will definitely hit performance.
-
 - add core viewtypes:
   - aquarium
   - scrollables (?)
   - grid
-- needs LOADS of assertions and hints
 
 - think about animation -> this should probably be layouting-wrappers
 - need a complete default signaling-setup for clicks/keys -> once signaling works properly
 - support image backgrounds -> also gradient ones?
-- linear might need some extra layout options if it's the base layout
-  - or maybe even just add a few layouting-wrappers (boundary, layouted-boundary, margin-simulators
 
-- there NEEDs to be a split between externalSignalHandlers and childSignalHandlers
-  - but they need to work the same and probably should be mostly in separate tables (duplicated)
+? linear might need some extra layout options if it's the base layout
+  ? or maybe even just add a few (more) layouting-wrappers (boundary, layouted-boundary, margin-simulators
