@@ -17,17 +17,23 @@ function mainview(lc)
     })
       
   local topLeft = lc:build("border", { left = "fill", right = 25, leftWeight = 5, top = 20, bottom = 10, backgroundColor = { 255, 0, 0, 255} })
-  topLeft:addChild( lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 }, externalSignalHandlers = { signal = function(self, signal, payload ) print "Oh hai, text receiving message." self:messageOut( "response", { test = "test"}) end } } ) )
+  topLeft:addChild( lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 } } ) )
   
-  topLeft.defaultExternalHandler = "c"
-  topLeft.defaultChildHandler = "o"
-  
+  topRight = lc:build("aquarium", { width = "fill", height = "fill", backgroundColor = { 0, 0, 255, 255 } })
+  local text = lc:build("text", { width="wrap", height="wrap", data = function() return "some text" end })
+  topRight:addChild(text)
+  topRight:setOffset(1, 350, 30000)
+      
+  local text2 = lc:build("text", { width="wrap", height="wrap", data = function() return "some other text" end })
+  topRight:addChild(text2)
+  topRight:setOffset(text2, 100, 100)
+
   local options = {
     width = love.graphics.getWidth(),
     height = love.graphics.getHeight(),
     back = back,
     topleft = topLeft,
-    topright = lc:build("text", { width = "fill", height = "fill", data = function() return "topright" end, gravity = { "end", "start" } }),
+    topright = topRight,
     bottomleft = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomleft" end, gravity = { "start", "end" } }),
     bottomright = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomright" end, gravity = { "end", "end" } }),    
   }
@@ -48,6 +54,7 @@ return function(lc)
   return {
     root = mainview(lc),
     update = function(self, dt) 
+      topRight:setOffset(2, math.random(25, 225), math.random(25,225))
       self.root:update(dt)
     end,
     draw = function(self)

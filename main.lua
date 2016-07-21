@@ -31,6 +31,7 @@ function love.load()
   lc:registerLayout("numberAsImage", require "layout/numberasimage"(lc) )
   lc:registerLayout("border", require "layout/border"(lc))
   lc:registerLayout("empty", require "layout/empty"(lc))
+  lc:registerLayout("aquarium", require "layout/aquarium"(lc))
   lc:registerFont("default", love.graphics.newFont(20))
   
   display = require "samples/4pane"(lc)
