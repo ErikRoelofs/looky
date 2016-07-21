@@ -9,28 +9,42 @@ return function(lc)
       local column1 = lc:build("linear", {width = "fill", height = "fill", direction = "v" })
       local column2 = lc:build("linear", {width = "fill", height = "fill", direction = "v" })
         
-      local topleft = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
-      if options.topleft then
+      local topleft
+      if not options.topleft then
+        topleft = lc:build("empty", {width = "fill", height = "fill"})
+      else
+        topleft = lc:build("border", {left = 0, right = "fill", top = 0, bottom = "fill" })
         topleft:addChild(options.topleft)
       end
-      local bottomleft = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
-      if options.bottomleft then
+      local bottomleft
+      if not options.bottomleft then
+        bottomleft = lc:build("empty", {width = "fill", height = "fill"})
+      else
+        bottomleft = lc:build("border", {left = 0, right = "fill", top = "fill", bottom = 0})
         bottomleft:addChild(options.bottomleft)
       end
+      
       column1:addChild(topleft)
       column1:addChild(bottomleft)
         
-      local topright = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
-      if options.topright then
+      local topright
+      if not options.topright then
+        topright = lc:build("empty", {width = "fill", height = "fill"})
+      else
+        topright = lc:build("border", {left = "fill", right = 0, top = 0, bottom = "fill", backgroundColor = { 0, 0, 255, 255 }})
         topright:addChild(options.topright)
       end
-      local bottomright = lc:build("linear", {width = "fill", height = "fill", direction = "h" })
-      if options.bottomright then
+      local bottomright
+      if not options.bottomright then
+        bottomright = lc:build("empty", {width = "fill", height = "fill"})
+      else
+        bottomright = lc:build("border", {left = "fill", right = 0, top = "fill", bottom = 0})
         bottomright:addChild(options.bottomright)
       end
-      column2:addChild(topright)      
+      
+      column2:addChild(topright)
       column2:addChild(bottomright)
-    
+        
       pane:addChild( column1 )
       pane:addChild( column2 )
       container:addChild(pane)

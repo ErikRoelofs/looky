@@ -16,8 +16,9 @@ function mainview(lc)
     end
     })
       
-  local topLeft = lc:build("border", { left = "fill", right = 25, leftWeight = 5, top = 20, bottom = 10, backgroundColor = { 255, 0, 0, 255} })
-  topLeft:addChild( lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 } } ) )
+  local topLeft = lc:build("border", { left = 25, right = 25, leftWeight = 5, top = 10, bottom = "fill", backgroundColor = { 255, 0, 0, 255} })
+  --local topLeft = lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 0,0, 255, 255}, thickness = 3 } } )
+  topLeft:addChild(lc:build("text", { width = 125, height = 30, data = function() return "topleft" end, gravity = { "start", "start" }, backgroundColor = { 0, 255, 0, 255 }, padding = lc.padding(15), border = { color = { 255,255, 0, 255}, thickness = 3 } } ))
   
   topRight = lc:build("aquarium", { width = "fill", height = "fill", backgroundColor = { 0, 0, 255, 255 } })
   local text = lc:build("text", { width="wrap", height="wrap", data = function() return "some text" end })
@@ -34,8 +35,7 @@ function mainview(lc)
     back = back,
     topleft = topLeft,
     topright = topRight,
-    bottomleft = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomleft" end, gravity = { "start", "end" } }),
-    bottomright = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomright" end, gravity = { "end", "end" } }),    
+    bottomleft = lc:build("text", { width = "fill", height = "fill", data = function() return "bottomleft" end, gravity = { "start", "end" } }),    
   }
   
   root = lc:build("root",{})
