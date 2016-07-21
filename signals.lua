@@ -1,29 +1,40 @@
--- a view should be able to send signals to its children
+mouseHeld = {}
+keysHeld = {}
 
--- a view should be able to receive signals from the outside
-
--- a view should be able to send signals to the outside
-
--- a view should be able to pass on external signals to its children
-
--- a view should be able to pass on child signals to its outside
-
--- should there be two signal tables?
-
--- use cases:
-
--- a proxy (like bordered) should act like it isn't even there
-  --> any child event goes to outside
-  --> any outside event goes to child
-
--- a general event (like a keypress or drag/drop) should be distributed to all children
-  --> outside event goes to all children
-
--- a targeted event (like a mouseclick) should be distributed to the proper child(ren)
-  --> outside event goes to targeted child
+love.update = function(dt)
+  x,y = love.mouse.getPosition()
   
--- a child being selected should signal its parent (or other listeners)
-  --> child signal the outside
+  local hover = true
+  for button, _ in pairs(mouseHeld) do
+    root:receiveOutsideSignal("mouse.held", { x = x, y = y, button = button })
+    hover = false
+  end
+  if hover then
+    root:receiveOutsideSignal("mouse.hover", { x = x, y = y })
+  end
   
--- a parent receiving a selection event should signal its other children
-  --> upon receiving a selection event from a child, signal other children
+  for key, scancode in pairs(keysHeld) do
+    root:receiveOutsideSignal("key.held", { key = key, scancode = scancode })
+  end
+  root:update(dt)
+end
+
+love.mousepressed = function(x,y,button)
+  root:receiveOutsideSignal("mouse.down", { x = x, y = y, button = button })
+  mouseHeld[button] = true
+end
+
+love.mousereleased = function(x,y,button)
+  root:receiveOutsideSignal("mouse.up", { x = x, y = y, button = button })
+  mouseHeld[button] = nil
+end
+
+love.keypressed = function(key,scancode)
+  root:receiveOutsideSignal("key.down", { key = key, scancode = scancode })
+  keysHeld[key] = scancode  
+end
+
+love.keyreleased = function(key)
+  root:receiveOutsideSignal("key.up", { key = key, scancode = keysHeld[key] })
+  keysHeld[key] = nil
+end

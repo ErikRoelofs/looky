@@ -52,6 +52,12 @@ return function(lc)
         removeAllChildren = function(self)
           self.linear:removeAllChildren()
         end,
+        receiveOutsideSignal = function(self, signal, payload)
+          self.linear:receiveOutsideSignal(signal, payload)
+        end,
+        receiveChildSignal = function(self, signal, payload)
+          self.linear:receiveChildSignal(signal, payload)
+        end,
       }
       root:setLinear(child)
       return root

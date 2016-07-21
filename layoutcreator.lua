@@ -11,9 +11,9 @@ local function assertArg(typeToCheck, value, fieldName, extra)
 end
 
 local signalChildren = function(self, signal, payload)  
-    for i, c in ipairs(self:getChildren()) do
-      c:receiveOutsideSignal(signal, payload)
-    end
+  for i, c in ipairs(self:getChildren()) do
+    c:receiveOutsideSignal(signal, payload)
+  end
 end
 
 local function baseLayout(width, height)

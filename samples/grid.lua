@@ -20,7 +20,20 @@ function mainview(lc)
 end
 
 function addText(lc, grid, x, y)
-  grid:setChild(lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, backgroundColor = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} }),x,y)
+  local text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, backgroundColor = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} })
+  if x == 1 and y == 1 then
+    text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload)
+      self.backgroundColor={100,100,100,255}
+    end
+    text.externalSignalHandlers['mouse.down'] = function(self, signal, payload)
+      self.backgroundColor={255,255,255,255}
+    end
+    text.externalSignalHandlers['mouse.up'] = function(self, signal, payload)
+      self.backgroundColor={0,0,0,255}
+    end
+    
+  end
+  grid:setChild(text,x,y)
 end
 
 return function(lc)

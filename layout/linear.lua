@@ -211,17 +211,17 @@ local function clickedViews(self,x,y)
 end
 
 local function clickShouldTargetChild(self, x, y, child)
-  local relativeX = x - self.scaffold[v][1]
-  local relativeY = y - self.scaffold[v][2]
+  local relativeX = x - self.scaffold[child][1]
+  local relativeY = y - self.scaffold[child][2]
   return relativeX > 0 and relativeY > 0 and 
-    relativeX < child:getGrantedWidth() and relativeY < child:getGrantedHeight()
+    relativeX < child:grantedWidth() and relativeY < child:grantedHeight()
 end
 
 local function signalTargetedChildren(self, signal, payload)  
-  for i, v in ipairs(self:getChildren()) do
+  for i, child in ipairs(self:getChildren()) do
     if clickShouldTargetChild(self, payload.x, payload.y, child) then
       local thisPayload = { x = payload.x - self.scaffold[child][1] , y = payload.y - self.scaffold[child][2] }
-      v:receiveSignal(signal, thisPayload)
+      child:receiveOutsideSignal(signal, thisPayload)
     end
   end
 end
@@ -258,13 +258,20 @@ return function(lc)
           end
         end
       end
-      if not options.signalHandlers then
-        options.signalHandlers = {}
-        if not options.signalHandlers.leftclick then
-          options.signalHandlers.leftclick = signalTargetedChildren
-        end
+      if not options.externalSignalHandlers then
+        options.externalSignalHandlers = {}
       end
-      base.signalHandlers = options.signalHandlers      
+      if not options.externalSignalHandlers['mouse.down'] then
+        options.externalSignalHandlers['mouse.down'] = signalTargetedChildren
+      end
+      if not options.externalSignalHandlers['mouse.hover'] then
+        options.externalSignalHandlers['mouse.hover'] = signalTargetedChildren
+      end
+      if not options.externalSignalHandlers['mouse.held'] then
+        options.externalSignalHandlers['mouse.held'] = signalTargetedChildren
+      end
+    
+      base.externalSignalHandlers = options.externalSignalHandlers      
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)

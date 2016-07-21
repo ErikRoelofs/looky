@@ -1,10 +1,18 @@
 - add core viewtypes:
-  - aquarium
+  - aquarium (need schema)
   - scrollables (?)
-  - grid
+  - grid (flex)
 
 - think about animation -> this should probably be layouting-wrappers
 - need a complete default signaling-setup for clicks/keys -> once signaling works properly
+  - need to support hover-start, hover-stop?
+  - need to handle mouse-up on, mouse-down off a view
+  - propagate mouse-signals to all children. but modify coordinates to local system
+  - can handle special events in the child then
+  - signalling default loader should modify the base constructor in some way, to include signals?
+  - are x,y special payload variables? (ugly) how to deal with coordinate translations?
+  
+  
 - support image backgrounds -> also gradient ones?
 
 ? linear might need some extra layout options if it's the base layout

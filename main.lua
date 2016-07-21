@@ -16,7 +16,6 @@ function love.load()
   
   local lcF = require "layoutcreator"
   local lc = lcF()
-  bargl = lc
   lc:registerLayout("linear", require "layout/linear"(lc) )
   lc:registerLayout("text", require "layout/text"(lc) )
   lc:registerLayout("image", require "layout/image"(lc) )  
@@ -36,9 +35,13 @@ function love.load()
   lc:registerFont("default", love.graphics.newFont(20))
   
   display = require "samples/grid"(lc)
+  root = display.root
+
+  require "signals"
   
 end
 
+--[[
 function love.keypressed(key)
   if key == "1" then
     display = require "samples/first"(bargl)
@@ -64,6 +67,7 @@ end
 function love.update(dt)
   display:update(dt)
 end
+]]
 
 function love.draw()
   display:draw()  
