@@ -20,7 +20,7 @@ function mainview(lc)
 end
 
 function addText(lc, grid, x, y)
-  grid:setChild(lc:build("text", { width = "wrap", height = "wrap", data = function() return x .. ", " .. y end }),x,y)
+  grid:setChild(lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, backgroundColor = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} }),x,y)
 end
 
 return function(lc)
