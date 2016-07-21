@@ -16,9 +16,9 @@ local determineOffsetY = function(self, child)
   elseif self.bottom ~= "fill" then
     return self:grantedHeight() - self.bottom - child:grantedHeight()
   else
-    local spareWidth = self:grantedHeight() - child:grantedHeight()
+    local spareHeight = self:grantedHeight() - child:grantedHeight()
     local totalChunks = (self.topWeight or 1) + (self.bottomWeight or 1)
-    return spareWidth / totalChunks * (self.topWeight or 1)
+    return spareHeight / totalChunks * (self.topWeight or 1)
   end
 end
 
@@ -56,10 +56,10 @@ local function layout(self, children)
     if self.bottom ~= "fill" then
       availableHeight = availableHeight - self.bottom
     end
-    if child:desiredWidth() == "fill" then 
+    if child:desiredHeight() == "fill" then 
       giveHeight = availableHeight
     else
-      giveHeight = math.min(child:desiredWidth(), availableHeight)
+      giveHeight = math.min(child:desiredHeight(), availableHeight)
     end
     
     
