@@ -1,9 +1,9 @@
 return function(lc)
   return {
     build = function (options)
-      local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
+      local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, background = {0,0,255,255}})  
       container:addChild( lc:build( "image", {file = options.file, width="wrap", height="wrap" } ))
-      container:addChild( lc:build( "text", {data = options.textdata, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
+      container:addChild( lc:build( "text", {data = options.textdata, width="wrap", height="wrap", background = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
       return container
     end,
     schema = lc:extendSchema("base", 

@@ -19,7 +19,7 @@ function mainview(lc)
 end
 
 function makestack(lc)
-  local stack = lc:build("stack", {width = "fill", height = "fill", tiltDirection = { "start", "start" }, tiltAmount = {2,4}, backgroundColor={0,0,0,0}, gravity = { "center", "center" } } )
+  local stack = lc:build("stack", {width = "fill", height = "fill", tiltDirection = { "start", "start" }, tiltAmount = {2,4}, background={0,0,0,0}, gravity = { "center", "center" } } )
   local i = 1
   while i < 53 do
       stack:addChild(makeCard(i, lc))
@@ -29,19 +29,19 @@ function makestack(lc)
 end
 
 function makeHand(lc)
-  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, backgroundColor={0,0,0,0} } )
+  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, background={0,0,0,0} } )
 end
 
 function makeVerticalHand(lc)
-  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "none", "end" }, tiltAmount = {0,25}, backgroundColor={0,0,0,0} } )    
+  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "none", "end" }, tiltAmount = {0,25}, background={0,0,0,0} } )    
 end
 
 function makeCard(i, lc)
-  local backgroundColor = { 0, 0, 255, 255 }
+  local background = { 0, 0, 255, 255 }
   if i == 0 then
-    backgroundColor = { 255, 0, 0, 255 }
+    background = { 255, 0, 0, 255 }
   end
-  return lc:build("text", {data={value="C" .. i}, width = 100, height = 100, backgroundColor=backgroundColor})
+  return lc:build("text", {data={value="C" .. i}, width = 100, height = 100, background=background})
 end
 
 function initialPass(root, lc)

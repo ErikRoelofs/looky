@@ -20,18 +20,21 @@ function mainview(lc)
 end
 
 function addText(lc, grid, x, y)
-  local text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, backgroundColor = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} })
+  local text
   if x == 1 and y == 1 then
+    text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = "images/emptyheart.png", gravity = {"center", "center"} })
+
     text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload)
-      self.backgroundColor={100,100,100,255}
+      --self.background ={100,100,100,255}
     end
     text.externalSignalHandlers['mouse.down'] = function(self, signal, payload)
-      self.backgroundColor={255,255,255,255}
+      --self.background ={255,255,255,255}
     end
     text.externalSignalHandlers['mouse.up'] = function(self, signal, payload)
-      self.backgroundColor={0,0,0,255}
+      --self.background ={0,0,0,255}
     end
-    
+  else
+    text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} })
   end
   grid:setChild(text,x,y)
 end

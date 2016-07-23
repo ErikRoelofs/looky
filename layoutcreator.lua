@@ -105,11 +105,19 @@ local function baseLayout(width, height)
       return self:contentHeight() + self.padding.top + self.padding.bottom
     end,
     renderBackground = function(self)
-      if self.backgroundColor then
-        love.graphics.setColor(self.backgroundColor)
-        local width = self:grantedWidth()
-        local height = self:grantedHeight()
-        love.graphics.rectangle("fill", 0, 0, width, height)
+      if self.background then
+        if type(self.background) == "table" then
+          love.graphics.setColor(self.background)
+          local width = self:grantedWidth()
+          local height = self:grantedHeight()
+          love.graphics.rectangle("fill", 0, 0, width, height)
+        elseif type(self.background) == "string" then          
+          love.graphics.setColor(255,255,255,255)
+          local pic = love.graphics.newImage(self.background)
+          love.graphics.draw(pic, 20, 20) -- NO
+        else
+          love.graphics.draw(self.background)
+        end
       end
       self:renderBorder()
     end,
@@ -263,7 +271,11 @@ return function()
             bottom = { required = true, schemaType = "number" },
             top = { required = true, schemaType = "number" },
           }},
-          backgroundColor = { required = false, schemaType = "color" },
+          background = { required = false, schemaType = "oneOf", possibilities = {
+            { schemaType = "color" },
+            { schemaType = "string" },
+            { schemaType = "image" }              
+          }},
           gravity = { required = false, schemaType = "table", options = {
             { schemaType = "fromList", list = { "start", "center", "end" } },
             { schemaType = "fromList", list = { "start", "center", "end" } },
@@ -334,7 +346,7 @@ return function()
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)      
       start.padding = self.padding(options.padding)      
-      start.backgroundColor = options.backgroundColor
+      start.background = options.background
       start.border = options.border or { color = { 0, 0, 0, 0 }, thickness = 0 }
       start.gravity = options.gravity or {"start","start"}
       start.weight = options.weight or 1

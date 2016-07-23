@@ -20,7 +20,7 @@ function mainview(lc)
   local root = lc:build("root", {direction = "v" })
   
   root:addChild( lc:build("text", { width = "fill", height = "wrap", data = {value="Above!"}, font = "default" } ) )
-  root:addChild( lc:build("freeform", { width = 500, height = 500, render = rf, update = uf, backgroundColor = { 255, 0, 0, 255 }, border = { color = { 0, 0, 255, 255 }, thickness = 10 } } ) )
+  root:addChild( lc:build("freeform", { width = 500, height = 500, render = rf, update = uf, background = { 255, 0, 0, 255 }, border = { color = { 0, 0, 255, 255 }, thickness = 10 } } ) )
   root:addChild( lc:build("text", { width = "fill", height = "wrap", data = {value= "Below!"}, border = { color = { 0, 255, 0, 255 }, thickness = 5 }, padding = lc.padding(5)} ) )
   
   root:layoutingPass()

@@ -31,7 +31,7 @@ return function(lc)
       if not options.topright then
         topright = lc:build("empty", {width = "fill", height = "fill"})
       else
-        topright = lc:build("border", {left = "fill", right = 0, top = 0, bottom = "fill", backgroundColor = { 0, 0, 255, 255 }})
+        topright = lc:build("border", {left = "fill", right = 0, top = 0, bottom = "fill", background = { 0, 0, 255, 255 }})
         topright:addChild(options.topright)
       end
       local bottomright

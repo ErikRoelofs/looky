@@ -1,9 +1,9 @@
 return function(lc)
   return {
     build = function (options)
-      local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, backgroundColor = {0,0,255,255}})  
+      local container = lc:build("linear", {direction = "v", width = options.width, height = options.height, background = {0,0,255,255}})  
       
-      local base = {width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}}
+      local base = {width="wrap", height="wrap", background = {255,0,0,255}, textColor={0,255,0,255}}
       local merged = lc.mergeOptions(base, options.textOptions or {})
       
       for k, v in ipairs( options.texts ) do

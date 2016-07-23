@@ -2,7 +2,7 @@ return function(lc)
   return {
     build = function(options)  
       local base = lc:makeBaseLayout(options)
-      local baseOptions = {direction="h", width="fill", height="fill", backgroundColor = options.backgroundColor or {0,0,0,0}}
+      local baseOptions = {direction="h", width="fill", height="fill", background = options.background or {0,0,0,0}}
       local child = lc:build("linear", lc.mergeOptions(baseOptions, options))
       local root = {
         base = base,

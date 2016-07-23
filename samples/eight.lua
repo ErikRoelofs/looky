@@ -1,5 +1,5 @@
 function mainview(lc)
-  local root = lc:build("root", {padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}, weight = 4.2 })
+  local root = lc:build("root", {padding = lc.padding(25), background = { 30, 30, 30, 255}, weight = 4.2 })
  
   ext = {value="First"}
  
@@ -16,9 +16,9 @@ function mainview(lc)
   container2:addChild(lc:build("text", {data={value="Cloaked"}, width="fill",height=50, visibility="cloaked"}))
   container2:addChild(lc:build("text", {data={value="Gone"}, width="fill",height=50, visibility="gone"}))
  
-  container2:addChild(lc:build("text", {data={value="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"}, width=50, height=50, backgroundColor = {255,0,0,255}}))
+  container2:addChild(lc:build("text", {data={value="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"}, width=50, height=50, background = {255,0,0,255}}))
  
-  container2:addChild(lc:build("image", {file="test-large.png", width=50, height="fill", backgroundColor = {255,0,0,255}, scale="crop"}))
+  container2:addChild(lc:build("image", {file="test-large.png", width=50, height="fill", background = {255,0,0,255}, scale="crop"}))
  
  
   ext2 = root:getChild(1):getChild(2).data

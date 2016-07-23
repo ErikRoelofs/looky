@@ -1,5 +1,5 @@
 function mainview(lc)
-  local root = lc:build("root", {padding = lc.padding(25), backgroundColor = { 30, 30, 30, 255}})
+  local root = lc:build("root", {padding = lc.padding(25), background = { 30, 30, 30, 255}})
  
   ext = {value="First"}
  
