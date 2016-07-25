@@ -1,6 +1,7 @@
 MVP
 - multiline text
 - proper (default) signaling
+- how to do signals returning from child to parent
 - samples (remove existing junk, add real samples)
 - bugfixes that result from the creation of samples
 - docs

@@ -24,13 +24,13 @@ function addText(lc, grid, x, y)
   if x == 3 and y == 3 then
     text = lc:build("text", { width = "fill", height = "fill", data = { cookies = "nomnomnom" }, dataKey = "cookies", background = { file = "images/heart.png", fill = "fill" }, gravity = {"center", "center"} })
 
+
     text.origBackground = text.background
+
     text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload, coords)
       if coords[1].x > 0 and coords[1].x < self:availableWidth()
         and coords[1].y > 0 and coords[1].y < self:availableHeight() then        
         self:setBackground({100,100,100,255})
-      else
-        self:setBackground(self.origBackground)
       end
     end
     text.externalSignalHandlers['mouse.down'] = function(self, signal, payload, coords)
@@ -44,6 +44,18 @@ function addText(lc, grid, x, y)
     end
     text.externalSignalHandlers['mouse.up'] = function(self, signal, payload, coords)      
       self:setBackground(self.origBackground)
+    end
+    text.externalSignalHandlers['key.down'] = function(self, signal, payload, coords)
+      if payload.key == "q" then
+        self:setBackground({255,0,0,255})
+      elseif payload.key == "w" then
+        self:setBackground({0,255,0,255})
+      elseif payload.key == "e" then
+        self:setBackground({0,0,255,255})
+      else
+        self:setBackground(self.origBackground)
+      end
+      
     end
   else
     text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} })
