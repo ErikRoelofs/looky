@@ -22,8 +22,7 @@ function mainview(lc)
   
   topRight = lc:build("aquarium", { width = "fill", height = "fill", background = { 0, 0, 255, 255 } })
   local text = lc:build("text", { width="wrap", height="wrap", data = function() return "some text" end })
-  topRight:addChild(text)
-  topRight:setOffset(1, 350, 30000)
+  topRight:addChild(text, 250, 30000)  
       
   local text2 = lc:build("text", { width="wrap", height="wrap", data = function() return "some other text" end })
   topRight:addChild(text2)

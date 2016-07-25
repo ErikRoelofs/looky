@@ -35,6 +35,11 @@ return function(lc)
         return math.min( self.offsets[child][1], self:grantedWidth() - child:grantedWidth()), 
                math.min( self.offsets[child][2], self:grantedHeight() - child:grantedHeight())
       end
+      base.oldAddChild = base.addChild
+      base.addChild = function(self, child, x, y)
+        base:oldAddChild(child)
+        base:setOffset(child, x, y)
+      end
       base.setOffset = function(self, child, x, y) 
         if type(child) == "number" then
           child = self:getChild(child)
