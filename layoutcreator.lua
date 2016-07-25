@@ -16,6 +16,55 @@ local signalChildren = function(self, signal, payload)
   end
 end
 
+
+local imageHelper = {
+  fit = function(view, image)
+    local scaledX = view:availableWidth() / image:getWidth()
+    local scaledY = view:availableHeight() / image:getHeight()
+    local scale = math.min(scaledX, scaledY)    
+    return image, scale, scale
+  end,        
+  stretch = function(view, image)
+    local scaleX = view:availableWidth() / image:getWidth()
+    local scaleY = view:availableHeight() / image:getHeight()                 
+    return image, scaleX, scaleY
+  end,
+  crop = function(view, image)
+    love.graphics.setColor(255,255,255,255)
+    local scaledX = view:availableWidth() / image:getWidth()
+    local scaledY = view:availableHeight() / image:getHeight()
+    local scale = math.max(scaledX, scaledY)
+    local canvas = love.graphics.newCanvas(view:availableWidth(), view:availableHeight())
+    love.graphics.setCanvas(canvas)
+    love.graphics.push()
+    love.graphics.origin()
+    love.graphics.draw(image, 0, 0, 0, scale, scale)
+    love.graphics.setCanvas()
+    love.graphics.pop()
+    return canvas, scale, scale
+  end,
+  fill = function(view, image)
+    love.graphics.setColor(255,255,255,255)
+    local canvas = love.graphics.newCanvas(view:availableWidth(), view:availableHeight())
+    love.graphics.setCanvas(canvas)
+    love.graphics.push()
+    love.graphics.origin()
+    local x, y = 0, 0
+    while x < view:availableWidth() do
+      while y < view:availableHeight() do
+        love.graphics.draw(image, x, y)
+        y = y + image:getHeight()
+      end
+      y = 0
+      x = x + image:getWidth()
+    end                      
+    love.graphics.setCanvas()
+    love.graphics.pop()
+    return canvas
+  end
+
+}
+
 local function baseLayout(width, height)
   return {
     children = {},
@@ -126,71 +175,11 @@ local function baseLayout(width, height)
     prepareBackground = function(self)
       if self.background then
         if self.background.file then
+          local helper = imageHelper
           local image = self.background.file
-          love.graphics.setColor(255,255,255,255)
             
-          local function fit(self)
-            local scaledX = self:availableWidth() / image:getWidth()
-            local scaledY = self:availableHeight() / image:getHeight()
-            local scale = math.min(scaledX, scaledY)
-            self.scaledX = scale
-            self.scaledY = scale
-            self.realBackground = image
-          end
-          
-          local function stretch(self)
-            local scaleX = self:availableWidth() / image:getWidth()
-            local scaleY = self:availableHeight() / image:getHeight()        
-            self.scaledX = scaleX
-            self.scaledY = scaleY                
-            self.realBackground = image
-          end
-          
-          local function crop(self)
-            love.graphics.setColor(255,255,255,255)
-            local scaledX = self:availableWidth() / image:getWidth()
-            local scaledY = self:availableHeight() / image:getHeight()
-            local scale = math.max(scaledX, scaledY)
-            local canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
-            love.graphics.setCanvas(canvas)
-            love.graphics.push()
-            love.graphics.origin()
-            love.graphics.draw(image, 0, 0, 0, scale, scale)
-            love.graphics.setCanvas()
-            love.graphics.pop()
-            self.realBackground = canvas
-          end
-          
-          local function fill(self)
-            love.graphics.setColor(255,255,255,255)
-            local canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
-            love.graphics.setCanvas(canvas)
-            love.graphics.push()
-            love.graphics.origin()
-            local x, y = 0, 0
-            while x < self:availableWidth() do
-              while y < self:availableHeight() do
-                love.graphics.draw(image, x, y)
-                y = y + image:getHeight()
-              end
-              y = 0
-              x = x + image:getWidth()
-            end                      
-            love.graphics.setCanvas()
-            love.graphics.pop()
-            self.realBackground = canvas
-          end
+          self.realBackground, self.scaleX, self.scaleY = helper[self.background.fill](self, image )
             
-          if self.background.fill == "fit" then
-            fit(self)            
-          elseif self.background.fill == "stretch" then
-            stretch(self)
-            love.graphics.draw(image, 0, 0, 0, self.scaledX, self.scaledY)
-          elseif self.background.fill == "crop" then
-            crop(self)
-          elseif self.background.fill == "fill" then
-            fill(self)
-          end         
         else
           self.realBackground = "color"
         end
@@ -414,6 +403,7 @@ return function()
     padding = function(left, top, right, bottom)
       return paddingMarginHelper(left, top, right, bottom)
     end,
+    imageHelper = imageHelper,
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)      
       start.padding = self.padding(options.padding)      
