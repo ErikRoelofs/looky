@@ -352,25 +352,15 @@ return function()
           visibility = { required = false, schemaType = "fromList", list = { "visible", "cloaked", "gone" } },
           externalSignalHandlers = {
             required = false,
-            schemaType = "dict",
-            keyValidator = { schemaType = "string" },
-            valueValidator = { schemaType = "oneOf", possibilities = {
-              { schemaType = "function" },
-              { schemaType = "fromList", list = { "o", "c" } },
-              { schemaType = "number" },
-              { schemaType = "table" },
-            }},
+            schemaType = "table",
+            options = {},
+            allowOther = true
           },
           childSignalHandlers = {
             required = false,
-            schemaType = "dict",
-            keyValidator = { schemaType = "string" },
-            valueValidator = { schemaType = "oneOf", possibilities = {
-              { schemaType = "function" },
-              { schemaType = "fromList", list = { "o", "c" } },
-              { schemaType = "number" },
-              { schemaType = "table" },
-            }},
+            schemaType = "table",
+            options = {},
+            allowOther = true
           }          
         }
       }

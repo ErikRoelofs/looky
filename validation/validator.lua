@@ -49,11 +49,6 @@ local checkTable = function(kind, field, schema, option, validator)
   validator:validate( kind .. "." .. field, schema.options, option, schema.allowOther )
 end
 
-local checkDictionary = function(kind, field, schema, option, validator)
-  typecheck("table", kind, field, option)
-  -- todo: implement the rest of this
-end
-
 local checkImage = function(kind, field, schema, option, validator)
   typecheck("userdata", kind, field, option)
 end
@@ -150,7 +145,6 @@ return function()
   validator:addSchemaType("oneOf", oneOf)
   validator:addSchemaType("betweenNumbers", betweenNumbers)
   validator:addSchemaType("array", checkArray)
-  validator:addSchemaType("dict", checkDictionary)
 
   validator:addPartialSchema("color", { schemaType = "table", options = {
       { required = true, schemaType = "betweenNumbers", min = 0, max = 255 },

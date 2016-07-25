@@ -1,6 +1,5 @@
 MVP
 - fix aquarium schema
-- fix "dict" validator
 - cleanup image functions (duplication; canvas performance -> layoutingpass)
 - multiline text
 - proper (default) signaling
@@ -17,3 +16,4 @@ Undetermined:
 - aquarium sorting
 - gradient backgrounds
 - rapid bootstrap
+- fix "dict" validator  -> requires validating non-tables
