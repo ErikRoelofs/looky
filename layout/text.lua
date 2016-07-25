@@ -3,7 +3,7 @@ local renderText = function(self)
   local locX, locY = self:startCoordsBasedOnGravity()
   love.graphics.setColor(self.textColor or {255,255,255,255})
   local toPrint = self:getData()
-  
+
   if self:contentWidth() > self:grantedWidth() then    
     while self:contentWidth(toPrint) > self:grantedWidth() do
       toPrint = toPrint:sub(0,-2)
@@ -36,6 +36,7 @@ return function(lc)
       base.contentHeight = textHeight
       base.font = lc:getFont(options.font or "base")
       base.dataKey = options.dataKey or "value"
+      base.multiline = options.multiline or false
       if options.externalSignalHandlers then
         base.externalSignalHandlers = options.externalSignalHandlers
       end
@@ -74,6 +75,10 @@ return function(lc)
       dataKey = {
           required = false,
           schemaType = "string"
+      },
+      multiline = {
+        required = false,
+        schemaType = "boolean"
       }
     })
   }
