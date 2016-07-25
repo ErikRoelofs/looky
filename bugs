@@ -20,3 +20,9 @@
 - support image backgrounds -> also gradient ones?
 - get rid of repitition of image functions. (Use the better ones from background)
 - draw images to canvas once!
+
+- animation in multiple parts:
+  - views with inherent animation (should be special viewtypes?)
+  - views with basic view animation (ie; zoom, shake) (should be layout wrappers?)
+  - views with appear/disappear/move animation 
+    (should be controlled by an animation-layer?) (would need to be set to put it at the right z-index)

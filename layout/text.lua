@@ -35,6 +35,7 @@ return function(lc)
       base.contentWidth = textWidth
       base.contentHeight = textHeight
       base.font = lc:getFont(options.font or "base")
+      base.dataKey = options.dataKey or "value"
       if options.externalSignalHandlers then
         base.externalSignalHandlers = options.externalSignalHandlers
       end
@@ -42,7 +43,7 @@ return function(lc)
         if type(self.data) == "function" then
           return self.data()
         else
-          return self.data.value
+          return self.data[self.dataKey]
         end
       end
       return base
@@ -54,12 +55,8 @@ return function(lc)
         possibilities = {
           {
             schemaType = "table", 
-            options = { 
-              value = { 
-                required = true, 
-                schemaType ="string" 
-              } 
-            } 
+            options = {},
+            allowOther = true
           },
           {
             schemaType = "function",
@@ -73,7 +70,11 @@ return function(lc)
       font = { 
         required = false, 
         schemaType = "string" 
-      } 
+      },
+      dataKey = {
+          required = false,
+          schemaType = "string"
+      }
     })
   }
 end

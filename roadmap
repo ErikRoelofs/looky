@@ -1,0 +1,19 @@
+MVP
+- fix aquarium schema
+- fix "dict" validator
+- cleanup image functions (duplication; canvas performance -> layoutingpass)
+- multiline text
+- proper (default) signaling
+- find a solution for the coordinates problem
+- samples (remove existing junk, add real samples)
+- docs
+
+V2
+- animation
+
+Undetermined:
+- slotted view
+- scrolling views
+- aquarium sorting
+- gradient backgrounds
+- rapid bootstrap

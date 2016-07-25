@@ -22,7 +22,7 @@ end
 function addText(lc, grid, x, y)
   local text
   if x == 1 and y == 1 then
-    text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = { file = "images/heart.png", fill = "fill" }, gravity = {"center", "center"} })
+    text = lc:build("text", { width = "fill", height = "fill", data = { cookies = "nomnomnom" }, dataKey = "cookies", background = { file = "images/heart.png", fill = "fill" }, gravity = {"center", "center"} })
 
     text.origBackground = text.background
     text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload)
