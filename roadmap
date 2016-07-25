@@ -1,5 +1,5 @@
 MVP
-- cleanup image functions (duplication; canvas performance -> layoutingpass)
+- cleanup image functions (duplication; changing existing background)
 - multiline text
 - proper (default) signaling
 - find a solution for the coordinates problem

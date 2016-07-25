@@ -64,6 +64,7 @@ local function baseLayout(width, height)
     setDimensions = function(self, x, y)
       self.givenWidth = x
       self.givenHeight = y
+      self:prepareBackground()
     end,
     availableWidth = function(self)
       return self:grantedWidth() - self.padding.left - self.padding.right
@@ -105,6 +106,20 @@ local function baseLayout(width, height)
       return self:contentHeight() + self.padding.top + self.padding.bottom
     end,
     renderBackground = function(self)
+      if self.realBackground then
+        if self.realBackground == "color" then
+          love.graphics.setColor(self.background)
+          local width = self:grantedWidth()
+          local height = self:grantedHeight()
+          love.graphics.rectangle("fill", 0, 0, width, height)
+        else
+          love.graphics.setColor(255,255,255,255)
+          love.graphics.draw(self.realBackground, 0, 0, 0, self.scaledX, self.scaledY)
+        end
+      end      
+      self:renderBorder()
+    end,
+    prepareBackground = function(self)
       if self.background then
         if self.background.file then
           local image = self.background.file
@@ -115,7 +130,8 @@ local function baseLayout(width, height)
             local scaledY = self:availableHeight() / image:getHeight()
             local scale = math.min(scaledX, scaledY)
             self.scaledX = scale
-            self.scaledY = scale    
+            self.scaledY = scale
+            self.realBackground = image
           end
           
           local function stretch(self)
@@ -123,9 +139,11 @@ local function baseLayout(width, height)
             local scaleY = self:availableHeight() / image:getHeight()        
             self.scaledX = scaleX
             self.scaledY = scaleY                
+            self.realBackground = image
           end
           
           local function crop(self)
+            love.graphics.setColor(255,255,255,255)
             local scaledX = self:availableWidth() / image:getWidth()
             local scaledY = self:availableHeight() / image:getHeight()
             local scale = math.max(scaledX, scaledY)
@@ -136,7 +154,7 @@ local function baseLayout(width, height)
             love.graphics.draw(image, 0, 0, 0, scale, scale)
             love.graphics.setCanvas()
             love.graphics.pop()
-            love.graphics.draw(canvas, locX, locY)
+            self.realBackground = canvas
           end
           
           local function fill(self)
@@ -156,12 +174,11 @@ local function baseLayout(width, height)
             end                      
             love.graphics.setCanvas()
             love.graphics.pop()
-            love.graphics.draw(canvas, locX, locY)            
+            self.realBackground = canvas
           end
             
           if self.background.fill == "fit" then
-            fit(self)
-            love.graphics.draw(image, 0, 0, 0, self.scaledX, self.scaledY)
+            fit(self)            
           elseif self.background.fill == "stretch" then
             stretch(self)
             love.graphics.draw(image, 0, 0, 0, self.scaledX, self.scaledY)
@@ -171,13 +188,9 @@ local function baseLayout(width, height)
             fill(self)
           end         
         else
-          love.graphics.setColor(self.background)
-          local width = self:grantedWidth()
-          local height = self:grantedHeight()
-          love.graphics.rectangle("fill", 0, 0, width, height)
+          self.realBackground = "color"
         end
       end
-      self:renderBorder()
     end,
     renderBorder = function(self)
       love.graphics.setColor(self.border.color)

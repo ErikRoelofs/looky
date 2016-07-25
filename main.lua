@@ -34,7 +34,7 @@ function love.load()
   lc:registerLayout("grid", require "layout/grid"(lc))
   lc:registerFont("default", love.graphics.newFont(20))
   
-  display = require "samples/4pane"(lc)
+  display = require "samples/grid"(lc)
   root = display.root
 
   require "signals"

@@ -27,7 +27,7 @@ function addText(lc, grid, x, y)
     text.origBackground = text.background
     text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload)
       if payload.x > 0 and payload.x < self:availableWidth()
-        and payload.y > 0 and payload.y < self:availableHeight() then
+        and payload.y > 0 and payload.y < self:availableHeight() then        
         self.background ={100,100,100,255}
       else
         self.background = self.origBackground
@@ -42,7 +42,7 @@ function addText(lc, grid, x, y)
       end
       
     end
-    text.externalSignalHandlers['mouse.up'] = function(self, signal, payload)
+    text.externalSignalHandlers['mouse.up'] = function(self, signal, payload)      
       self.background = self.origBackground
     end
   else
