@@ -13,6 +13,8 @@ local renderImage = function(self)
   local function stretch(self)
     local scaleX = self:availableWidth() / self.image:getWidth()
     local scaleY = self:availableHeight() / self.image:getHeight()        
+    self.scaledX = scaleX
+    self.scaledY = scaleY   
   end
   
   local function crop(self)

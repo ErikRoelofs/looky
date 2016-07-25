@@ -106,17 +106,75 @@ local function baseLayout(width, height)
     end,
     renderBackground = function(self)
       if self.background then
-        if type(self.background) == "table" then
+        if self.background.file then
+          local image = self.background.file
+          love.graphics.setColor(255,255,255,255)
+            
+          local function fit(self)
+            local scaledX = self:availableWidth() / image:getWidth()
+            local scaledY = self:availableHeight() / image:getHeight()
+            local scale = math.min(scaledX, scaledY)
+            self.scaledX = scale
+            self.scaledY = scale    
+          end
+          
+          local function stretch(self)
+            local scaleX = self:availableWidth() / image:getWidth()
+            local scaleY = self:availableHeight() / image:getHeight()        
+            self.scaledX = scaleX
+            self.scaledY = scaleY                
+          end
+          
+          local function crop(self)
+            local scaledX = self:availableWidth() / image:getWidth()
+            local scaledY = self:availableHeight() / image:getHeight()
+            local scale = math.max(scaledX, scaledY)
+            local canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
+            love.graphics.setCanvas(canvas)
+            love.graphics.push()
+            love.graphics.origin()
+            love.graphics.draw(image, 0, 0, 0, scale, scale)
+            love.graphics.setCanvas()
+            love.graphics.pop()
+            love.graphics.draw(canvas, locX, locY)
+          end
+          
+          local function fill(self)
+            love.graphics.setColor(255,255,255,255)
+            local canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
+            love.graphics.setCanvas(canvas)
+            love.graphics.push()
+            love.graphics.origin()
+            local x, y = 0, 0
+            while x < self:availableWidth() do
+              while y < self:availableHeight() do
+                love.graphics.draw(image, x, y)
+                y = y + image:getHeight()
+              end
+              y = 0
+              x = x + image:getWidth()
+            end                      
+            love.graphics.setCanvas()
+            love.graphics.pop()
+            love.graphics.draw(canvas, locX, locY)            
+          end
+            
+          if self.background.fill == "fit" then
+            fit(self)
+            love.graphics.draw(image, 0, 0, 0, self.scaledX, self.scaledY)
+          elseif self.background.fill == "stretch" then
+            stretch(self)
+            love.graphics.draw(image, 0, 0, 0, self.scaledX, self.scaledY)
+          elseif self.background.fill == "crop" then
+            crop(self)
+          elseif self.background.fill == "fill" then
+            fill(self)
+          end         
+        else
           love.graphics.setColor(self.background)
           local width = self:grantedWidth()
           local height = self:grantedHeight()
           love.graphics.rectangle("fill", 0, 0, width, height)
-        elseif type(self.background) == "string" then          
-          love.graphics.setColor(255,255,255,255)
-          local pic = love.graphics.newImage(self.background)
-          love.graphics.draw(pic, 20, 20) -- NO
-        else
-          love.graphics.draw(self.background)
         end
       end
       self:renderBorder()
@@ -273,8 +331,14 @@ return function()
           }},
           background = { required = false, schemaType = "oneOf", possibilities = {
             { schemaType = "color" },
-            { schemaType = "string" },
-            { schemaType = "image" }              
+            { schemaType = "table", options = {
+                file = { required = true, schemaType = "oneOf" , possibilities = {
+                    { schemaType = "string" },
+                    { schemaType = "image" }
+                }},
+                fill = { required = true, schemaType = "fromList", list = { "fit", "stretch", "crop", "fill" }}
+              }
+            }
           }},
           gravity = { required = false, schemaType = "table", options = {
             { schemaType = "fromList", list = { "start", "center", "end" } },
@@ -352,6 +416,12 @@ return function()
       start.weight = options.weight or 1
       start.visibility = options.visibility or "visible"
       start.signalHandlers = options.signalHandlers or {}
+      
+      -- if background is a filename, load it now
+      if start.background and start.background.file and type(start.background.file) == "string" then
+        start.background.file = love.graphics.newImage(start.background.file)
+      end
+      
       return start
     end,
     mergeOptions = function (baseOptions, options)

@@ -19,3 +19,5 @@
   
   
 - support image backgrounds -> also gradient ones?
+- get rid of repitition of image functions. (Use the better ones from background)
+- draw images to canvas once!
