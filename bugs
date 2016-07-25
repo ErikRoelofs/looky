@@ -2,20 +2,19 @@
   - multiline text
 
 - add core viewtypes:
-  - aquarium (need schema)
+  - aquarium (need schema) (need sorting)
   - scrollables (?)
-  - grid (flex)
+  - grid (flex) (?) (or let the user use linears?)
   - slotted  
 
 - think about animation -> this should probably be layouting-wrappers
   - also some baseviews like animatedImage, movingText, textPrinter
   - with signalSupport to control them
 - need a complete default signaling-setup for clicks/keys -> once signaling works properly
-  - need to support hover-start, hover-stop? (or is that child resp?)
-  - need to handle mouse-up on, mouse-down off a view (or just let child handle it based on coords)
   - propagate mouse-signals to all children. but modify coordinates to local system
   - signalling default loader should modify the base constructor in some way, to include signals?
-  - are x,y special payload variables? (ugly) how to deal with coordinate translations?
+  - are x,y special payload variables? (ugly) how to deal (properly) with coordinate translations?
+  - each view with children needs translateCoordsToChild and translateCoordsFromChild function 
   
   
 - support image backgrounds -> also gradient ones?

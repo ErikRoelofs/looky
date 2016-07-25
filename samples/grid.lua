@@ -24,14 +24,26 @@ function addText(lc, grid, x, y)
   if x == 1 and y == 1 then
     text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = { file = "images/heart.png", fill = "fill" }, gravity = {"center", "center"} })
 
+    text.origBackground = text.background
     text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload)
-      --self.background ={100,100,100,255}
+      if payload.x > 0 and payload.x < self:availableWidth()
+        and payload.y > 0 and payload.y < self:availableHeight() then
+        self.background ={100,100,100,255}
+      else
+        self.background = self.origBackground
+      end
     end
     text.externalSignalHandlers['mouse.down'] = function(self, signal, payload)
-      --self.background ={255,255,255,255}
+      if payload.x > 0 and payload.x < self:availableWidth()
+        and payload.y > 0 and payload.y < self:availableHeight() then
+        self.background ={255,255,255,255}
+      else
+        self.background = self.origBackground
+      end
+      
     end
     text.externalSignalHandlers['mouse.up'] = function(self, signal, payload)
-      --self.background ={0,0,0,255}
+      self.background = self.origBackground
     end
   else
     text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} })

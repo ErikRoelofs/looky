@@ -211,10 +211,7 @@ local function clickedViews(self,x,y)
 end
 
 local function clickShouldTargetChild(self, x, y, child)
-  local relativeX = x - self.scaffold[child][1]
-  local relativeY = y - self.scaffold[child][2]
-  return relativeX > 0 and relativeY > 0 and 
-    relativeX < child:grantedWidth() and relativeY < child:grantedHeight()
+  return true
 end
 
 local function signalTargetedChildren(self, signal, payload)  
