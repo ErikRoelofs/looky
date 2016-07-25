@@ -6,11 +6,11 @@ love.update = function(dt)
   
   local hover = true
   for button, _ in pairs(mouseHeld) do
-    root:receiveOutsideSignal("mouse.held", { x = x, y = y, button = button })
+    root:receiveOutsideSignal("mouse.held", { button = button }, {{ x = x, y = y,}})
     hover = false
   end
   if hover then
-    root:receiveOutsideSignal("mouse.hover", { x = x, y = y })
+    root:receiveOutsideSignal("mouse.hover", {}, {{ x = x, y = y }})
   end
   
   for key, scancode in pairs(keysHeld) do
@@ -20,12 +20,12 @@ love.update = function(dt)
 end
 
 love.mousepressed = function(x,y,button)
-  root:receiveOutsideSignal("mouse.down", { x = x, y = y, button = button })
+  root:receiveOutsideSignal("mouse.down", { button = button }, {{ x = x, y = y,}})
   mouseHeld[button] = true
 end
 
 love.mousereleased = function(x,y,button)
-  root:receiveOutsideSignal("mouse.up", { x = x, y = y, button = button })
+  root:receiveOutsideSignal("mouse.up", { button = button }, {{ x = x, y = y,}})
   mouseHeld[button] = nil
 end
 

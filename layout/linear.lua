@@ -192,37 +192,6 @@ local function scaffoldViews(self)
   end
 end
 
-
-local function clickedViews(self,x,y)
-  local clicked = {}
-  if x > 0 and x < self:grantedWidth()
-  and y > 0 and y < self:grantedHeight() then
-  
-    for k, v in ipairs(self.visibleChildren) do
-
-      for _, deeperClicked in ipairs( v:clickedViews(x - self.scaffold[v][1], y - self.scaffold[v][2]) ) do
-        table.insert( clicked, deeperClicked )
-      end
-    end    
-    
-    table.insert(clicked, self)
-  end
-  return clicked
-end
-
-local function clickShouldTargetChild(self, x, y, child)
-  return true
-end
-
-local function signalTargetedChildren(self, signal, payload)  
-  for i, child in ipairs(self:getChildren()) do
-    if clickShouldTargetChild(self, payload.x, payload.y, child) then
-      local thisPayload = { x = payload.x - self.scaffold[child][1] , y = payload.y - self.scaffold[child][2] }
-      child:receiveOutsideSignal(signal, thisPayload)
-    end
-  end
-end
-
 return function(lc)
   return {
     build = function (options)
@@ -255,25 +224,21 @@ return function(lc)
           end
         end
       end
-      if not options.externalSignalHandlers then
-        options.externalSignalHandlers = {}
-      end
-      if not options.externalSignalHandlers['mouse.down'] then
-        options.externalSignalHandlers['mouse.down'] = signalTargetedChildren
-      end
-      if not options.externalSignalHandlers['mouse.hover'] then
-        options.externalSignalHandlers['mouse.hover'] = signalTargetedChildren
-      end
-      if not options.externalSignalHandlers['mouse.held'] then
-        options.externalSignalHandlers['mouse.held'] = signalTargetedChildren
-      end
-    
-      base.externalSignalHandlers = options.externalSignalHandlers      
+      
+      base.externalSignalHandlers = options.externalSignalHandlers or {}
       base.update = function(self, dt)
         for k, v in ipairs(self.children) do
           v:update(dt)
         end
       end
+      
+      base.translateCoordsToChild = function(self, child, x, y) 
+        return x - self.scaffold[child][1], y - self.scaffold[child][2]
+      end
+      base.translateCoordsFromChild = function(self, child, x, y)
+        return x + self.scaffold[child][1], y + self.scaffold[child][2]
+      end
+      
       return base
     end,
     schema = lc:extendSchema("base", 

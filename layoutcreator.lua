@@ -10,9 +10,16 @@ local function assertArg(typeToCheck, value, fieldName, extra)
   assert(type(value) == typeToCheck, extra .. fieldName .. " should be a " .. typeToCheck .. ", got a: " .. type(value))  
 end
 
-local signalChildren = function(self, signal, payload)  
+local signalChildren = function(self, signal, payload, coords)
   for i, c in ipairs(self:getChildren()) do
-    c:receiveOutsideSignal(signal, payload)
+    local newCoords = {}
+    if coords then
+      for i, v in ipairs(coords) do
+        local x,y = self:translateCoordsToChild(c, v.x, v.y)
+        table.insert(newCoords, { x = x, y = y })
+      end
+    end
+    c:receiveOutsideSignal(signal, payload, newCoords)
   end
 end
 
@@ -235,49 +242,49 @@ local function baseLayout(width, height)
       self.children = {}
     end,
     signalChildren = signalChildren,
-    receiveOutsideSignal = function(self, signal, payload)
+    receiveOutsideSignal = function(self, signal, payload, coords)
       local handler = self.externalSignalHandlers[signal]
       if not handler then
         handler = self.defaultExternalHandler
       end
       if handler then
         if type(handler) == "function" then
-          self.externalSignalHandlers[signal](self, signal, payload)
+          self.externalSignalHandlers[signal](self, signal, payload, coords)
         elseif type(handler) == "string" then
           if handler == "o" then
-            self.messageOut(self, signal, payload)
+            self.messageOut(self, signal, payload, coords)
           elseif handler == "c" then
-            self.signalChildren(self, signal, payload)
+            self.signalChildren(self, signal, payload, coords)
           else
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
         elseif type(handler) == "number" then
-          self.getChildren()[handler]:receiveOutsideSignal(signal, payload)
+          self.getChildren()[handler]:receiveOutsideSignal(signal, payload, coords)
         elseif type(handler) == "table" then
-          handler:receiveOutsideSignal(signal, payload)        
+          handler:receiveOutsideSignal(signal, payload, coords)        
         end    
       end
     end,
-    receiveChildSignal = function(self, signal, payload)
+    receiveChildSignal = function(self, signal, payload, coords)
       local handler = self.childSignalHandlers[signal]
       if not handler then
         handler = self.defaultChildHandler
       end
       if handler then
         if type(handler) == "function" then
-          self.childSignalHandlers[signal](self, signal, payload)
+          self.childSignalHandlers[signal](self, signal, payload, coords)
         elseif type(handler) == "string" then
           if handler == "o" then
             self.messageOut(self, signal, payload)
           elseif handler == "c" then
-            self.signalChildren(self, signal, payload)
+            self.signalChildren(self, signal, payload, coords)
           else
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
         elseif type(handler) == "number" then
-          self.getChildren()[handler]:receiveOutsideSignal(signal, payload)
+          self.getChildren()[handler]:receiveOutsideSignal(signal, payload, coords)
         elseif type(handler) == "table" then
-          handler:receiveOutsideSignal(signal, payload)        
+          handler:receiveOutsideSignal(signal, payload, coords)        
         end
       end      
     end,
@@ -289,6 +296,12 @@ local function baseLayout(width, height)
       for i, listener in ipairs(self.listeners) do
         listener.target[listener.method](listener.target, signal, payload)
       end
+    end,
+    translateCoordsToChild = function(self, child, x, y) 
+      return x, y
+    end,
+    translateCoordsFromChild = function(self, child, x, y)
+      return x, y
     end
   }
 end
