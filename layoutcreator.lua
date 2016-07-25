@@ -119,6 +119,10 @@ local function baseLayout(width, height)
       end      
       self:renderBorder()
     end,
+    setBackground = function(self, background)
+      self.background = background
+      self:prepareBackground()
+    end,
     prepareBackground = function(self)
       if self.background then
         if self.background.file then

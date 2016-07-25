@@ -28,22 +28,22 @@ function addText(lc, grid, x, y)
     text.externalSignalHandlers['mouse.hover'] = function(self, signal, payload)
       if payload.x > 0 and payload.x < self:availableWidth()
         and payload.y > 0 and payload.y < self:availableHeight() then        
-        self.background ={100,100,100,255}
+        self:setBackground({100,100,100,255})
       else
-        self.background = self.origBackground
+        self:setBackground(self.origBackground)
       end
     end
     text.externalSignalHandlers['mouse.down'] = function(self, signal, payload)
       if payload.x > 0 and payload.x < self:availableWidth()
         and payload.y > 0 and payload.y < self:availableHeight() then
-        self.background ={255,255,255,255}
+        self:setBackground({255,255,255,255})
       else
-        self.background = self.origBackground
+        self:setBackground(self.origBackground)
       end
       
     end
     text.externalSignalHandlers['mouse.up'] = function(self, signal, payload)      
-      self.background = self.origBackground
+      self:setBackground(self.origBackground)
     end
   else
     text = lc:build("text", { width = "fill", height = "fill", data = function() return x .. ", " .. y end, background = { x * 20, y * 20, x+y * 10, 255 }, gravity = {"center", "center"} })
