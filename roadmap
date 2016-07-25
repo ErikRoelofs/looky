@@ -1,5 +1,4 @@
 MVP
-- fix aquarium schema
 - cleanup image functions (duplication; canvas performance -> layoutingpass)
 - multiline text
 - proper (default) signaling
