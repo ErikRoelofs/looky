@@ -1,3 +1,5 @@
+- linear contained in a linear, with borders for all, makes the child containers too large
+
 - upgrade core viewtypes
   - multiline text
 
