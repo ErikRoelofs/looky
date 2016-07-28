@@ -34,40 +34,12 @@ function love.load()
   lc:registerLayout("grid", require "layout/grid"(lc))
   lc:registerFont("default", love.graphics.newFont(20))
   
-  display = require "samples/grid"(lc)
+  display = require "samples/old/grid"(lc)
   root = display.root
 
   require "signals"
   
 end
-
---[[
-function love.keypressed(key)
-  if key == "1" then
-    display = require "samples/first"(bargl)
-  elseif key == "2" then
-    display = require "samples/second"(bargl)
-  elseif key == "3" then
-    display = require "samples/third"(bargl)
-  elseif key == "4" then
-    display = require "samples/fourth"(bargl)
-  elseif key == "5" then
-    display = require "samples/fifth"(bargl)
-  elseif key == "6" then
-    display = require "samples/sixth"(bargl)
-  elseif key == "7" then
-    display = require "samples/seventh"(bargl)  
-  elseif key == "8" then
-    display = require "samples/eight"(bargl)
-  elseif key == "9" then
-    display = require "samples/ninth"(bargl)
-  end
-end
-
-function love.update(dt)
-  display:update(dt)
-end
-]]
 
 function love.draw()
   display:draw()  

@@ -3,7 +3,13 @@ MVP
 - proper (default) signaling
 - how to do signals returning from child to parent
 - samples (remove existing junk, add real samples)
+  - simple 4pane
+  - shooter hud
+  - rpg with dialogs
+  - rts, C&C style
+  - collectible card game
 - bugfixes that result from the creation of samples
+- number-as-bar view
 - docs
 
 V2
