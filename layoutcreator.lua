@@ -165,9 +165,9 @@ local function baseLayout(width, height)
       if self.realBackground then
         if self.realBackground == "color" then
           love.graphics.setColor(self.background)
-          local width = self:grantedWidth()
-          local height = self:grantedHeight()
-          love.graphics.rectangle("fill", 0, 0, width, height)
+          local width = self:availableWidth()
+          local height = self:availableHeight()
+          love.graphics.rectangle("fill", self.padding.left, self.padding.top, width , height)
         else
           love.graphics.setColor(255,255,255,255)
           love.graphics.draw(self.realBackground, 0, 0, 0, self.scaledX, self.scaledY)
@@ -195,12 +195,14 @@ local function baseLayout(width, height)
       end
     end,
     renderBorder = function(self)
-      love.graphics.setColor(self.border.color)
-      love.graphics.setLineWidth(self.border.thickness)
-      local width = self:grantedWidth()
-      local height = self:grantedHeight()
-      love.graphics.rectangle("line", self.border.thickness/2, self.border.thickness/2, width - self.border.thickness, height - self.border.thickness)
-      love.graphics.setLineWidth(1)
+      if self.border.thickness > 0 then
+        love.graphics.setColor(self.border.color)
+        love.graphics.setLineWidth(self.border.thickness)
+        local width = self:availableWidth()
+        local height = self:availableHeight()
+        love.graphics.rectangle("line", self.padding.left + self.border.thickness/2, self.padding.top + self.border.thickness/2, width - self.border.thickness, height - self.border.thickness)
+        love.graphics.setLineWidth(1)
+      end
     end,
     startCoordsBasedOnGravity = function(self)
       local locX, locY
