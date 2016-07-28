@@ -56,7 +56,7 @@ local horizontalLayout = function(parent, children)
     for k, v in ipairs(fills) do
       local height = v:desiredHeight()
       if height == "fill" then
-        height = parent:grantedHeight()
+        height = parent:availableHeight()
       end
       v:setDimensions((availableSize - sizeForSpacing)/ sumWeight * v.weight, height)
       toShow[v] = true
