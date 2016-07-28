@@ -1,6 +1,8 @@
 local renderText = function(self)  
   love.graphics.setFont(self.font)
   local locX, locY = self:startCoordsBasedOnGravity()
+  locX = math.floor(locX)
+  locY = math.floor(locY)
   love.graphics.setColor(self.textColor or {255,255,255,255})
   local toPrint = self:getData()
 
@@ -17,7 +19,7 @@ end
 
 local textWidth = function (self, str)
   str = str or self:getData()
-  assert( type(str) == "string", "A text view is trying to determine the width of a non-string (type: " .. type(str) )
+  assert( type(str) == "string", "A text view is trying to determine the width of a non-string (type: " .. type(str) .. " )" )
   return self.font:getWidth(str)
 end
 
