@@ -211,14 +211,14 @@ local function baseLayout(width, height)
       elseif self.gravity[1] == "end" then
         locX = self:grantedWidth() - self:contentWidth() - self.padding.left
       elseif self.gravity[1] == "center" then
-        locX = (self:availableWidth() - self:contentWidth()) / 2
+        locX = (self:availableWidth() - self:contentWidth()) / 2 + self.padding.left
       end
       if self.gravity[2] == "start" then
         locY = self.padding.top
       elseif self.gravity[2] == "end" then
         locY = self:grantedHeight() - self:contentHeight() - self.padding.bottom
       elseif self.gravity[2] == "center" then
-        locY = (self:availableHeight() - self:contentHeight()) / 2 
+        locY = (self:availableHeight() - self:contentHeight()) / 2 + self.padding.top
       end
       return locX, locY
     end,
