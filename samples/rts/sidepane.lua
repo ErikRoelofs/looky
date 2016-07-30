@@ -7,7 +7,7 @@ return function(lc)
       container:addChild( lc:build( "text", {width="fill", height=40, data = function() return "$ 2500" end, gravity = { "center", "center" }, padding = lc.padding(3), background = { 0, 90, 0, 255 } }))
       
     -- minimap
-    container:addChild( lc:build( "minimap", {}))
+    container:addChild( lc:build( "minimap", {units = units, map = map}))
     
     -- purchase bar
     container:addChild( lc:build( "purchase", {}))
