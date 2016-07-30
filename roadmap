@@ -1,4 +1,5 @@
 MVP
+- onload, onremove events?
 - multiline text
 - proper (default) signaling
 - how to do signals returning from child to parent
