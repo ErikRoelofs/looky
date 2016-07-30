@@ -33,7 +33,7 @@ return function(lc)
           height = {
             required = true,
             schemaType = "number"
-          },
+          }
         }
   })
 
@@ -59,7 +59,7 @@ return function(lc)
   local column = lc:build("linear", { width = "fill", height = "fill", direction = "v" })
   local topbar = lc:build("topbar", {})
   column:addChild(topbar)
-  local main = lc:build("mainscreen", {units = units, map = map})
+  local main = lc:build("mainscreen", {units = units, map = map, locX = 115, locY = 115})
   column:addChild(main)
   root:addChild(column)
 
