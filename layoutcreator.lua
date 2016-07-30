@@ -12,14 +12,16 @@ end
 
 local signalChildren = function(self, signal, payload, coords)
   for i, c in ipairs(self:getChildren()) do
-    local newCoords = {}
-    if coords then
-      for i, v in ipairs(coords) do
-        local x,y = self:translateCoordsToChild(c, v.x, v.y)
-        table.insert(newCoords, { x = x, y = y })
+    if c.visibility == "visible" then
+      local newCoords = {}
+      if coords then
+        for i, v in ipairs(coords) do
+          local x,y = self:translateCoordsToChild(c, v.x, v.y)
+          table.insert(newCoords, { x = x, y = y })
+        end
       end
+      c:receiveOutsideSignal(signal, payload, newCoords)
     end
-    c:receiveOutsideSignal(signal, payload, newCoords)
   end
 end
 
@@ -305,6 +307,9 @@ local function baseLayout(width, height)
     end,
     translateCoordsFromChild = function(self, child, x, y)
       return x, y
+    end,
+    coordsInMe = function(self, x, y)
+       return x > 0 and x < self:grantedWidth() and y > 0 and y < self:grantedHeight()
     end
   }
 end
