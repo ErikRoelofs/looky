@@ -66,16 +66,23 @@ return function(lc)
   local sidepane = lc:build("sidepane", {})
   root:addChild(sidepane)
 
-
   root:layoutingPass()
   
   require "signals"(root)
   
+  local signalUpdate = love.update
   love.update = function(dt)
-    root:update(dt)
+    
+    units[3].x = units[3].x + 25 * dt
+    units[4].y = units[4].y + 25 * dt
+    
+    signalUpdate(dt)
+    fps = 1 / dt
   end
 
   love.draw = function()
     root:render()
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.print("fps: " .. fps, 5, 5 )
   end
 end
