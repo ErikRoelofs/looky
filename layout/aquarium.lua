@@ -1,4 +1,10 @@
 local renderAquarium = function(self)  
+  local canvas = nil
+  if self.useCanvas then
+    canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
+    love.graphics.setCanvas(canvas)    
+  end
+
   for k, child in ipairs(self:getChildren()) do
     local offsetX, offsetY = self:getOffset(child)
     love.graphics.push()
@@ -6,6 +12,12 @@ local renderAquarium = function(self)
     child:render()
     love.graphics.pop()    
   end
+  
+  if self.useCanvas then
+    love.graphics.setCanvas()
+    love.graphics.draw(canvas, 0, 0)
+  end
+  
 end
 
 local function layout(self, children)
@@ -46,8 +58,14 @@ return function(lc)
         end        
         self.offsets[child] = { x, y }        
       end
+      base.useCanvas = options.useCanvas or false
       return base
     end,
-    schema = lc:extendSchema("base",  {})
+    schema = lc:extendSchema("base",  {
+      useCanvas = {
+        required = false,
+        schemaType = "boolean"
+      }
+    })
   }
 end

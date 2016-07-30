@@ -55,6 +55,7 @@ end
 
 local checkArray = function(kind, field, schema, option,validator)
   typecheck("table", kind, field, option)
+  assert(schema.item, "Array validator for " .. kind .. " must have the 'item' options set")
   expandSchema(schema.item, validator)
   local fn = validator:tryGetValidatorFunction(kind, schema.item)
   for key, value in ipairs(option) do    
