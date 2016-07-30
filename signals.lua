@@ -8,7 +8,7 @@ return function(root)
     
     local hover = true
     for button, _ in pairs(mouseHeld) do
-      root:receiveOutsideSignal("mouse.held", { button = button }, {{ x = x, y = y,}})
+      root:receiveOutsideSignal("mouse.held", { button = button }, {{ x = x, y = y, dt = dt}})
       hover = false
     end
     if hover then
@@ -16,8 +16,8 @@ return function(root)
     end
     
     for key, scancode in pairs(keysHeld) do
-      root:receiveOutsideSignal("key.held", { key = key, scancode = scancode })
-    end
+      root:receiveOutsideSignal("key.held", { key = key, scancode = scancode, dt = dt })
+    end    
     root:update(dt)
   end
 
