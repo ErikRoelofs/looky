@@ -28,22 +28,22 @@ end
 
 local imageHelper = {
   fit = function(view, image)
-    local scaledX = view:availableWidth() / image:getWidth()
-    local scaledY = view:availableHeight() / image:getHeight()
+    local scaledX = view:grantedWidth() / image:getWidth()
+    local scaledY = view:grantedHeight() / image:getHeight()
     local scale = math.min(scaledX, scaledY)    
     return image, scale, scale
   end,        
   stretch = function(view, image)
-    local scaleX = view:availableWidth() / image:getWidth()
-    local scaleY = view:availableHeight() / image:getHeight()                 
+    local scaleX = view:grantedWidth() / image:getWidth()
+    local scaleY = view:grantedHeight() / image:getHeight()                 
     return image, scaleX, scaleY
   end,
   crop = function(view, image)
     love.graphics.setColor(255,255,255,255)
-    local scaledX = view:availableWidth() / image:getWidth()
-    local scaledY = view:availableHeight() / image:getHeight()
+    local scaledX = view:grantedWidth() / image:getWidth()
+    local scaledY = view:grantedHeight() / image:getHeight()
     local scale = math.max(scaledX, scaledY)
-    local canvas = love.graphics.newCanvas(view:availableWidth(), view:availableHeight())
+    local canvas = love.graphics.newCanvas(view:grantedWidth(), view:grantedHeight())
     love.graphics.setCanvas(canvas)
     love.graphics.push()
     love.graphics.origin()
@@ -54,13 +54,13 @@ local imageHelper = {
   end,
   fill = function(view, image)
     love.graphics.setColor(255,255,255,255)
-    local canvas = love.graphics.newCanvas(view:availableWidth(), view:availableHeight())
+    local canvas = love.graphics.newCanvas(view:grantedWidth(), view:grantedHeight())
     love.graphics.setCanvas(canvas)
     love.graphics.push()
     love.graphics.origin()
     local x, y = 0, 0
-    while x < view:availableWidth() do
-      while y < view:availableHeight() do
+    while x < view:grantedWidth() do
+      while y < view:grantedHeight() do
         love.graphics.draw(image, x, y)
         y = y + image:getHeight()
       end

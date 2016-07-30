@@ -44,6 +44,9 @@ return function(lc)
         if not self.offsets[child] then
           self.offsets[child] = {0,0}
         end
+        if self.useCanvas then
+          return self.offsets[child][1], self.offsets[child][2]
+        end
         return math.min( self.offsets[child][1], self:grantedWidth() - child:grantedWidth()), 
                math.min( self.offsets[child][2], self:grantedHeight() - child:grantedHeight())
       end

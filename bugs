@@ -1,3 +1,5 @@
+- imagehelper needs to have size passed to function, because methods differ
+
 - upgrade core viewtypes
   - multiline text
 
