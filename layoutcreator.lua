@@ -170,7 +170,7 @@ local function baseLayout(width, height)
           love.graphics.rectangle("fill", 0, 0, width , height)
         else
           love.graphics.setColor(255,255,255,255)
-          love.graphics.draw(self.realBackground, 0, 0, 0, self.scaledX, self.scaledY)
+          love.graphics.draw(self.realBackground, 0, 0, 0, self.scaleX, self.scaleY)
         end
       end      
       self:renderBorder()
@@ -188,7 +188,6 @@ local function baseLayout(width, height)
           local image = self.background.file
             
           self.realBackground, self.scaleX, self.scaleY = helper[self.background.fill](self, image )
-            
         else
           self.realBackground = "color"
         end
