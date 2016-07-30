@@ -13,8 +13,8 @@ return function(lc)
             
       local buyOptions = lc:build("linear", {width="fill", height="fill", background = { 60, 60, 60, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, direction = "h", childSpacing = 5, padding = lc.padding(4) })
       
-      local leftColumn = lc:build("purchaselist", {})
-      local rightColumn = lc:build("purchaselist", {})
+      local leftColumn = lc:build("purchaselist", {amount = 10})
+      local rightColumn = lc:build("purchaselist", {amount = 15})
       
       buyOptions:addChild(leftColumn)
       buyOptions:addChild(rightColumn)

@@ -32,7 +32,7 @@ return function(lc)
         prevIndex(self)
       end
       
-      for i = 1, 12 do
+      for i = 1, options.amount do
         local c = lc:build("buyoption", { num = i})
         if i > 5 then
           c.visibility = "gone"
@@ -42,6 +42,11 @@ return function(lc)
       
       return column
     end,
-    schema = {}
+    schema = {
+      amount = {
+        required = true,
+        schemaType = "number"
+      }
+    }
   }
 end
