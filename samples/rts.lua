@@ -1,5 +1,7 @@
 return function(lc)
-  local root = lc:build("root", {direction = "h"})
+  local stackroot = lc:build("stackroot", {})
+  local root = lc:build("linear", {width="fill", height="fill", direction="h"})
+  stackroot:addChild(root)
   
   lc:registerLayout("topbar", require "samples/rts/topbar"(lc) )
   lc:registerLayout("sidepane", require "samples/rts/sidepane"(lc) )
@@ -66,9 +68,9 @@ return function(lc)
   local sidepane = lc:build("sidepane", {})
   root:addChild(sidepane)
 
-  root:layoutingPass()
+  stackroot:layoutingPass()
   
-  require "signals"(root)
+  require "signals"(stackroot)
   
   local signalUpdate = love.update
   love.update = function(dt)
@@ -81,7 +83,7 @@ return function(lc)
   end
 
   love.draw = function()
-    root:render()
+    stackroot:render()
     love.graphics.setColor(255,255,255,255)
     love.graphics.print("fps: " .. fps, 5, 5 )
   end

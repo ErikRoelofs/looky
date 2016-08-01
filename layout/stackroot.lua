@@ -57,6 +57,12 @@ return function(lc)
         end,
         messageOut = function(self, signal, payload)
           return self.stack:messageOut(signal, payload)
+        end,
+        receiveOutsideSignal = function(self, signal, payload, coords)
+          self.stack:receiveOutsideSignal(signal, payload, coords)
+        end,
+        receiveChildSignal = function(self, signal, payload, coords)
+          self.stack:receiveChildSignal(signal, payload, coords)
         end,        
       }
       root:setLinear(child)
