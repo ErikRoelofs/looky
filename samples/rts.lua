@@ -76,14 +76,22 @@ return function(lc)
   
   require "signals"(stackroot)
   
+  cash = 2500
+  
   local signalUpdate = love.update
   love.update = function(dt)
     
     units[3].x = units[3].x + 25 * dt
     units[4].y = units[4].y + 25 * dt
     
+    cash = cash + 100 * dt
+    
     signalUpdate(dt)
     fps = 1 / dt
+  end
+  
+  function getCash()
+    return math.floor(cash)
   end
 
   love.draw = function()
