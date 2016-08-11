@@ -5,8 +5,10 @@ return function(lc)
       
       -- options button
       local options = lc:build( "text", {width=200, height="fill", data = function() return "Options" end, background = { 120, 120, 120, 255 }, border = { thickness = 2, color = { 90, 90, 90, 255 }}, gravity = { "center", "center" }})
-      options.externalSignalHandlers['mouse.down'] = function(self, signal, payload)
-        self:messageOut("dialog.options")
+      options.externalSignalHandlers['mouse.down'] = function(self, signal, payload, coords)
+        if self:coordsInMe(coords[1].x, coords[1].y) then
+          self:messageOut("dialog.options")
+        end
       end
       container:addChild( options )
       

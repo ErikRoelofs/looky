@@ -3,7 +3,15 @@ return function(lc)
   local root = lc:build("linear", {width="fill", height="fill", direction="h"})
   stackroot:addChild(root)
   local handler = {receive = function( self, signal, payload ) 
-      print("handler received: " .. signal)      
+      if signal == "dialog.options" then
+        print("received open")
+        openOptions()
+      elseif signal == "dialog.options.close" then
+        print("received close")
+        closeOptions()
+      else
+        print("received " .. signal)
+      end
   end }
   stackroot:addListener(handler, "receive")
   
@@ -15,6 +23,7 @@ return function(lc)
   lc:registerLayout("buyoption", require "samples/rts/buyoption"(lc) )
   lc:registerLayout("mainscreen", require "samples/rts/mainscreen"(lc) )
   lc:registerLayout("unit", require "samples/rts/unit"(lc) )
+  lc:registerLayout("options", require "samples/rts/options"(lc) )
   
   lc:registerValidator( "units", { schemaType = "array",
         item = { schemaType = "table", 
@@ -92,6 +101,25 @@ return function(lc)
   
   function getCash()
     return math.floor(cash)
+  end
+  
+  open = false
+  
+  function openOptions()
+    if open == false then
+      local options = lc:build("options", {})
+      stackroot:addChild(options)
+      stackroot:layoutingPass()
+      open = true
+    end
+  end
+
+  function closeOptions()
+    if open == true then
+      stackroot:removeChild(2)
+      stackroot:layoutingPass()
+      open = false
+    end
   end
 
   love.draw = function()

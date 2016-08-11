@@ -134,6 +134,14 @@ return function(lc)
           v:update(dt)
         end
       end
+      
+      base.translateCoordsToChild = function(self, child, x, y) 
+        return x - self.scaffold[child][1], y - self.scaffold[child][2]
+      end
+      base.translateCoordsFromChild = function(self, child, x, y)
+        return x + self.scaffold[child][1], y + self.scaffold[child][2]
+      end
+
       return base
     end,
     schema = lc:extendSchema("base", {
