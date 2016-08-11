@@ -299,6 +299,9 @@ local function baseLayout(width, height)
     defaultChildHandler = "o",
     messageOut = function(self, signal, payload)
       for i, listener in ipairs(self.listeners) do
+        if not listener.target[listener.method] then
+          print("Could not find method " .. method .. " of listener " )
+        end
         listener.target[listener.method](listener.target, signal, payload)
       end
     end,

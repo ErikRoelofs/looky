@@ -2,6 +2,10 @@ return function(lc)
   local stackroot = lc:build("stackroot", {})
   local root = lc:build("linear", {width="fill", height="fill", direction="h"})
   stackroot:addChild(root)
+  local handler = {receive = function( self, signal, payload ) 
+      print("handler received: " .. signal)      
+  end }
+  stackroot:addListener(handler, "receive")
   
   lc:registerLayout("topbar", require "samples/rts/topbar"(lc) )
   lc:registerLayout("sidepane", require "samples/rts/sidepane"(lc) )

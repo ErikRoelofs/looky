@@ -12,6 +12,9 @@ return function(lc)
         setLinear = function(self,child)
           self.stack = child
         end,
+        addListener = function(self, listener, method)
+          self.stack:addListener(listener, method)
+        end,        
         desiredWidth = function(self)
           return love.graphics.getWidth()
         end,
