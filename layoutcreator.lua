@@ -171,7 +171,7 @@ local function baseLayout(width, height)
           local height = self:grantedHeight()
           love.graphics.rectangle("fill", 0, 0, width , height)
         else
-          love.graphics.setColor(255,255,255,255)
+          love.graphics.setColor(self.background.colorFilter)
           love.graphics.draw(self.realBackground, 0, 0, 0, self.scaleX, self.scaleY)
         end
       end      
@@ -366,7 +366,8 @@ return function()
                     { schemaType = "string" },
                     { schemaType = "image" }
                 }},
-                fill = { required = true, schemaType = "fromList", list = { "fit", "stretch", "crop", "fill" }}
+                fill = { required = true, schemaType = "fromList", list = { "fit", "stretch", "crop", "fill" }},
+                colorFilter = { required = false, schemaType = "color" }
               }
             }
           }},
@@ -442,7 +443,9 @@ return function()
       if start.background and start.background.file and type(start.background.file) == "string" then
         start.background.file = love.graphics.newImage(start.background.file)
       end
-      
+      if start.background and not start.background.colorFilter then
+        start.background.colorFilter = { 255, 255, 255, 255 }
+      end
       return start
     end,
     mergeOptions = function (baseOptions, options)
