@@ -504,6 +504,17 @@ return function()
       schema = schema
     }
     lc:registerLayout(newName, layout)
+  end  
+  lc.wrap = function( self, ... )        
+    args = {...}
+    local prev = nil
+    for _, view in ipairs(args) do
+      if prev then
+        view:addChild(prev)
+      end
+      prev = view
+    end
+    return prev -- view is not in scope anymore
   end
   return lc
 end
