@@ -136,6 +136,15 @@ return function(lc)
         end
         base:oldAddChild(child)
       end        
+      
+      base.translateCoordsToChild = function(self, child, x, y) 
+        return x - determineOffsetX(self,child), y - determineOffsetY(self,child)
+      end
+      base.translateCoordsFromChild = function(self, child, x, y)
+        return x + determineOffsetX(self,child), y + determineOffsetY(self,child)
+      end
+
+      
       return base
     end,
     

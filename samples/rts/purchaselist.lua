@@ -33,7 +33,7 @@ return function(lc)
       end
       
       for i = 1, options.amount do
-        local c = lc:build("buyoption", { num = i})
+        local c = lc:build("buyoption", { num = i, filter = { love.math.random(1, 255), love.math.random(1, 255), love.math.random(1, 255), 255 }})
         if i > 5 then
           c.visibility = "gone"
         end
