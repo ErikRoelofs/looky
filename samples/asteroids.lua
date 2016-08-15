@@ -1,6 +1,7 @@
 return function(lc)
   
   lives = 5
+  score = 0
   
   local stackroot = lc:build("stackroot", {})
   
@@ -8,13 +9,16 @@ return function(lc)
   
   local livesView = lc:build("numberAsImage", { width = "wrap", height = "wrap", image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 } })
   
-  local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView } )
+  local scoreView = lc:build("text", { width = 250, height = "wrap", data = function() return "Score: " .. score end, padding = lc.padding( 15 ), gravity = { "end", "center" } })
+  
+  local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView } )
   
   stackroot:addChild(main)
   stackroot:layoutingPass()
   
   love.update = function(dt)
     fps = 1 / dt
+    score = score + 1
     stackroot:update(dt)
   end
   
