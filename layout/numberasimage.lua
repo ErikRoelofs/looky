@@ -78,7 +78,7 @@ return function(lc)
         }
       }, 
       emptyImage = {        
-        required = true,
+        required = false,
         schemaType = "oneOf",
         possibilities = {
             {
@@ -102,7 +102,7 @@ return function(lc)
               options = { 
                 value = { 
                   required = true, 
-                  schemaType ="string" 
+                  schemaType ="number" 
                 } 
               } 
             },
