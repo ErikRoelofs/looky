@@ -8,7 +8,7 @@ return function(lc)
         local column = lc:build("linear", { width = "fill", height = "fill", direction="v" })      
         local j = 0
         while j < options.rows do
-          column:addChild( lc:build( "border", { left = "fill", right = "fill", top = "fill", bottom = "fill" } ))
+          column:addChild( lc:build( "filler", { left = "fill", right = "fill", top = "fill", bottom = "fill" } ))
           j = j +1
         end
         container:addChild(column)

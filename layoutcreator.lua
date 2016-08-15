@@ -401,6 +401,7 @@ return function()
     },
     validator = require ( _PACKAGE .. "/validation/validator" )(),
     build = function( self, kind, options )
+      options = options or {}
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")            
       self:validate(kind, options)
       return self.kinds[kind].build(options)

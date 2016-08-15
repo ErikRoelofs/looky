@@ -63,13 +63,13 @@ return function(lc)
   
   -- main column holds the top bar and main screen
   local column = lc:build("linear", { width = "fill", height = "fill", direction = "v" })
-  local topbar = lc:build("topbar", {})
+  local topbar = lc:build("topbar")
   column:addChild(topbar)
   local main = lc:build("mainscreen", {units = units, map = map, locX = 115, locY = 115})
   column:addChild(main)
   root:addChild(column)
 
-  local sidepane = lc:build("sidepane", {})
+  local sidepane = lc:build("sidepane")
   root:addChild(sidepane)
 
   stackroot:layoutingPass()

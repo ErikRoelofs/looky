@@ -13,7 +13,8 @@ lc:registerLayout("stackroot", require( _NAME .. "/layout/stackroot" )(lc))
 lc:registerLayout("dragbox", require( _NAME .. "/layout/dragbox" )(lc))
 lc:registerLayout("numberasimage", require( _NAME .. "/layout/numberasimage" )(lc))
 lc:registerLayout("empty", require( _NAME .. "/layout/empty" )(lc))
-lc:registerLayout("border", require( _NAME .. "/layout/border" )(lc))
-lc:registerLayout("4pane", require( _NAME .. "/layout/4pane" )(lc))
+lc:registerLayout("filler", require( _NAME .. "/layout/filler" )(lc))
+lc:registerLayout("4pane", require( _NAME .. "/layout/4pane" =)(lc))
+lc:registerLayout("aquarium", require( _NAME .. "/layout/aquarium" =)(lc))
 
 return lc

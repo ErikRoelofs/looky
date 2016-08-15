@@ -13,14 +13,14 @@ return function(lc)
       if not options.topleft then
         topleft = lc:build("empty", {width = "fill", height = "fill"})
       else
-        topleft = lc:build("border", {left = 0, right = "fill", top = 0, bottom = "fill" })
+        topleft = lc:build("filler", { right = "fill", bottom = "fill" })
         topleft:addChild(options.topleft)
       end
       local bottomleft
       if not options.bottomleft then
         bottomleft = lc:build("empty", {width = "fill", height = "fill"})
       else
-        bottomleft = lc:build("border", {left = 0, right = "fill", top = "fill", bottom = 0})
+        bottomleft = lc:build("filler", {right = "fill", top = "fill"})
         bottomleft:addChild(options.bottomleft)
       end
       
@@ -31,14 +31,14 @@ return function(lc)
       if not options.topright then
         topright = lc:build("empty", {width = "fill", height = "fill"})
       else
-        topright = lc:build("border", {left = "fill", right = 0, top = 0, bottom = "fill", background = { 0, 0, 255, 255 }})
+        topright = lc:build("filler", {left = "fill", bottom = "fill", background = { 0, 0, 255, 255 }})
         topright:addChild(options.topright)
       end
       local bottomright
       if not options.bottomright then
         bottomright = lc:build("empty", {width = "fill", height = "fill"})
       else
-        bottomright = lc:build("border", {left = "fill", right = 0, top = "fill", bottom = 0})
+        bottomright = lc:build("filler", {left = "fill", top = "fill" })
         bottomright:addChild(options.bottomright)
       end
       
