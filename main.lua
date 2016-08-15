@@ -25,6 +25,16 @@ function love.load()
   lc:registerLayout("grid", require "layout/grid"(lc))
   lc:registerFont("default", love.graphics.newFont(20))
   
+  lc:registerStyledLayout("filler.right", "filler", { right = "fill" })
+  lc:registerStyledLayout("filler.left", "filler", { left = "fill" })
+  lc:registerStyledLayout("filler.top", "filler", { top = "fill" })
+  lc:registerStyledLayout("filler.bottom", "filler", { bottom = "fill" })
+  lc:registerStyledLayout("filler.topright", "filler", { top = "fill", right = "fill" })
+  lc:registerStyledLayout("filler.topleft", "filler", { top = "fill", left = "fill" })
+  lc:registerStyledLayout("filler.bottomright", "filler", { bottom = "fill", right = "fill" })
+  lc:registerStyledLayout("filler.bottomleft", "filler", { bottom = "fill", left = "fill" })
+  lc:registerStyledLayout("filler.center", "filler", { top = "fill", bottom = "fill", left = "fill", right = "fill" })
+  
   require "samples/rts"(lc)
 end
 
