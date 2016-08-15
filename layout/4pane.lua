@@ -35,7 +35,7 @@ return function(lc)
       if not options.topright then
         topright = lc:build("empty", {width = "fill", height = "fill"})
       else
-        topright = lc:build("filler", {left = "fill", bottom = "fill", background = { 0, 0, 255, 255 }})
+        topright = lc:build("filler", {left = "fill", bottom = "fill"})
         topright:addChild(options.topright)
         table.insert(toUpdate, options.topright)
       end
