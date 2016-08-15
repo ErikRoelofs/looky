@@ -23,6 +23,9 @@ function love.load()
   lc:registerLayout("empty", require "layout/empty"(lc))
   lc:registerLayout("aquarium", require "layout/aquarium"(lc))
   lc:registerLayout("grid", require "layout/grid"(lc))
+  lc:registerLayout("numberAsBar", require "layout/numberasbar"(lc))
+  
+  
   lc:registerFont("default", love.graphics.newFont(20))
   
   lc:registerStyledLayout("filler.right", "filler", { right = "fill" })
