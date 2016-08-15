@@ -9,8 +9,8 @@ return function(lc)
           return self.value.value
         end
       end
-            
-      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, background = options.background, padding = options.padding})
+      
+      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, background = options.background, padding = options.padding, border = options.border })
       container.value = options.value
       container.maxValue = options.maxValue
       container.getValue = getValue      

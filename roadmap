@@ -3,6 +3,9 @@ MVP
 - multiline text
 - proper (default) signaling
 - how to do signals returning from child to parent
+- extra schema options:
+  - reuse existing schema as option (possibly already?)
+  - filter these tables to meet this schema
 - samples (remove existing junk, add real samples) (as separate projects)
   - simple 4pane
   - shooter hud

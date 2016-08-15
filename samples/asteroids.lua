@@ -33,7 +33,7 @@ return function(lc)
   
   local shipView = lc:build("linear", { width = 250, height = "wrap", direction = "v" })
     
-  shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, value = function() return math.abs(player.spd) end, maxValue = player.maxSpd } ))
+  shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, value = function() return math.abs(player.spd) end, maxValue = player.maxSpd, background = { 255, 0, 0, 100 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 10, largerEvery = 3 }} ))
   shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, value = function() return player.power end, maxValue = player.maxPower } ))
   
   local scoreView = lc:build("text", { width = 250, height = "wrap", data = function() return "Score: " .. score end, padding = lc.padding( 15 ), gravity = { "end", "center" } })
