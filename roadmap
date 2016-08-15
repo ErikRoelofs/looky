@@ -3,7 +3,7 @@ MVP
 - multiline text
 - proper (default) signaling
 - how to do signals returning from child to parent
-- samples (remove existing junk, add real samples)
+- samples (remove existing junk, add real samples) (as separate projects)
   - simple 4pane
   - shooter hud
   - rpg with dialogs

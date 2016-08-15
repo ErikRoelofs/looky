@@ -35,7 +35,7 @@ function love.load()
   lc:registerStyledLayout("filler.bottomleft", "filler", { bottom = "fill", left = "fill" })
   lc:registerStyledLayout("filler.center", "filler", { top = "fill", bottom = "fill", left = "fill", right = "fill" })
   
-  require "samples/rts"(lc)
+  require "samples/asteroids"(lc)
 end
 
 function test() 
