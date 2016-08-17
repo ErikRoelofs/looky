@@ -1,5 +1,7 @@
 return function(lc)
   
+  lc:registerFont("big", love.graphics.newFont( 32 ))
+  
   lives = 5
   score = 0
   level = 4
@@ -27,16 +29,16 @@ return function(lc)
   
   local game = lc:build("freeform", { width = "fill", height = "fill", render = render })
   
-  local livesView = lc:build("numberAsImage", { width = "wrap", height = "wrap", image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 } })
+  local livesView = lc:build("numberAsImage", { width = "wrap", height = "wrap", image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 }, padding = lc.padding( 15 ) })
   
-  local levelView = lc:build("text", { width = "wrap", height = "wrap", data = function() return "Level: " .. level end, padding = lc.padding( 15 ) })
+  local levelView = lc:build("text", { width = "wrap", height = "wrap", data = function() return "Level: " .. level end, padding = lc.padding( 15 ), font = "big" })
   
-  local shipView = lc:build("linear", { width = 250, height = "wrap", direction = "v" })
+  local shipView = lc:build("linear", { width = 250, height = "wrap", direction = "v", padding = lc.padding( 15 ) })
     
   shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, value = function() return math.abs(player.spd) end, maxValue = player.maxSpd, background = { 255, 0, 0, 100 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 10, largerEvery = 3 }} ))
   shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, value = function() return player.power end, maxValue = player.maxPower } ))
   
-  local scoreView = lc:build("text", { width = 250, height = "wrap", data = function() return "Score: " .. score end, padding = lc.padding( 15 ), gravity = { "end", "center" } })
+  local scoreView = lc:build("text", { width = 250, height = "wrap", data = function() return "Score: " .. score end, padding = lc.padding( 15 ), gravity = { "end", "center" }, font = "big" })
   
   local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )
   
@@ -58,8 +60,10 @@ return function(lc)
       player.r = player.r + player.maxRot * dt
     end
     if love.keyboard.isDown("a") then
-      player.r = player.r - player.maxRot * dt
+      player.r = player.r - player.maxRot * dt      
     end
+    
+    player.spd = player.spd - ( player.spd * 0.4 * dt )
     
     if player.spd > player.maxSpd then
       player.spd = player.maxSpd
@@ -86,7 +90,5 @@ return function(lc)
   
   love.draw = function()
     stackroot:render()
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.print("fps: " .. fps, 5, 5 )
   end
 end
