@@ -84,7 +84,7 @@ local oneOf = function(kind, field, schema, option, validator)
   for key, possibility in ipairs(schema.possibilities) do
     table.insert(triedOptions, possibility.schemaType)
   end
-  error( "OneOf condition not met for field " .. field .. " of " .. kind .. ". I tried these, but none matched: " .. table.concat( triedOptions, ", " ) )
+  error( "OneOf condition not met for field " .. field .. " of " .. kind .. ". I tried these, but none matched: " .. table.concat( triedOptions, ", " ) .. " (Received a: " .. type(option) .. ")" )
 end
 
 local betweenNumbers = function(kind, field, schema, option, validator)
@@ -157,3 +157,4 @@ return function()
 
   return validator
 end
+

@@ -3,7 +3,7 @@ if debug then require("mobdebug").start() end
 
 function love.load()  
   
-  test()
+  --test()
   
   local lcF = require "layoutcreator"
   local lc = lcF()

@@ -1,7 +1,6 @@
 return function(lc)
   
-  lc:registerFont("big", love.graphics.newFont( 32 ))
-  
+  -- setup game consts
   lives = 5
   score = 0
   level = 4
@@ -20,35 +19,38 @@ return function(lc)
     image = love.graphics.newImage("images/asteroids/ship.png")
   }
   
+  -- setup styles
+  lc:registerLayout("stats", require ( "samples/asteroids/stats" )(lc) )
+  lc:registerLayout("bar", require ( "samples/asteroids/bar" )(lc) )
+
+  lc:registerFont("big", love.graphics.newFont( 32 ))
+  
+  lc:registerStyledLayout("ast.numberAsImage", "numberAsImage", { width = "wrap", height = "wrap", padding = lc.padding( 15 ) })
+  lc:registerStyledLayout("ast.text", "text", { width = "wrap", height = "wrap", padding = lc.padding( 15 ), font = "big" } )
+  lc:registerStyledLayout("ast.numberAsBar", "numberAsBar", {width = "fill", height = 25, background = { 255, 255, 255, 255 }, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 10, largerEvery = 3 }} )  
+  
+  -- render function for game window itself
   render = function()
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(player.image, player.x, player.y, player.r, 1, 1, player.image:getWidth() / 2, player.image:getHeight() / 2)
   end
   
-  local stackroot = lc:build("stackroot", {})
-  
-  local game = lc:build("freeform", { width = "fill", height = "fill", render = render })
-  
-  local livesView = lc:build("numberAsImage", { width = "wrap", height = "wrap", image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 }, padding = lc.padding( 15 ) })
-  
-  local levelView = lc:build("text", { width = "wrap", height = "wrap", data = function() return "Level: " .. level end, padding = lc.padding( 15 ), font = "big" })
-  
-  local shipView = lc:build("linear", { width = 250, height = "wrap", direction = "v", padding = lc.padding( 15 ) })
-    
-  shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, value = function() return math.abs(player.spd) end, maxValue = player.maxSpd, background = { 255, 0, 0, 100 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 10, largerEvery = 3 }} ))
-  shipView:addChild( lc:build("numberAsBar", { width = "fill", height = 25, filledColor = { 255, 255, 0, 255 }, value = function() return player.power end, maxValue = player.maxPower } ))
-  
-  local scoreView = lc:build("text", { width = 250, height = "wrap", data = function() return "Score: " .. score end, padding = lc.padding( 15 ), gravity = { "end", "center" }, font = "big" })
-  
+  local game = lc:build("freeform", { width = "fill", height = "fill", render = render })  
+  local livesView = lc:build("ast.numberAsImage", { image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 } }) 
+  local shipView = lc:build("stats")  
+  local levelView = lc:build("ast.text", { data = function() return "Level: " .. level end })
+  local scoreView = lc:build("ast.text", { width = 250, data = function() return "Score: " .. score end })
+
+  local root = lc:build("root", {})  
   local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )
   
-  stackroot:addChild(main)
-  stackroot:layoutingPass()
+  root:addChild(main)
+  root:layoutingPass()
   
   love.update = function(dt)
     fps = 1 / dt
     score = score + 1
-    stackroot:update(dt)
+    root:update(dt)
     
     if love.keyboard.isDown("w") then
       player.spd = player.spd + player.acc * dt
@@ -89,6 +91,6 @@ return function(lc)
   end
   
   love.draw = function()
-    stackroot:render()
+    root:render()
   end
 end
