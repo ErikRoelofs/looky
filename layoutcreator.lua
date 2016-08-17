@@ -444,7 +444,7 @@ return function()
       if start.background and start.background.file and type(start.background.file) == "string" then
         start.background.file = love.graphics.newImage(start.background.file)
       end
-      if start.background and not start.background.colorFilter then
+      if start.background and start.background.file and not start.background.colorFilter then
         start.background.colorFilter = { 255, 255, 255, 255 }
       end
       return start
