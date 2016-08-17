@@ -44,7 +44,7 @@ return function(lc)
   
   -- the components of the main gui
   local game = lc:build("freeform", { width = "fill", height = "fill", render = render })  
-  local livesView = lc:build("ast.numberAsImage", { image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 } }) 
+  local livesView = lc:build("ast.numberAsImage", { image = "images/asteroids/ship.png", maxValue = 6, value = function() return lives end }) 
   local shipView = lc:build("stats")  
   local levelView = lc:build("ast.text", { data = function() return "Level: " .. level end })
   local scoreView = lc:build("ast.text", { width = 250, data = function() return "Score: " .. score end })
@@ -101,6 +101,13 @@ return function(lc)
       player.power = player.power - 1
       shoot()
     end
+    if key == "r" and lives > 1 then
+      lives = lives - 1
+    end
+    if key == "e" then
+      lives = lives + 1
+    end
+
   end
   
   -- draw the gui to the screen

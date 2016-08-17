@@ -2,18 +2,17 @@ MVP
 - onload, onremove events?
 - multiline text
 - proper (default) signaling
-- how to do signals returning from child to parent
+- how to do signals returning from child to parent -> or just child adding itself as a payload? (but coords?)
 - extra schema options:
   - reuse existing schema as option (possibly already?)
   - filter these tables to meet this schema
 - samples (remove existing junk, add real samples) (as separate projects)
-  - simple 4pane
+  - simple 4pane V
   - shooter hud
   - rpg with dialogs
-  - rts, C&C style
+  - rts, C&C style V
   - collectible card game
 - bugfixes that result from the creation of samples
-- number-as-bar view
 - docs
 
 V2
