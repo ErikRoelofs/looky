@@ -16,7 +16,9 @@ return function(lc)
     power = 5,
     maxPower = 5,
     powerChrg = 1,
-    image = love.graphics.newImage("images/asteroids/ship.png")
+    image = love.graphics.newImage("images/asteroids/ship.png"),
+    bullet = love.graphics.newImage("images/asteroids/bullet.png"),
+    bulletSpd = 10,
   }
   
   shots = {}
@@ -29,14 +31,14 @@ return function(lc)
   
   lc:registerStyledLayout("ast.numberAsImage", "numberAsImage", { width = "wrap", height = "wrap", padding = lc.padding( 15 ) })
   lc:registerStyledLayout("ast.text", "text", { width = "wrap", height = "wrap", padding = lc.padding( 15 ), font = "big" } )
-  lc:registerStyledLayout("ast.numberAsBar", "numberAsBar", {width = "fill", height = 25, background = { 255, 255, 255, 255 }, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 10, largerEvery = 3 }} )  
+  lc:registerStyledLayout("ast.numberAsBar", "numberAsBar", {width = "fill", height = 25, background = { 255, 255, 255, 255 }, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 5 }} )  
   
   -- render function for game window itself
   render = function()
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(player.image, player.x, player.y, player.r, 1, 1, player.image:getWidth() / 2, player.image:getHeight() / 2)
     for _, shot in ipairs(shots) do
-      love.graphics.rectangle("fill", shot.x, shot.y, 10, 10 )
+      love.graphics.draw(player.bullet, shot.x, shot.y, shot.r )
     end
   end
   
@@ -47,7 +49,6 @@ return function(lc)
   local levelView = lc:build("ast.text", { data = function() return "Level: " .. level end })
   local scoreView = lc:build("ast.text", { width = 250, data = function() return "Score: " .. score end })
 
-  -- setting up the window
   local root = lc:build("root", {})  
   local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )  
   root:addChild(main)
@@ -89,8 +90,8 @@ return function(lc)
     player.y = player.y + player.spd * (math.cos(player.r)*-1)
     
     for _, shot in ipairs(shots) do
-      shot.x = shot.x + 10 * math.sin(shot.r)
-      shot.y = shot.y + 10 * (math.cos(shot.r)*-1)      
+      shot.x = shot.x + player.bulletSpd * math.sin(shot.r)
+      shot.y = shot.y + player.bulletSpd * (math.cos(shot.r)*-1)      
     end
     
   end
@@ -109,8 +110,8 @@ return function(lc)
   
   shoot = function()
     table.insert(shots, {
-      x = player.x,
-      y = player.y,
+      x = player.x + 50 * math.sin(player.r),
+      y = player.y + 50 * (math.cos(player.r)*-1),
       r = player.r
     })
   end
