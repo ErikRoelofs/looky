@@ -19,6 +19,8 @@ return function(lc)
     image = love.graphics.newImage("images/asteroids/ship.png")
   }
   
+  shots = {}
+  
   -- setup styles
   lc:registerLayout("stats", require ( "samples/asteroids/stats" )(lc) )
   lc:registerLayout("bar", require ( "samples/asteroids/bar" )(lc) )
@@ -33,22 +35,26 @@ return function(lc)
   render = function()
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(player.image, player.x, player.y, player.r, 1, 1, player.image:getWidth() / 2, player.image:getHeight() / 2)
+    for _, shot in ipairs(shots) do
+      love.graphics.rectangle("fill", shot.x, shot.y, 10, 10 )
+    end
   end
   
+  -- the components of the main gui
   local game = lc:build("freeform", { width = "fill", height = "fill", render = render })  
   local livesView = lc:build("ast.numberAsImage", { image = "images/asteroids/ship.png", maxValue = 6, value = { value = 5 } }) 
   local shipView = lc:build("stats")  
   local levelView = lc:build("ast.text", { data = function() return "Level: " .. level end })
   local scoreView = lc:build("ast.text", { width = 250, data = function() return "Score: " .. score end })
 
+  -- setting up the window
   local root = lc:build("root", {})  
-  local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )
-  
+  local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )  
   root:addChild(main)
   root:layoutingPass()
   
+  -- update function; allow movement and increase score
   love.update = function(dt)
-    fps = 1 / dt
     score = score + 1
     root:update(dt)
     
@@ -82,15 +88,30 @@ return function(lc)
     player.x = player.x + player.spd * math.sin(player.r)
     player.y = player.y + player.spd * (math.cos(player.r)*-1)
     
+    for _, shot in ipairs(shots) do
+      shot.x = shot.x + 10 * math.sin(shot.r)
+      shot.y = shot.y + 10 * (math.cos(shot.r)*-1)      
+    end
+    
   end
   
   love.keypressed = function(key)
     if key == "space" and player.power >= 1 then
       player.power = player.power - 1
+      shoot()
     end
   end
   
+  -- draw the gui to the screen
   love.draw = function()
     root:render()
+  end
+  
+  shoot = function()
+    table.insert(shots, {
+      x = player.x,
+      y = player.y,
+      r = player.r
+    })
   end
 end
