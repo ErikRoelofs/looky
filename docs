@@ -4,24 +4,16 @@ Creating a new layout type:
 - layout must be a table with a 'build' and 'schema' method
 
 Build:
-- should return a view
+- must return a view
 - is passed whatever options are passed to lc upon instantation
-- is also passed a base view, with base methods
-- must return a valid view object
 - you CAN return a different type of view entirely, if you just want to make a composite view
-- can overrule:
-  - renderCustom, which needs to render the view
-  - layoutingPass, which needs to lay out the view's children
-  - contentWidth, contentHeight, which determine the size of the view's content
-  - clickedViews, which should a table with whether this view should be considered "clicked", and all children that should be considered clicked (ask the children if they wish to be clicked by calling this method on them, don't presume)
-  - update, which is called on every update cycle and should call the update function for all children
-- should probably not overrule anything else unless you really know what you're doing
-- views should not render outside their granted width/height, regardless of big they would LIKE to be
+- in fact; that will probably happen the majority of the time. it should be very rare to need to make a completely new view
+- views must not render outside their granted width/height, regardless of big they would LIKE to be
 - views are responsible for their own padding
-- views should be responsible for their children's margins
+- views are responsible for their children's margins
 
 Schema:
-  - should return a schema table
+  - must return a schema table
   - should PROBABLY extend from an existing schema
   - should detail exactly what is and is not valid in terms of passed options
   - if you need a new schema validator or partial schema, register it: lc:registerValidator()
@@ -29,17 +21,14 @@ Schema:
 
 Setting up a layout:
 
-- should probably start with a root
-- should definitely start with something that has a limited size (not "fill")
+- must start with a root (a root being any view which cheats the width/height system)
 - views are created by using lc:build(type, options)
-- views are added to other views using view:addChild(child)
+- views are added to (most) other views using view:addChild(child)
 - before rendering, make sure to call layoutingPass on your root: root:layoutingPass()
 - to render, call the render method on your root view: root:render()
 - to update, call the render method on your root view: root:update(dt)
 - if you want a view to re-layout its children, call layoutingPass() on it again
 - if you want a view to re-size ITSELF, call layoutingPass() on its parent! Views cannot control their own size.
-- to detect what is clicked, call clickedViews on a view: view:clickedViews(x,y). This will return a table with all views that exist on those coordinates relative to the topleft of the view you called it on
-- something something signals
 
 Fonts:
 
@@ -49,3 +38,45 @@ Fonts:
 Images:
 
 - handle your own. not currently handled by LC.
+
+
+Interface of a view:
+
+ALL VIEWS MUST IMPLEMENT: (s -> you must implement, w -> comes with a working implementation)
+    layoutingPass (s) [called externally]
+    renderCustom (s) [used by render]
+    update (s) [called externally]
+    contentWidth (s) [used by contentWidthWithPadding -> getDesiredWidth ]
+    contentHeight (s) [used by contentHeightWithPadding -> getDesiredHeight ]
+    
+    render (w) [called externally]
+    desiredWidth (w) [called externally]
+    desiredHeight (w) [called externally]
+    receiveOutsideSignal (w) [called externally]
+    addListener (w) [called externally]
+    grantedWidth (w) [called externally]
+    grantedHeight (w) [called externally]
+    contentWidthWithPadding (w) [used by desiredWidth]
+    contentHeightWithPadding (w) [used by desiredHeight]
+    setDimensions (w) [called externally]
+
+ALL CONTAINER VIEWS MUST IMPLEMENT:
+    receiveChildSignal (w)
+    addChild (w)
+    getChild (w)
+    getChildren (w)
+    removeChild (w)
+    removeAllChildren (w)
+
+
+ALL VIEWS GET THESE PRIVATE METHODS BY DEFAULT:    
+    renderBackground = (w)
+    setBackground = (w)
+    prepareBackground = (w)
+    renderBorder = (w)
+    startCoordsBasedOnGravity = (w)
+    signalChildren = (w)
+    messageOut (w)
+    translateCoordsToChild (s)
+    translateCoordsFromChild (s)
+    coordsInMe (w)
