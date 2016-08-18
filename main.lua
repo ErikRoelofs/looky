@@ -3,7 +3,7 @@ if debug then require("mobdebug").start() end
 
 function love.load()  
   
-  --test()
+  test()
   
   local lcF = require "layoutcreator"
   local lc = lcF()
@@ -24,6 +24,7 @@ function love.load()
   lc:registerLayout("aquarium", require "layout/aquarium"(lc))
   lc:registerLayout("grid", require "layout/grid"(lc))
   lc:registerLayout("numberAsBar", require "layout/numberasbar"(lc))
+  lc:registerLayout("slotted", require "layout/slotted"(lc))
   
   
   lc:registerFont("default", love.graphics.newFont(20))
@@ -38,7 +39,7 @@ function love.load()
   lc:registerStyledLayout("filler.bottomleft", "filler", { bottom = "fill", left = "fill" })
   lc:registerStyledLayout("filler.center", "filler", { top = "fill", bottom = "fill", left = "fill", right = "fill" })
   
-  require "samples/asteroids"(lc)
+  require "samples/shooter"(lc)
 end
 
 function test() 

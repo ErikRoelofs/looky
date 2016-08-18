@@ -4,8 +4,7 @@ MVP
 - proper (default) signaling
 - how to do signals returning from child to parent -> or just child adding itself as a payload? (but coords?)
 - extra schema options:
-  - reuse existing schema as option (possibly already?)
-  - filter these tables to meet this schema
+  - filter this table to meet this schema (may need more work)
 - samples (remove existing junk, add real samples) (as separate projects)
   - simple 4pane V
   - shooter hud

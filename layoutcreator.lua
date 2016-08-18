@@ -485,7 +485,16 @@ return function()
         schema[k] = v
       end
       return schema
-    end,    
+    end,
+    -- only operates on top-level; doesn't validate
+    conformToSchema = function( self, schema, t )
+      local schema = self:getSchema(schema)
+      local output = {}
+      for k, v in pairs(schema) do
+        output[k] = t[k]
+      end
+      return output
+    end,
   }
   lc.registerStyledLayout = function( self, newName, oldName, defaultOptions  )
     local schema = lc:extendSchema(oldName, {})

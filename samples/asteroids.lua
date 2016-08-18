@@ -18,7 +18,7 @@ return function(lc)
     powerChrg = 1,
     image = love.graphics.newImage("images/asteroids/ship.png"),
     bullet = love.graphics.newImage("images/asteroids/bullet.png"),
-    bulletSpd = 10,
+    bulletSpd = 20,
   }
   
   shots = {}

@@ -79,9 +79,23 @@ tests = {
     assert(schema.cookies.schemaType == "number", "Schema should have cookies option that is a number.")
     
   end,
+  it_should_allow_adding_schemas_in_others = function(lc)
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "string" } } } )
+    lc:registerLayout("test2", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "string" }, test = lc:getSchema("test") } } )
+    local schema = lc:getSchema("test2")
+    assert(schema.test.name.schemaType == "string", "Should have inserted the sub-schema here")
+    
+  end,
   it_should_not_extend_unknown_schemas = function(lc) 
     v, e = pcall( function() lc:extendSchema("cookies", {} ) end )
     assert(v == false, "Should not be able to extend an unknown schema.")
+  end,
+  it_should_conform_schemas = function(lc)
+    lc:registerLayout("test", { build = function(options) return options.name end, schema = {name = { required = true, schemaType = "string" } } } )
+    local input = { name = "hi", junk = "no" }
+    local output = lc:conformToSchema( "test", input )
+    assert(output.name == "hi", "Properties in the schema should be unchanged")
+    assert(not output.junk, "Properties not in the schema should be filtered")
   end,
   it_should_merge_options = function(lc) 
     local base = {alreadyThere = false, override = false}
@@ -160,8 +174,6 @@ tests = {
     
     assert(view.name == "set", "The options passed to the view should be there")
     assert(view.name2 == "fixed", "The options not passed to the view should go to default (even if required)")
-    
-    
     
   end,
   
