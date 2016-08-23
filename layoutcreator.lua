@@ -675,8 +675,21 @@ paddingHelper = function(left, top, right, bottom)
   end
 end
   
+--[[
+  Factory function to create a new, empty LayoutCreator
+  Will not contain any type of views except for 'base' and no fonts except for 'base'
+  
+  @return LayoutCreator
+]]
 return function()
+  --[[
+    The main object for this library. You use this to register and build your Views.
+  ]]
   local lc = {
+    --[[
+      Kinds holds all the different Views registered to the system.
+      By default, only contains "base" which cannot be built, but can be intantiated using the special *createBaseLayout* function.
+    ]]
     kinds = {
       base = { 
         build = function() assert(false, "Base cannot be instantiated") end,
@@ -732,17 +745,43 @@ return function()
         }
       }
     },
-
+    --[[
+      Fonts contains all the fonts registered to the LC. 
+      By default, contains only "base", which is löve's default font
+    ]]
     fonts = {
       base = love.graphics.newFont()
     },
+    --[[
+      Initializes a Validator to check schemas. 
+      You will not interact with this directly.
+      By default, Validator will contain all the basic validation rules.
+      You can register more through LC's own registerValidator function.
+    ]]      
     validator = require ( _PACKAGE .. "/validation/validator" )(),
+    --[[
+      Requests LC to build a new view. Will validate the options passed before building.
+      
+      @param kind: string; the name of the view you want built.
+      @param options: table; the options that should be passed to the view. These will be checked against the Schema defined for the view.
+      
+      @return View; the requested view
+      @throws if the kind is unknown or the options do not pass schema validation
+    ]]
     build = function( self, kind, options )
       options = options or {}
       assert(self.kinds[kind], "Requesting layout " .. kind .. ", but I do not have it")            
       self:validate(kind, options)
       return self.kinds[kind].build(options)
     end,
+    --[[
+      Register a new type of buildable layout. After registering, you can build() it.
+      
+      @param name: string; the name of this kind of view that needs to be passed to build to create it
+      @param layoutTable: table; a table that contains at least a build method (that will build a new instance of the view) and a schema table that defines the View's schema
+      
+      @return nil
+    ]]
     registerLayout = function( self, name, layoutTable )
       assertArg("string", name, "Name" )
       assertArg("table", layoutTable, "layoutTable", name )
@@ -752,20 +791,50 @@ return function()
       
       self.kinds[name] = layoutTable
     end,
+    --[[
+      Registers a new type of font that can be used by views.
+      
+      @param name: string; the name of this font
+      @param font: Font; a font created by love.graphics.newFont or similar method
+      
+      @return nil
+    ]]
     registerFont = function( self, name, font )
       assertArg("string", name, "Name")
       assertArg("userdata", font, "Font", name)
       assert(not self.fonts[name], "A font named " .. name .. " was previously registered")
       self.fonts[name] = font
     end,
+    --[[
+      Recovers a font that was previously registered.
+      
+      @param name: string; the name of the font you want
+      
+      @return Font; the requested Font
+    ]]
     getFont = function( self, name )
       assert(self.fonts[name], "Requesting font " ..  name .. ", but I do not have it")
       return self.fonts[name]
     end,
+    --[[
+      see documentation for paddingHelper function, above
+    ]]
     padding = function(left, top, right, bottom)
       return paddingHelper(left, top, right, bottom)
     end,
+    --[[
+      see documentation for imageHelper function, above
+    ]]
     imageHelper = imageHelper,
+    --[[
+      Special function that can be used by views to create an empty stub of a view.
+      This is the starting point for any View that cannot be based on a working, existing view.
+      You probably won't need it.
+      
+      @param options: Table; the default options for this new view. Follows the Base schema.
+      
+      @return View; a View stub
+    ]]
     makeBaseLayout = function(self, options)
       local start = baseLayout(options.width, options.height)      
       start.padding = self.padding(options.padding)      
@@ -785,15 +854,43 @@ return function()
       end
       return start
     end,
+    --[[
+      Helper function. Merges two sets of options, with the second param taking precedence over the first.
+      
+      @param baseOptions: Table; the first set of options
+      @param options: Table; the second set of options
+      
+      @return Table; the merged options, added to the baseOptions table
+    ]]
     mergeOptions = function (baseOptions, options)
       for k, v in pairs(options) do
         baseOptions[k] = v
       end
       return baseOptions   
     end,
+    --[[
+      Validates the given options against the schema of the given kind.
+      Throws an error if the options do not pass the validation.
+      
+      @param kind: string; the name of the schema to validate against
+      @param options: table; the options you wish to validate
+      
+      @return nil
+      @throws if the options do not fit the required schema
+    ]]
     validate = function(self, kind, options)
       self.validator:validate(kind, self.kinds[kind].schema, options)
     end,    
+    --[[
+      Registers a new validator.
+      If you pass a function, it will register a new validation function that will be called when you use that name.
+      If you pass a table (which is a schema itself), then when you use the name it will as a type, it will replace it with the schema.
+      
+      @param name: string; the name you will reference this by in your schemas
+      @param validator: function or table; what should be checked when you use this schemaType
+      
+      @return nil
+    ]]
     registerValidator = function(self, name, validator)
       if type(validator) == "function" then
         self.validator:addSchemaType(name, validator)
@@ -801,6 +898,14 @@ return function()
         self.validator:addPartialSchema(name, validator)
       end
     end,
+    --[[
+      Extend a schema, by taking all the options of the first and then adding the modification options to them.
+      Does not register the schema; only returns it.
+      SPECIAL: if you pass an option from the base schema with the value FALSE, it will be removed from the baseSchema
+      
+      @param startWith: string; the name of the schema to use as a base
+      @param andModifyWith: table; the entries that need to be modified. Will overwrite any matching keys in base.
+    ]]
     extendSchema = function( self, startWith, andModifyWith )
       assert(self.kinds[startWith] and self.kinds[startWith].schema, "Trying to extend an unregistered schema: " .. startWith )
       local initial = self.kinds[startWith].schema
@@ -813,16 +918,32 @@ return function()
       end
       return schema
     end,
-    getSchema = function(self, startWith)
-      assert(self.kinds[startWith] and self.kinds[startWith].schema, "Trying to get an unregistered schema: " .. startWith )
-      local initial = self.kinds[startWith].schema
+    --[[
+      Get a copy of an existing schema
+      
+      @param name: string; the schema you want
+      
+      @return Table; a copy of the requested schema
+    ]]
+    getSchema = function(self, name)
+      assert(self.kinds[name] and self.kinds[name].schema, "Trying to get an unregistered schema: " .. name )
+      local initial = self.kinds[name].schema
       local schema = {}
       for k, v in pairs(initial) do
         schema[k] = v
       end
       return schema
     end,
-    -- only operates on top-level; doesn't validate
+    --[[
+      @Deprecated
+      Helper method. Removes any keys from the passed t that aren't in the schema.
+      Only operates on top-level; doesn't validate values.
+      
+      @param schema: string; the name of the schema you want to conform to
+      @param t: Table; a table that you want to conform to the schema
+      
+      @return Table; a new table containing only keys from t that exist in the schema
+    ]]
     conformToSchema = function( self, schema, t )
       local schema = self:getSchema(schema)
       local output = {}
@@ -832,6 +953,14 @@ return function()
       return output
     end,
   }
+  --[[
+    Register a new layout that is simply an existing layout with some options prefilled.
+    Used to generate your own styles, and to make extending views easier.
+    
+    @param newName: string; the name by which the styled layout will be known
+    @param oldName: string; the old view you're using as a base
+    @param defaultOptions: Table; the options that are passed to the old view to style it
+  ]]
   lc.registerStyledLayout = function( self, newName, oldName, defaultOptions  )
     local schema = lc:extendSchema(oldName, {})
     for key, value in pairs(schema) do
@@ -854,6 +983,14 @@ return function()
     }
     lc:registerLayout(newName, layout)
   end  
+  --[[
+    Wrap a bunch of views into each other. 
+    Useful if you have views that extend a single view with some extra decoration.
+    (For example, when wrapping a content view in a dragbox or filler)
+    
+    @param ..., Tables; a list of views that need to be wrapped. 
+    @return the Nth View passed, which will contain the N-1th View as a child, which will contain the N-2th View as a child, etc.
+  ]]
   lc.wrap = function( self, ... )        
     args = {...}
     local prev = nil
