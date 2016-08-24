@@ -30,10 +30,10 @@ local function layout(self, children)
   end
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function(options)      
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.offsets = {}
       base.renderCustom = renderAquarium            
       base.layoutingPass = layout
@@ -64,7 +64,7 @@ return function(lc)
       base.useCanvas = options.useCanvas or false
       return base
     end,
-    schema = lc:extendSchema("base",  {
+    schema = looky:extendSchema("base",  {
       useCanvas = {
         required = false,
         schemaType = "boolean"

@@ -1,4 +1,4 @@
-return function(lc)
+return function(looky)
   
   -- setup game consts
   
@@ -18,14 +18,14 @@ return function(lc)
   }
   -- setup styles
 
-  local root = lc:build("root", {})  
-  local main = lc:build("slotted", { width = 800, height = 200, background = { file = "images/shooter/hud.png", fill = "fit" }, slots = {
+  local root = looky:build("root", {})  
+  local main = looky:build("slotted", { width = 800, height = 200, background = { file = "images/shooter/hud.png", fill = "fit" }, slots = {
     health = { x = 10, y = 20, width = 100, height = 100 },
     key1 = { x = 100, y = 20, width = 20, height = 20 }
         
   } } )    
 
-  local health = lc:build("text", { width = "fill", height = "fill", data = function() return tostring(player.health) end })
+  local health = looky:build("text", { width = "fill", height = "fill", data = function() return tostring(player.health) end })
   main:addChildToSlot(health, "health")
   
   root:addChild(main)

@@ -1,7 +1,7 @@
-return function(lc) 
+return function(looky) 
   return { 
     build = function(options)  
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.contentWidth = options.contentWidth or function(self) return 0 end
       base.contentHeight = options.contentHeight or function(self) return 0 end
       
@@ -10,6 +10,6 @@ return function(lc)
       
       return base
     end,
-    schema = lc:extendSchema("base", { render = { required = false, schemaType = "function" }, update = { required = false, schemaType = "function" }})
+    schema = looky:extendSchema("base", { render = { required = false, schemaType = "function" }, update = { required = false, schemaType = "function" }})
   }
 end

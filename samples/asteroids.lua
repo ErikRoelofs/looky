@@ -1,4 +1,4 @@
-return function(lc)
+return function(looky)
   
   -- setup game consts
   lives = 5
@@ -24,14 +24,14 @@ return function(lc)
   shots = {}
   
   -- setup styles
-  lc:registerLayout("stats", require ( "samples/asteroids/stats" )(lc) )
-  lc:registerLayout("bar", require ( "samples/asteroids/bar" )(lc) )
+  looky:registerLayout("stats", require ( "samples/asteroids/stats" )(looky) )
+  looky:registerLayout("bar", require ( "samples/asteroids/bar" )(looky) )
 
-  lc:registerFont("big", love.graphics.newFont( 32 ))
+  looky:registerFont("big", love.graphics.newFont( 32 ))
   
-  lc:registerStyledLayout("ast.numberAsImage", "numberAsImage", { width = "wrap", height = "wrap", padding = lc.padding( 15 ) })
-  lc:registerStyledLayout("ast.text", "text", { width = "wrap", height = "wrap", padding = lc.padding( 15 ), font = "big" } )
-  lc:registerStyledLayout("ast.numberAsBar", "numberAsBar", {width = "fill", height = 25, background = { 255, 255, 255, 255 }, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, padding = lc.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 5 }} )  
+  looky:registerStyledLayout("ast.numberAsImage", "numberAsImage", { width = "wrap", height = "wrap", padding = looky.padding( 15 ) })
+  looky:registerStyledLayout("ast.text", "text", { width = "wrap", height = "wrap", padding = looky.padding( 15 ), font = "big" } )
+  looky:registerStyledLayout("ast.numberAsBar", "numberAsBar", {width = "fill", height = 25, background = { 255, 255, 255, 255 }, filledColor = { 255, 255, 0, 255 }, emptyColor = { 0, 255, 255, 255 }, padding = looky.padding(2), border = { color = { 0, 255, 0, 100 }, thickness = 2 }, notches = { color = { 0, 0, 255, 255 }, amount = 5 }} )  
   
   -- render function for game window itself
   render = function()
@@ -43,14 +43,14 @@ return function(lc)
   end
   
   -- the components of the main gui
-  local game = lc:build("freeform", { width = "fill", height = "fill", render = render })  
-  local livesView = lc:build("ast.numberAsImage", { image = "images/asteroids/ship.png", maxValue = 6, value = function() return lives end }) 
-  local shipView = lc:build("stats")  
-  local levelView = lc:build("ast.text", { data = function() return "Level: " .. level end })
-  local scoreView = lc:build("ast.text", { width = 250, data = function() return "Score: " .. score end })
+  local game = looky:build("freeform", { width = "fill", height = "fill", render = render })  
+  local livesView = looky:build("ast.numberAsImage", { image = "images/asteroids/ship.png", maxValue = 6, value = function() return lives end }) 
+  local shipView = looky:build("stats")  
+  local levelView = looky:build("ast.text", { data = function() return "Level: " .. level end })
+  local scoreView = looky:build("ast.text", { width = 250, data = function() return "Score: " .. score end })
 
-  local root = lc:build("root", {})  
-  local main = lc:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )  
+  local root = looky:build("root", {})  
+  local main = looky:build("4pane", { width = "fill", height = "fill", back = game, bottomleft = livesView, topright = scoreView, topleft = levelView, bottomright = shipView } )  
   root:addChild(main)
   root:layoutingPass()
   

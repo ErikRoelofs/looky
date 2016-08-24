@@ -1,51 +1,51 @@
-function mainview(lc)
-  local root = lc:build("root", {direction = "v"})
+function mainview(looky)
+  local root = looky:build("root", {direction = "v"})
    
-  root:addChild(makeHand(lc))
-  root:addChild( lc:build("linear", {direction="h", width="fill", height = "fill", weight = 2} ) )
-  root:addChild(makeHand(lc))
+  root:addChild(makeHand(looky))
+  root:addChild( looky:build("linear", {direction="h", width="fill", height = "fill", weight = 2} ) )
+  root:addChild(makeHand(looky))
   
   local middle = root:getChild(2)
  
-  middle:addChild( makeVerticalHand(lc) )
-  middle:addChild( lc:build("linear", {direction="v", width="fill", height = "fill", weight = 2} ) )
-  middle:addChild( makeVerticalHand(lc) )
+  middle:addChild( makeVerticalHand(looky) )
+  middle:addChild( looky:build("linear", {direction="v", width="fill", height = "fill", weight = 2} ) )
+  middle:addChild( makeVerticalHand(looky) )
  
-  root:getChild(2):getChild(2):addChild(makestack(lc))
+  root:getChild(2):getChild(2):addChild(makestack(looky))
   
-  initialPass(root, lc)
+  initialPass(root, looky)
   
   return root
 end
 
-function makestack(lc)
-  local stack = lc:build("stack", {width = "fill", height = "fill", tiltDirection = { "start", "start" }, tiltAmount = {2,4}, background={0,0,0,0}, gravity = { "center", "center" } } )
+function makestack(looky)
+  local stack = looky:build("stack", {width = "fill", height = "fill", tiltDirection = { "start", "start" }, tiltAmount = {2,4}, background={0,0,0,0}, gravity = { "center", "center" } } )
   local i = 1
   while i < 53 do
-      stack:addChild(makeCard(i, lc))
+      stack:addChild(makeCard(i, looky))
       i = i + 1
   end
   return stack
 end
 
-function makeHand(lc)
-  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, background={0,0,0,0} } )
+function makeHand(looky)
+  return looky:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "end", "none" }, tiltAmount = {25,0}, background={0,0,0,0} } )
 end
 
-function makeVerticalHand(lc)
-  return lc:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "none", "end" }, tiltAmount = {0,25}, background={0,0,0,0} } )    
+function makeVerticalHand(looky)
+  return looky:build("stack", {width = "wrap", height = "wrap", tiltDirection = { "none", "end" }, tiltAmount = {0,25}, background={0,0,0,0} } )    
 end
 
-function makeCard(i, lc)
+function makeCard(i, looky)
   local background = { 0, 0, 255, 255 }
   if i == 0 then
     background = { 255, 0, 0, 255 }
   end
-  return lc:build("text", {data={value="C" .. i}, width = 100, height = 100, background=background})
+  return looky:build("text", {data={value="C" .. i}, width = 100, height = 100, background=background})
 end
 
-function initialPass(root, lc)
-  local child = makeCard(0, lc)
+function initialPass(root, looky)
+  local child = makeCard(0, looky)
   root:getChild(1):addChild(child)
   root:getChild(2):getChild(1):addChild(child)
   root:getChild(2):getChild(3):addChild(child)
@@ -60,14 +60,14 @@ end
 
 local count = 0
 
-return function(lc)
+return function(looky)
   return {
-    root = mainview(lc),
-    lc = lc,
+    root = mainview(looky),
+    looky = looky,
     update = function(self, dt)
       
       if love.keyboard.isDown("r") then
-        self.root = mainview(self.lc)
+        self.root = mainview(self.looky)
       end
       
       count = count+dt
@@ -91,7 +91,7 @@ return function(lc)
           self.root:layoutingPass()
         end
       end
-      initialPass(self.root, self.lc)      
+      initialPass(self.root, self.looky)      
     end,
     draw = function(self)
       self.root:render()

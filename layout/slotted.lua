@@ -17,10 +17,10 @@ local function layout(self, children)
   end
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function(options)      
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.slots = options.slots
       base.renderCustom = renderSlotted
       base.layoutingPass = layout
@@ -30,7 +30,7 @@ return function(lc)
       end        
       return base
     end,
-    schema = lc:extendSchema("base",  {
+    schema = looky:extendSchema("base",  {
       slots = {
         required = true,
         schemaType = "array",

@@ -1,13 +1,13 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)
         
-      local container = lc:build( "aquarium", {width="fill", height="fill", background = { 15,35,15,255}, useCanvas = true })
+      local container = looky:build( "aquarium", {width="fill", height="fill", background = { 15,35,15,255}, useCanvas = true })
       container.locX = options.locX
       container.locY = options.locY
 
       for _, unit in ipairs(options.units) do
-        local child = lc:build("unit", {})
+        local child = looky:build("unit", {})
         child.unit = unit
         container:addChild( child, child.unit.x - container.locX , child.unit.y - container.locY)
       end

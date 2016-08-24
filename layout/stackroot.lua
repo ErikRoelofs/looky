@@ -1,9 +1,9 @@
-return function(lc)
+return function(looky)
   return {
     build = function(options)  
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       local baseOptions = {width="fill", height="fill", background = options.background or {0,0,0,0}}
-      local child = lc:build("stack", lc.mergeOptions(baseOptions, options))
+      local child = looky:build("stack", looky.mergeOptions(baseOptions, options))
       local root = {
         base = base,
         addChild = function(self, child, position)
@@ -49,14 +49,14 @@ return function(lc)
         removeChild = function(self,target)
           self.stack:removeChild(target)
         end,
-        removeAllChildren = function(self)
-          self.stack:removeAllChildren()
+        removeAllookyhildren = function(self)
+          self.stack:removeAllookyhildren()
         end,
         receiveSignal = function(self, signal, payload)
           return self.stack:receiveSignal(signal, payload)
         end,
-        signalChildren = function(self, signal, payload)
-          return self.stack:signalChildren(signal, payload)
+        signalookyhildren = function(self, signal, payload)
+          return self.stack:signalookyhildren(signal, payload)
         end,
         messageOut = function(self, signal, payload)
           return self.stack:messageOut(signal, payload)
@@ -72,6 +72,6 @@ return function(lc)
       root.signalHandlers = root.stack.signalHandlers
       return root
     end,
-    schema = lc:extendSchema("base", {width = false, height = false})
+    schema = looky:extendSchema("base", {width = false, height = false})
   }
 end

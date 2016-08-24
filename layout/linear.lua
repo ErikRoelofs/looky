@@ -196,10 +196,10 @@ local function scaffoldViews(self)
   end
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function (options)
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.renderCustom = renderChildren
       base.direction = options.direction or "v"
       if base.direction == "v" then
@@ -245,7 +245,7 @@ return function(lc)
       
       return base
     end,
-    schema = lc:extendSchema("base", 
+    schema = looky:extendSchema("base", 
       {
         direction = { required = false, schemaType = "fromList", list = { "v", "h" } },
         childSpacing = { required = false, schemaType = "number" }

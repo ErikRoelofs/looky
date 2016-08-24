@@ -1,10 +1,7 @@
 MVP
-- onload, onremove events?
+- slotted view
 - multiline text
 - proper (default) signaling
-- how to do signals returning from child to parent -> or just child adding itself as a payload? (but coords?)
-- extra schema options:
-  - filter this table to meet this schema (may need more work)
 - samples (remove existing junk, add real samples) (as separate projects)
   - simple 4pane V
   - shooter hud
@@ -14,13 +11,17 @@ MVP
 - bugfixes that result from the creation of samples
 - docs
 
+
 V2
 - animation
 
 Undetermined:
-- slotted view
 - scrolling views
 - aquarium sorting
 - gradient backgrounds
 - rapid bootstrap
 - fix "dict" validator  -> requires validating non-tables
+- on-attach events, on-remove events? (although the view isn't aware of these and they could just be signals)
+- extra schema options:
+  - filter this table to meet this schema (may need more work)
+- how to do signals returning from child to parent -> or just child adding itself as a payload? (but coords?)

@@ -17,10 +17,10 @@ local function layout(self, children)
   end
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function(options)      
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.renderCustom = renderDragbox
       base.oldAddChild = base.addChild
       base.offset = options.offset or { 0, 0 }      
@@ -33,7 +33,7 @@ return function(lc)
       end
       return base
     end,
-    schema = lc:extendSchema("base",  {
+    schema = looky:extendSchema("base",  {
       offset = { 
         required = false, 
         schemaType = "table",

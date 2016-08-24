@@ -107,10 +107,10 @@ local function signalTargetedChildren(self, signal, payload)
   end
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function (options)
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.renderCustom = renderChildren  
       base.layoutingPass = function(self) layout(self, self.children) end  
       base.contentWidth = containerWidth
@@ -144,7 +144,7 @@ return function(lc)
 
       return base
     end,
-    schema = lc:extendSchema("base", {
+    schema = looky:extendSchema("base", {
         tiltAmount = { 
           required = false, 
           schemaType = "table", 

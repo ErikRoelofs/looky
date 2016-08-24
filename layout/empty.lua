@@ -1,9 +1,9 @@
 local render = function(self) end
 
-return function(lc)
+return function(looky)
   return {
     build = function(options)
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.renderCustom = render      
       base.contentWidth = function(self)
         return self.width

@@ -27,16 +27,16 @@ local textHeight = function (self)
   return self.font:getHeight()
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function(options)
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.renderCustom = renderText
       base.data = options.data
       base.textColor = options.textColor or {255,255,255,255}
       base.contentWidth = textWidth
       base.contentHeight = textHeight
-      base.font = lc:getFont(options.font or "base")
+      base.font = looky:getFont(options.font or "base")
       base.dataKey = options.dataKey or "value"
       base.multiline = options.multiline or false
       if options.externalSignalHandlers then
@@ -51,7 +51,7 @@ return function(lc)
       end
       return base
     end,
-    schema = lc:extendSchema("base",  {
+    schema = looky:extendSchema("base",  {
       data = { 
         required = true, 
         schemaType = "oneOf",

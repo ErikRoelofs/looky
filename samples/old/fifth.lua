@@ -1,4 +1,4 @@
-function mainview(lc)
+function mainview(looky)
   
   local rf = function(self)
     self:renderBackground()
@@ -17,19 +17,19 @@ function mainview(lc)
     self.color = {255, 255, self.counter * 255, 255}
   end
   
-  local root = lc:build("root", {direction = "v" })
+  local root = looky:build("root", {direction = "v" })
   
-  root:addChild( lc:build("text", { width = "fill", height = "wrap", data = {value="Above!"}, font = "default" } ) )
-  root:addChild( lc:build("freeform", { width = 500, height = 500, render = rf, update = uf, background = { 255, 0, 0, 255 }, border = { color = { 0, 0, 255, 255 }, thickness = 10 } } ) )
-  root:addChild( lc:build("text", { width = "fill", height = "wrap", data = {value= "Below!"}, border = { color = { 0, 255, 0, 255 }, thickness = 5 }, padding = lc.padding(5)} ) )
+  root:addChild( looky:build("text", { width = "fill", height = "wrap", data = {value="Above!"}, font = "default" } ) )
+  root:addChild( looky:build("freeform", { width = 500, height = 500, render = rf, update = uf, background = { 255, 0, 0, 255 }, border = { color = { 0, 0, 255, 255 }, thickness = 10 } } ) )
+  root:addChild( looky:build("text", { width = "fill", height = "wrap", data = {value= "Below!"}, border = { color = { 0, 255, 0, 255 }, thickness = 5 }, padding = looky.padding(5)} ) )
   
   root:layoutingPass()
   return root
 end
 
-return function(lc)
+return function(looky)
   return {
-    root = mainview(lc),
+    root = mainview(looky),
     update = function(self, dt) 
       self.root:update(dt)
     end,

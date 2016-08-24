@@ -1,9 +1,9 @@
-return function(lc)
+return function(looky)
   return {
     build = function(options)  
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       local baseOptions = {direction="h", width="fill", height="fill", background = options.background or {0,0,0,0}}
-      local child = lc:build("linear", lc.mergeOptions(baseOptions, options))
+      local child = looky:build("linear", looky.mergeOptions(baseOptions, options))
       local root = {
         base = base,
         addChild = function(self, child, position)
@@ -52,8 +52,8 @@ return function(lc)
         removeChild = function(self,target)
           self.linear:removeChild(target)
         end,
-        removeAllChildren = function(self)
-          self.linear:removeAllChildren()
+        removeAllookyhildren = function(self)
+          self.linear:removeAllookyhildren()
         end,
         receiveOutsideSignal = function(self, signal, payload, coords)
           self.linear:receiveOutsideSignal(signal, payload, coords)
@@ -65,6 +65,6 @@ return function(lc)
       root:setLinear(child)
       return root
     end,
-    schema = lc:extendSchema("base", {width = false, height = false, direction = { required = false, schemaType="fromList", list = { "h", "v" }}})
+    schema = looky:extendSchema("base", {width = false, height = false, direction = { required = false, schemaType="fromList", list = { "h", "v" }}})
   }
 end

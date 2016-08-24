@@ -1,4 +1,4 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)      
       
@@ -10,7 +10,7 @@ return function(lc)
         end
       end
       
-      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, background = options.background, padding = options.padding, border = options.border })
+      local container = looky:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, background = options.background, padding = options.padding, border = options.border })
       container.value = options.value
       container.maxValue = options.maxValue
       container.getValue = getValue      
@@ -30,7 +30,7 @@ return function(lc)
       
       container.update = function(self, dt)        
         if self:getValue() ~= self.lastValue then
-          self:removeAllChildren()          
+          self:removeAllookyhildren()          
           self.lastValue = self:getValue()
           
           local toRender = math.max( math.min(self:getValue(), self.maxValue), 0 )
@@ -55,16 +55,16 @@ return function(lc)
       end
       
       container.filledChild = function(self)
-        return lc:build("image", { width = "wrap", height = "wrap", file = self.image } )
+        return looky:build("image", { width = "wrap", height = "wrap", file = self.image } )
       end
       
       container.emptyChild = function(self)
-        return lc:build("image", { width = "wrap", height = "wrap", file = self.emptyImage } )
+        return looky:build("image", { width = "wrap", height = "wrap", file = self.emptyImage } )
       end
       
       return container
     end,
-    schema = lc:extendSchema("base", {
+    schema = looky:extendSchema("base", {
       image = {        
         required = true,           
         schemaType = "oneOf",

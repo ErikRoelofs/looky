@@ -1,4 +1,4 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)      
       
@@ -33,7 +33,7 @@ return function(lc)
         end
       end
       
-      local container = lc:build("freeform", {width = options.width, height = options.height, background = options.background, padding = options.padding, render = render, border = options.border})
+      local container = looky:build("freeform", {width = options.width, height = options.height, background = options.background, padding = options.padding, render = render, border = options.border})
       container.value = options.value
       container.maxValue = options.maxValue
       container.getValue = getValue
@@ -47,7 +47,7 @@ return function(lc)
       
       return container
     end,
-    schema = lc:extendSchema("base", {
+    schema = looky:extendSchema("base", {
       filledColor = { required = true, schemaType = "color" },
       emptyColor = { required = false, schemaType = "color" },
       maxValue = {

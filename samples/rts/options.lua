@@ -1,4 +1,4 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)
         
@@ -8,13 +8,13 @@ return function(lc)
         { value = "so I'll just leave those" }, 
         { value = "as an excercise to the reader" },       
       }
-      local border = lc:build( "border", {left = "fill", right = "fill", top = "fill", bottom = "fill"})
-      local container = lc:build( "linear", { width = 300, height = 350, direction = "v" })
+      local border = looky:build( "border", {left = "fill", right = "fill", top = "fill", bottom = "fill"})
+      local container = looky:build( "linear", { width = 300, height = 350, direction = "v" })
       
-      local wrapRight = lc:build( "border", {left = "fill", right = 0, top = 0, bottom = 0})
+      local wrapRight = looky:build( "border", {left = "fill", right = 0, top = 0, bottom = 0})
       
-      local closeButton = lc:build( "text", { width = 100, height = "wrap", padding = lc.padding(5), background = { 120, 120, 120, 255 }, border = { color = { 140, 140, 140, 255 }, thickness = 3 }, data = function() return "Close" end } )
-      local content = lc:build( "list", {width = "fill", height = "fill", texts = values, background = { 100, 125, 125, 200 }, gravity = { "center", "center" } })
+      local closeButton = looky:build( "text", { width = 100, height = "wrap", padding = looky.padding(5), background = { 120, 120, 120, 255 }, border = { color = { 140, 140, 140, 255 }, thickness = 3 }, data = function() return "Close" end } )
+      local content = looky:build( "list", {width = "fill", height = "fill", texts = values, background = { 100, 125, 125, 200 }, gravity = { "center", "center" } })
       
       closeButton.externalSignalHandlers['mouse.down'] = function(self, signal, payload, coords )
         print(coords[1].x .. ", " .. coords[1].y )

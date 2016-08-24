@@ -1,4 +1,4 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)      
     local rf = function(self)
@@ -11,7 +11,7 @@ return function(lc)
     end
       
     return 
-        lc:build( "freeform", {width="fill", height=200, background = { 0,0,0,255}, border = { thickness = 3, color = { 35, 35, 35, 255 }}, padding = lc.padding(3), render = rf })
+        looky:build( "freeform", {width="fill", height=200, background = { 0,0,0,255}, border = { thickness = 3, color = { 35, 35, 35, 255 }}, padding = looky.padding(3), render = rf })
     end,
     schema = {
       units = {

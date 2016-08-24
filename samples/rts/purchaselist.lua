@@ -1,8 +1,8 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)
       
-      local column = lc:build("linear", {width="fill", height="fill", background = { 70, 70, 70, 255 }, border = { thickness = 3, color = { 80, 80, 80, 255 } }, direction = "v", childSpacing = 5, padding = lc.padding(4) })
+      local column = looky:build("linear", {width="fill", height="fill", background = { 70, 70, 70, 255 }, border = { thickness = 3, color = { 80, 80, 80, 255 } }, direction = "v", childSpacing = 5, padding = looky.padding(4) })
       
       local index = 1
       local toShow = 5
@@ -33,7 +33,7 @@ return function(lc)
       end
       
       for i = 1, options.amount do
-        local c = lc:build("buyoption", { num = i, filter = { love.math.random(1, 255), love.math.random(1, 255), love.math.random(1, 255), 255 }})
+        local c = looky:build("buyoption", { num = i, filter = { love.math.random(1, 255), love.math.random(1, 255), love.math.random(1, 255), 255 }})
         if i > 5 then
           c.visibility = "gone"
         end

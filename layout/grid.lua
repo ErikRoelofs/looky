@@ -1,14 +1,14 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)
-      local container = lc:build("linear", {width = options.width, height = options.height, direction="h"})
+      local container = looky:build("linear", {width = options.width, height = options.height, direction="h"})
       local i = 0
       while i < options.columns do
         -- add the column
-        local column = lc:build("linear", { width = "fill", height = "fill", direction="v" })      
+        local column = looky:build("linear", { width = "fill", height = "fill", direction="v" })      
         local j = 0
         while j < options.rows do
-          column:addChild( lc:build( "filler", { left = "fill", right = "fill", top = "fill", bottom = "fill" } ))
+          column:addChild( looky:build( "filler", { left = "fill", right = "fill", top = "fill", bottom = "fill" } ))
           j = j +1
         end
         container:addChild(column)
@@ -16,18 +16,18 @@ return function(lc)
       end
       
       container.setChild = function(self, child, x, y)
-        self:getChild(x):getChild(y):removeAllChildren()
+        self:getChild(x):getChild(y):removeAllookyhildren()
         self:getChild(x):getChild(y):addChild(child)
       end
       container.removeChild = function(self, x, y) 
-        self:getChild(x):getChild(y):removeAllChildren()
+        self:getChild(x):getChild(y):removeAllookyhildren()
       end
     
     
       
       return container
     end,
-    schema = lc:extendSchema("base", {
+    schema = looky:extendSchema("base", {
       rows = {
         required = true,
         schemaType = "number"

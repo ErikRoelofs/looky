@@ -2,7 +2,7 @@ local _NAME = ...
 local _PACKAGE = _NAME:sub(1, -15) -- I should probably clean this up...
 
 --[[
-  assertion function - helps check that you pass the right things to various LC functions, to catch errors earlier
+  assertion function - helps check that you pass the right things to various looky functions, to catch errors earlier
   @param typeTocheck: string; the type of variable that is expected ("string", "number", etc)
   @param value: any; the variable that will be checked against the typeToCheck
   @param fieldName: string; the name of the field in the calling function; to build a proper error message on failure
@@ -31,7 +31,7 @@ end
   
   @return nil
 ]]
-local signalChildren = function(self, signal, payload, coords)
+local signalookyhildren = function(self, signal, payload, coords)
   for i, c in ipairs(self:getChildren()) do
     if c.visibility == "visible" then
       local newCoords = {}
@@ -50,7 +50,7 @@ end
   An image helper to handle some common modifications to images
   Used to layout both backgrounds and the default image view. 
   Do not call these methods repeatedly. Some of them create a canvas, which makes them fairly expensive.
-  Can be accessed through lc.imageHelper  
+  Can be accessed through looky.imageHelper  
 ]]
 local imageHelper = {
   --[[
@@ -340,7 +340,7 @@ local function baseLayout(width, height)
     --[[
       This method will render the background and border for the View.
       It is called before the custom render method so that the background/border are in place for all elements.
-      Note that backgrounds are prepareda and redrawn, not recalculated on each call
+      Note that backgrounds are prepareda and redrawn, not recalookyulated on each call
       
       @return nil
     ]]
@@ -406,7 +406,7 @@ local function baseLayout(width, height)
     --[[
       This method determines where in the view the content should be drawn, based on the set gravity.
       This is relevant for views that are larger than their content.
-      For example; when rendering some text in a large view, this method calculates exactly which x,y you should pass to love.graphics.print()
+      For example; when rendering some text in a large view, this method calookyulates exactly which x,y you should pass to love.graphics.print()
       
       @return x, y: number; the top-left coorindates where you should start drawing to fit the current content based on the gravity
     ]]
@@ -471,13 +471,13 @@ local function baseLayout(width, height)
       
       @return nil
     ]]
-    removeAllChildren = function(self)
+    removeAllookyhildren = function(self)
       self.children = {}
     end,
     --[[
-      docs for signalChildren are with the function's definition at the top of this file
+      docs for signalookyhildren are with the function's definition at the top of this file
     ]]
-    signalChildren = signalChildren,
+    signalookyhildren = signalookyhildren,
     --[[
       This method is called by "the outside" when the view receives a signal.
       (Often this is done by the parent; but the view doesn't know it has one, so everything is treated as "the outside")
@@ -509,7 +509,7 @@ local function baseLayout(width, height)
           if handler == "o" then
             self.messageOut(self, signal, payload, coords)
           elseif handler == "c" then
-            self.signalChildren(self, signal, payload, coords)
+            self.signalookyhildren(self, signal, payload, coords)
           else
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
@@ -551,7 +551,7 @@ local function baseLayout(width, height)
           if handler == "o" then
             self.messageOut(self, signal, payload)
           elseif handler == "c" then
-            self.signalChildren(self, signal, payload, coords)
+            self.signalookyhildren(self, signal, payload, coords)
           else
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
@@ -654,7 +654,7 @@ end
   @return table: { left = number, top = number, right = number, bottom = number }
 ]]
 paddingHelper = function(left, top, right, bottom)
-  assert( not (type(left) == "table" and top ~= nil), "Cannot pass both a table and other values to padding/margin. Did you accidentally call it as a method (ie lc:padding(10)) ?" )
+  assert( not (type(left) == "table" and top ~= nil), "Cannot pass both a table and other values to padding/margin. Did you accidentally call it as a method (ie looky:padding(10)) ?" )
   if left == nil and top == nil and right == nil and bottom == nil then
     return paddingHelper(0,0,0,0)
   elseif top == nil and right == nil and bottom == nil then
@@ -685,7 +685,7 @@ return function()
   --[[
     The main object for this library. You use this to register and build your Views.
   ]]
-  local lc = {
+  local looky = {
     --[[
       Kinds holds all the different Views registered to the system.
       By default, only contains "base" which cannot be built, but can be intantiated using the special *createBaseLayout* function.
@@ -746,7 +746,7 @@ return function()
       }
     },
     --[[
-      Fonts contains all the fonts registered to the LC. 
+      Fonts contains all the fonts registered to the looky. 
       By default, contains only "base", which is löve's default font
     ]]
     fonts = {
@@ -756,11 +756,11 @@ return function()
       Initializes a Validator to check schemas. 
       You will not interact with this directly.
       By default, Validator will contain all the basic validation rules.
-      You can register more through LC's own registerValidator function.
+      You can register more through looky's own registerValidator function.
     ]]      
     validator = require ( _PACKAGE .. "/validation/validator" )(),
     --[[
-      Requests LC to build a new view. Will validate the options passed before building.
+      Requests looky to build a new view. Will validate the options passed before building.
       
       @param kind: string; the name of the view you want built.
       @param options: table; the options that should be passed to the view. These will be checked against the Schema defined for the view.
@@ -961,8 +961,8 @@ return function()
     @param oldName: string; the old view you're using as a base
     @param defaultOptions: Table; the options that are passed to the old view to style it
   ]]
-  lc.registerStyledLayout = function( self, newName, oldName, defaultOptions  )
-    local schema = lc:extendSchema(oldName, {})
+  looky.registerStyledLayout = function( self, newName, oldName, defaultOptions  )
+    local schema = looky:extendSchema(oldName, {})
     for key, value in pairs(schema) do
       if defaultOptions[key] ~= nil then
         schema[key].required = false
@@ -977,11 +977,11 @@ return function()
           end
         end
         
-        return lc:build(oldName, options)
+        return looky:build(oldName, options)
       end,
       schema = schema
     }
-    lc:registerLayout(newName, layout)
+    looky:registerLayout(newName, layout)
   end  
   --[[
     Wrap a bunch of views into each other. 
@@ -991,7 +991,7 @@ return function()
     @param ..., Tables; a list of views that need to be wrapped. 
     @return the Nth View passed, which will contain the N-1th View as a child, which will contain the N-2th View as a child, etc.
   ]]
-  lc.wrap = function( self, ... )        
+  looky.wrap = function( self, ... )        
     args = {...}
     local prev = nil
     for _, view in ipairs(args) do
@@ -1002,5 +1002,5 @@ return function()
     end
     return prev -- view is not in scope anymore
   end
-  return lc
+  return looky
 end

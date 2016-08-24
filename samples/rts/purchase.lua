@@ -1,9 +1,9 @@
-return function(lc)
+return function(looky)
   return {
     build = function (options)
-      local container = lc:build("linear", {direction = "v", width = "fill", height = "fill", background = {75,75,75,255}, padding = lc.padding(20)})
+      local container = looky:build("linear", {direction = "v", width = "fill", height = "fill", background = {75,75,75,255}, padding = looky.padding(20)})
             
-      local upButton = lc:build("text", {width="fill", height="wrap", padding = lc.padding(20, 10), background = { 40, 40, 40, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, data = function() return "UP" end })
+      local upButton = looky:build("text", {width="fill", height="wrap", padding = looky.padding(20, 10), background = { 40, 40, 40, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, data = function() return "UP" end })
       upButton.externalSignalHandlers['mouse.down'] = function(self, signal, payload, coords)
         if self:coordsInMe(coords[1].x, coords[1].y) then
           self:messageOut("up", {}, {})
@@ -11,17 +11,17 @@ return function(lc)
       end
       container:addChild(upButton)
             
-      local buyOptions = lc:build("linear", {width="fill", height="fill", background = { 60, 60, 60, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, direction = "h", childSpacing = 5, padding = lc.padding(4) })
+      local buyOptions = looky:build("linear", {width="fill", height="fill", background = { 60, 60, 60, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, direction = "h", childSpacing = 5, padding = looky.padding(4) })
       
-      local leftColumn = lc:build("purchaselist", {amount = 10})
-      local rightColumn = lc:build("purchaselist", {amount = 15})
+      local leftColumn = looky:build("purchaselist", {amount = 10})
+      local rightColumn = looky:build("purchaselist", {amount = 15})
       
       buyOptions:addChild(leftColumn)
       buyOptions:addChild(rightColumn)
       
       container:addChild(buyOptions)
             
-      local downButton = lc:build("text", {width="fill", height="wrap", padding = lc.padding(20, 10), background = { 40, 40, 40, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, data = function() return "DOWN" end})
+      local downButton = looky:build("text", {width="fill", height="wrap", padding = looky.padding(20, 10), background = { 40, 40, 40, 255 }, border = { thickness = 3, color = { 30, 30, 30, 255 } }, data = function() return "DOWN" end})
       downButton.externalSignalHandlers['mouse.down'] = function(self, signal, payload, coords)
         if self:coordsInMe(coords[1].x, coords[1].y) then
           self:messageOut("down", {}, {})

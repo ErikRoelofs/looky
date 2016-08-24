@@ -1,6 +1,6 @@
-return function(lc)
-  local stackroot = lc:build("stackroot", {})
-  local root = lc:build("linear", {width="fill", height="fill", direction="h"})
+return function(looky)
+  local stackroot = looky:build("stackroot", {})
+  local root = looky:build("linear", {width="fill", height="fill", direction="h"})
   stackroot:addChild(root)
   local handler = {receive = function( self, signal, payload ) 
       if signal == "dialog.options" then
@@ -15,17 +15,17 @@ return function(lc)
   end }
   stackroot:addListener(handler, "receive")
   
-  lc:registerLayout("topbar", require "samples/rts/topbar"(lc) )
-  lc:registerLayout("sidepane", require "samples/rts/sidepane"(lc) )
-  lc:registerLayout("minimap", require "samples/rts/minimap"(lc) )
-  lc:registerLayout("purchase", require "samples/rts/purchase"(lc) )
-  lc:registerLayout("purchaselist", require "samples/rts/purchaselist"(lc) )
-  lc:registerLayout("buyoption", require "samples/rts/buyoption"(lc) )
-  lc:registerLayout("mainscreen", require "samples/rts/mainscreen"(lc) )
-  lc:registerLayout("unit", require "samples/rts/unit"(lc) )
-  lc:registerLayout("options", require "samples/rts/options"(lc) )
+  looky:registerLayout("topbar", require "samples/rts/topbar"(looky) )
+  looky:registerLayout("sidepane", require "samples/rts/sidepane"(looky) )
+  looky:registerLayout("minimap", require "samples/rts/minimap"(looky) )
+  looky:registerLayout("purchase", require "samples/rts/purchase"(looky) )
+  looky:registerLayout("purchaselist", require "samples/rts/purchaselist"(looky) )
+  looky:registerLayout("buyoption", require "samples/rts/buyoption"(looky) )
+  looky:registerLayout("mainscreen", require "samples/rts/mainscreen"(looky) )
+  looky:registerLayout("unit", require "samples/rts/unit"(looky) )
+  looky:registerLayout("options", require "samples/rts/options"(looky) )
   
-  lc:registerValidator( "units", { schemaType = "array",
+  looky:registerValidator( "units", { schemaType = "array",
         item = { schemaType = "table", 
                 options = {
                   x = {
@@ -39,7 +39,7 @@ return function(lc)
                 }
         }
   })
-  lc:registerValidator( "map", { schemaType = "table",
+  looky:registerValidator( "map", { schemaType = "table",
         options = { 
           width = {
             required = true,
@@ -71,14 +71,14 @@ return function(lc)
   }
   
   -- main column holds the top bar and main screen
-  local column = lc:build("linear", { width = "fill", height = "fill", direction = "v" })
-  local topbar = lc:build("topbar")
+  local column = looky:build("linear", { width = "fill", height = "fill", direction = "v" })
+  local topbar = looky:build("topbar")
   column:addChild(topbar)
-  local main = lc:build("mainscreen", {units = units, map = map, locX = 115, locY = 115})
+  local main = looky:build("mainscreen", {units = units, map = map, locX = 115, locY = 115})
   column:addChild(main)
   root:addChild(column)
 
-  local sidepane = lc:build("sidepane")
+  local sidepane = looky:build("sidepane")
   root:addChild(sidepane)
 
   stackroot:layoutingPass()
@@ -107,7 +107,7 @@ return function(lc)
   
   function openOptions()
     if open == false then
-      local options = lc:build("options", {})
+      local options = looky:build("options", {})
       stackroot:addChild(options)
       stackroot:layoutingPass()
       open = true

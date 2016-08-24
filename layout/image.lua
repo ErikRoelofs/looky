@@ -13,10 +13,10 @@ local function imageHeight(self)
   return self.image:getHeight() * self.scaledY
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function (options)
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       base.renderCustom = renderImage
       if type(options.file) == "string" then
         base.image = love.graphics.newImage(options.file)
@@ -28,14 +28,14 @@ return function(lc)
       base._setDimensions = base.setDimensions
       base.setDimensions = function(self, x, y)
         base._setDimensions(self,x,y)
-        self.realImage, self.scaleX, self.scaleY = lc.imageHelper[self.scale](self, self.image)
+        self.realImage, self.scaleX, self.scaleY = looky.imageHelper[self.scale](self, self.image)
       end
       base.scale = options.scale or "fit"
       base.scaledX = 1
       base.scaledY = 1
       return base
     end,
-    schema = lc:extendSchema("base", 
+    schema = looky:extendSchema("base", 
       {
         file = {        
           required = true,           

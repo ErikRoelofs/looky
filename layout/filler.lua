@@ -5,8 +5,8 @@ local determineOffsetX = function(self, child)
     return self:grantedWidth() - self.right - child:grantedWidth()
   else
     local spareWidth = self:grantedWidth() - child:grantedWidth()
-    local totalChunks = (self.leftWeight or 1) + (self.rightWeight or 1)
-    return spareWidth / totalChunks * (self.leftWeight or 1)
+    local totalookyhunks = (self.leftWeight or 1) + (self.rightWeight or 1)
+    return spareWidth / totalookyhunks * (self.leftWeight or 1)
   end
 end
 
@@ -17,8 +17,8 @@ local determineOffsetY = function(self, child)
     return self:grantedHeight() - self.bottom - child:grantedHeight()
   else
     local spareHeight = self:grantedHeight() - child:grantedHeight()
-    local totalChunks = (self.topWeight or 1) + (self.bottomWeight or 1)
-    return spareHeight / totalChunks * (self.topWeight or 1)
+    local totalookyhunks = (self.topWeight or 1) + (self.bottomWeight or 1)
+    return spareHeight / totalookyhunks * (self.topWeight or 1)
   end
 end
 
@@ -68,10 +68,10 @@ local function layout(self, children)
   end
 end
 
-return function(lc)
+return function(looky)
   return {
     build = function(options)      
-      local base = lc:makeBaseLayout(options)
+      local base = looky:makeBaseLayout(options)
       -- set sizes and weights
       base.left = options.left or 0
       base.right = options.right or 0
@@ -148,7 +148,7 @@ return function(lc)
       return base
     end,
     
-    schema = lc:extendSchema("base", {
+    schema = looky:extendSchema("base", {
       width = false,
       height = false,
       left = { required = false, schemaType = "oneOf", possibilities = {
