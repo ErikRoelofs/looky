@@ -1,0 +1,106 @@
+Creating a new layout type:
+
+- must be registered to creator: lc:registerLayout(name, layout)
+- layout must be a table with a 'build' and 'schema' method
+
+Build:
+- must return a view
+- is passed whatever options are passed to lc upon instantation
+- you CAN return a different type of view entirely, if you just want to make a composite view
+- in fact; that will probably happen the majority of the time. it should be very rare to need to make a completely new view
+- views must not render outside their granted width/height, regardless of big they would LIKE to be
+- views are responsible for their own padding
+- views are responsible for their children's margins
+
+Schema:
+  - must return a schema table
+  - should PROBABLY extend from an existing schema
+  - should detail exactly what is and is not valid in terms of passed options
+  - if you need a new schema validator or partial schema, register it: lc:registerValidator()
+  
+
+Setting up a layout:
+
+- must start with a root (a root being any view which cheats the width/height system)
+- views are created by using lc:build(type, options)
+- views are added to (most) other views using view:addChild(child)
+- before rendering, make sure to call layoutingPass on your root: root:layoutingPass()
+- to render, call the render method on your root view: root:render()
+- to update, call the render method on your root view: root:update(dt)
+- if you want a view to re-layout its children, call layoutingPass() on it again
+- if you want a view to re-size ITSELF, call layoutingPass() on its parent! Views cannot control their own size.
+
+Fonts:
+
+- should be registered with lc: lc:registerFont(fontname, font)
+- can be retrieved from LC by textbased views: lc:getFont(fontname)
+
+Images:
+
+- handle your own. not currently handled by LC.
+
+
+Interface of a view:
+
+ALL VIEWS MUST IMPLEMENT: (s -> you must implement, w -> comes with a working implementation)
+    layoutingPass (s) [called externally]
+    renderCustom (s) [used by render]
+    update (s) [called externally]
+    contentWidth (s) [used by contentWidthWithPadding -> getDesiredWidth ]
+    contentHeight (s) [used by contentHeightWithPadding -> getDesiredHeight ]
+    
+    render (w) [called externally]
+    desiredWidth (w) [called externally]
+    desiredHeight (w) [called externally]
+    receiveOutsideSignal (w) [called externally]
+    addListener (w) [called externally]
+    grantedWidth (w) [called externally]
+    grantedHeight (w) [called externally]
+    contentWidthWithPadding (w) [used by desiredWidth]
+    contentHeightWithPadding (w) [used by desiredHeight]
+    setDimensions (w) [called externally]
+
+ALL CONTAINER VIEWS MUST IMPLEMENT:
+    receiveChildSignal (w)
+    addChild (w)
+    getChild (w)
+    getChildren (w)
+    removeChild (w)
+    removeAllChildren (w)
+
+
+ALL VIEWS GET THESE PRIVATE METHODS BY DEFAULT:    
+    renderBackground = (w)
+    setBackground = (w)
+    prepareBackground = (w)
+    renderBorder = (w)
+    startCoordsBasedOnGravity = (w)
+    signalChildren = (w)
+    messageOut (w)
+    translateCoordsToChild (s)
+    translateCoordsFromChild (s)
+    coordsInMe (w)
+    
+ARTICLES:
+
+- quickstart
+- principles
+- architecture
+- styling views
+- building custom views
+  - from existing views
+  - from scratch
+- extending schemas
+  - with partials
+  - new validator functions
+- communication
+  - signals
+  - basic input examples
+- advanced looky
+  - about root and how to get rid of it
+- reference
+  - layoutcreator
+  - validator
+  - schema options
+  - basic views
+- FAQ

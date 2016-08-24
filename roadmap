@@ -1,4 +1,5 @@
 MVP
+- get it renamed to looky on git
 - slotted view
 - multiline text
 - proper (default) signaling
@@ -25,3 +26,4 @@ Undetermined:
 - extra schema options:
   - filter this table to meet this schema (may need more work)
 - how to do signals returning from child to parent -> or just child adding itself as a payload? (but coords?)
+- expressions in width/height?
