@@ -84,6 +84,7 @@ ALL VIEWS GET THESE PRIVATE METHODS BY DEFAULT:
 ARTICLES:
 
 - quickstart
+- tutorial
 - principles
 - architecture
 - styling views

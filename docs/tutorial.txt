@@ -1,0 +1,94 @@
+==TUTORIAL==
+
+In this tutorial, we are going to make a very simple "game" where you can fly a spaceship around a field of stars. The guide assumes you already are somewhat familiar with love and have Looky installed.
+
+First, we are going to setup the basic layout that we will use. It will consist of a few components that we want to identify:
+
+- There will be a main screen, which will have the ship you can fly with
+- There will be a HUD at the bottom, containing a game-clock and the current speed
+
+The first thing we need to do, is set up a "root". The root is the base view for our Looky setup, and will contain all the components of our game screen. Since we want to have our main screen at the top, and our HUD at the bottom, we want a root that will display all its children under one another, in the vertical direction. The root will automatically fill up the whole screen.
+
+So let's start by creating the root in the love.load function, after we've initialized Looky:
+
+    rootView = looky:build("root", { direction = "v" })
+    
+We'll see this "build" method a lot, as it is the only way Looky creates new views for you to use. The first argument is the name of the view-type we want; the second is the options passed. In this sample, we want to build a "root" and we set it's direction to v(ertical) so that if it has multiple children, they will be rendered under each other.
+
+Next, we identified that we have a main screen to play in. The main screen will contain our ship and a background with some stars. Since obviously no such view exists in the base set, we will need to create one. Fortunately, there is a base view that simply allows you to specify your own drawing function. In this situation, that will be the easiest way to get what we want. Let's set up an empty rendering function and then make one of those.
+
+    renderGameScreen = function() end
+    gameScreenView = looky:build("freeform", { width = "fill", height = "fill", render = renderGameScreen })
+    
+Note how we have to set a width and a height for this view. While root is of fixed size, all other views need to specify their size. In this case we're setting the value to "fill" which means "as big as possible". This will cause the view to expand until it fills up the whole parent.
+
+The next thing we need, is the bottom HUD. This contains multiple items, which means we need a container type view that can have multiple children of its own. Since the various control options will be aligned horizontally, we will need a container that aligns items horizontally.
+Looky comes with the "linear" view, which puts all its children next to each other, either horizontally or vertically. (If you think this sounds a lot like what "root" does, you would be correct. Root is a special type of "linear" view)
+Now, let's make the bottom HUD container.
+
+    HUDView = looky:build("linear", { width = "fill", height = 100, direction = "h" })
+    
+Here, the height is fixed to 100 pixels. When we build this layout, the root will have two children. Children whose layout has a fixed size get priority, while those who want to "fill" get whichever room is left. The result will be that the bottom 100 pixels will be our HUD and the rest of the screen will be the main game screen.
+
+Next, we'll need the game clock, which will go in the HUD on the left side. Here, we want to draw some text to the screen, so we need to make an instance of the aptly named "text" view. It will need to be provided with a function that returns what to print. It also needs a font and a text color. For now, we'll use the default font and color (which is white).
+
+    seconds = 0
+    ClockView = looky:build("text", { width = "fill", height = "fill", data = function() return math.floor(seconds) .. "s" end, gravity = {"center", "center"} })
+    
+Now the clock will return the number of (whole) seconds with the letter 's' at the end. The gravity property causes the text to be rendered in the center of the view. However, the clock won't run yet. In order to make it run, we'll have to update the value of the seconds variwable, which we can do in the love.update function:
+
+    love.update = function(dt)
+      seconds = seconds + dt
+    end
+    
+This shows a bit of the basic architecture ideas of Looky, too. Note how seconds is not encapsulated in the view. It's something that's coming from you game's MODEL, not it's view, and so the variable is not a part of the view. Generally speaking, you want to build a working game model and then have views that refer to it, not a working view and then being forced to talk to the view to get the game data you need.
+
+Next item on the list is the speed gauge. For this one, we'll use a bar. We will need to define a player model which holds the current and maximum speed, and then create a numberAsBar view to render the speed. While we're at it, we'll also add the current position and rotation to the player's model, since we'll need it soon anyway.
+
+    player = {
+      x = 200,
+      y = 200,
+      rotation = 0,
+      speed = 0,
+      maxSpeed = 100
+    }
+    
+    speedView = looky:build("numberAsBar", { width = "fill", height = 20, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed })    
+    
+Now, we have all the basic views for our layout. But we don't actually have anything on the screen yet, because the viwes have not been connected and the root is not being rendered. To finish it up, let's connect the views and tell Looky to draw to the screen.
+
+First, the two HUD views need to be children of the HUD. They will be shown horizontally, left to right, so we put the clock first.
+
+    HUDView:addChild(clockView)
+    HUDView:addChild(speedView)
+    
+Next, we add the main screen and the HUD to the root.
+
+    rootView:addChild(gameScreenView)
+    rootView:addChild(HUDView)
+    
+This gives us the basic view tree that we need to draw. Two things remain. Firstly; we need to tell the tree that it needs to determine the final size of each item. After all; we have set a number of components to be "as big as possible", but we haven't calculated how big that is yet. Now that all the views are connected, we can let the system do the calculations.
+Call the layoutingPass method on the root view, and it will determine sizes for all its children, who will in turn determine sizes for their children, etc.
+
+    rootView:layoutingPass()
+    
+You always need to call the layoutingPass function before trying to draw a root, but you only need to call it again if you change the game's basic layout.
+
+That only leaves us with the last step, which is to actually render the root view. Let's add a line to our love.draw for that:
+
+    function love.draw()
+      rootView:render()
+    end
+
+Now, if you run the program you should see... well, not very much honestly. The speed is zero so you can't see the speed bar; nothing is rendered in the main screen. Only the clock will be ticking, but it will not look very flashy.
+Let's render the actual ship to the screen. Make an images folder, put your favorite spaceship in there as "ship.png" (or take the one in the assets folder) and update your code to draw the ship:
+
+    -- load the ship in your love.load
+    shipImage = love.graphics.newImage("images/ship.png")
+
+    -- add some content to ship function
+    function renderGameScreen()
+      love.graphics.draw(shipImage, player.x, player.y, player.rotation, 1, 1, shipImage:getWidth() / 2, shipImage:getHeight() / 2)
+    end
+    
+Because all Views in Looky have a localized coordinate system, it doesn't really matter where on the screen your View is rendered; the ship will be put x,y away from the top-left corner of the view you are rendering it in. Now, if we run the program again, we should see the ship rendered somewhere near the top-left corner (since starting coordinates are 200,200)
