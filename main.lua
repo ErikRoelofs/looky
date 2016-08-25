@@ -10,7 +10,6 @@ function love.load()
   looky:registerLayout("linear", require "layout/linear"(looky) )
   looky:registerLayout("text", require "layout/text"(looky) )
   looky:registerLayout("image", require "layout/image"(looky) )  
-  looky:registerLayout("caption", require "layout/caption"(looky) )
   looky:registerLayout("list", require "layout/list"(looky) )
   looky:registerLayout("root", require "layout/root"(looky) )
   looky:registerLayout("stack", require "layout/stack"(looky) )
@@ -39,7 +38,7 @@ function love.load()
   looky:registerStyledLayout("filler.bottomleft", "filler", { bottom = "fill", left = "fill" })
   looky:registerStyledLayout("filler.center", "filler", { top = "fill", bottom = "fill", left = "fill", right = "fill" })
   
-  require "samples/shooter"(looky)
+  require "samples/tutorial"(looky)
 end
 
 function test() 
