@@ -124,3 +124,13 @@ The next step then is to make the ship move. Because inputs are done against the
 You can take my word for it that this works, or read it over to see what it does. It will allow you to move the ship using the wasd keys. Feel free to give it a try; it should work now. You'll also see the speed-gauge working now.
 
 So we did what we set out to do; but of course it looks rather dreadful right now. Fortunately, Looky lets us redesign and modify existing updates with ease. Let's add a bit more beauty to it. First; the main screen should have a border and a background.
+
+We can add the following options to the creation of our main screen to set a background and border for it. (You can again grab your own favorite starry background or take the one from the assets folder)
+
+  background = { file = "images/background.png", fill = "fill" }, padding = looky.padding(5), border = { thickness = 5, color = { 60, 60, 60, 250 }  }
+ 
+So the final View result will look like this:
+
+  gameScreenView = looky:build("freeform", { width = "fill", height = "fill", render = renderGameScreen, background = { file = "images/background.png", fill = "fill" }, padding = looky.padding(5), border = { thickness = 5, color = { 60, 60, 60, 250 }  } })
+  
+Looky will automatically load the image for the background. If you want to re-use the image, it's better to load it yourself (once) and pass the variable to all the Views using that background. Both a filename and an actual image resource will work. The border property will assing a border to the view. The padding property will clean up a bit of space at the edges of the view to draw the border in; if you don't set this padding then it will look the same but the ship will be able to fly over the border.
