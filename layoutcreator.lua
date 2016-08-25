@@ -101,8 +101,8 @@ local imageHelper = {
     love.graphics.push()
     love.graphics.origin()
     love.graphics.draw(image, 0, 0, 0, scale, scale)
-    love.graphics.setCanvas()
     love.graphics.pop()
+    love.graphics.setCanvas()    
     return canvas, scale, scale
   end,
   --[[
@@ -128,8 +128,8 @@ local imageHelper = {
       y = 0
       x = x + image:getWidth()
     end                      
-    love.graphics.setCanvas()
     love.graphics.pop()
+    love.graphics.setCanvas()    
     return canvas
   end
 

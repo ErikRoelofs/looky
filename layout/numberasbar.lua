@@ -10,7 +10,7 @@ return function(looky)
         end
       end
             
-      local render = function(self)
+      local render = function(self)        
         love.graphics.setColor(self.filledColor)
         love.graphics.rectangle("fill", self.padding.left, self.padding.top, self:availableWidth() * ( self:getValue() / self.maxValue ), self:availableHeight())
         

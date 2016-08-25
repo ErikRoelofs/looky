@@ -41,6 +41,7 @@ function love.load()
   require "samples/tutorial"(looky)
 end
 
+
 function test() 
   require("tests/validation/validatortest")
   require("tests/layoutcreatortest")

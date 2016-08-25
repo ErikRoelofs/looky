@@ -27,7 +27,7 @@ return function(looky)
   
   HUDView:addChild(clockView)
   HUDView:addChild(speedView)
-  
+    
   rootView:addChild(gameScreenView)
   rootView:addChild(HUDView)
 

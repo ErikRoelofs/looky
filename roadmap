@@ -1,4 +1,5 @@
 MVP
+- fix aquarium to create a canvas once
 - get it renamed to looky on git
 - slotted view
 - multiline text
