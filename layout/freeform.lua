@@ -12,12 +12,12 @@ return function(looky)
         love.graphics.clear()
         self:freeformRender()
         love.graphics.setCanvas()
-        love.graphics.draw(self.canvas)        
+        love.graphics.draw(self.canvas, self.padding.left, self.padding.top)
       end
       base._setDimensions = base.setDimensions
       base.setDimensions = function(self, x,y)
         self:_setDimensions(x,y)
-        self.canvas = love.graphics.newCanvas(x,y)
+        self.canvas = love.graphics.newCanvas(self:availableWidth(),self:availableHeight())
       end
       
       return base
