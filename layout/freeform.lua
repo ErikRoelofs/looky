@@ -6,7 +6,19 @@ return function(looky)
       base.contentHeight = options.contentHeight or function(self) return 0 end
       
       base.update = options.update or function(self, dt) end
-      base.renderCustom = options.render or function(self, dt) end
+      base.freeformRender = options.render or function(self, dt) end      
+      base.renderCustom = function(self)
+        love.graphics.setCanvas(self.canvas)
+        love.graphics.clear()
+        self:freeformRender()
+        love.graphics.setCanvas()
+        love.graphics.draw(self.canvas)        
+      end
+      base._setDimensions = base.setDimensions
+      base.setDimensions = function(self, x,y)
+        self:_setDimensions(x,y)
+        self.canvas = love.graphics.newCanvas(x,y)
+      end
       
       return base
     end,
