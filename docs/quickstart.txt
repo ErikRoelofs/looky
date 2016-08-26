@@ -1,15 +1,3 @@
-@todo: check the links. rename the repository if possible. add a thank-you for the ship sprite: http://unluckystudio.com/game-art-giveaway-3-sci-fi-spaceship-game-sprites-pack/
-
-[[
-  what is it?
-  installation
-  how to build a simple layout
-  how to render and update views
-  how to register a view
-  how to build a view (?)  
-  overview of the base views
-]]
-
 ==QUICKSTART GUIDE==
 
 ===WHAT IS IT?===
