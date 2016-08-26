@@ -27,7 +27,15 @@ return function(looky)
       base.contentHeight = imageHeight  
       base._setDimensions = base.setDimensions
       base.setDimensions = function(self, x, y)
-        base._setDimensions(self,x,y)
+        self._setDimensions(self,x,y)
+        self:setImage(self.image)
+      end
+      base.setImage = function(self, image)
+        if type(image) == "string" then
+          self.image = love.graphics.newImage(image)
+        else
+          self.image = image
+        end
         self.realImage, self.scaleX, self.scaleY = looky.imageHelper[self.scale](self, self.image)
       end
       base.scale = options.scale or "fit"

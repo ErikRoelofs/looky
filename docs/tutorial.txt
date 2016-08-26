@@ -1,6 +1,6 @@
 ==TUTORIAL==
 
-In this tutorial, we are going to make a very simple "game" where you can fly a spaceship around a field of stars. The guide assumes you already are somewhat familiar with love and have Looky installed.
+In this tutorial, we are going to make a very simple "game" where you can fly a spaceship around a field of stars. The guide assumes you already are somewhat familiar with löve and have Looky installed.
 
 First, we are going to setup the basic layout that we will use. It will consist of a few components that we want to identify:
 
@@ -22,11 +22,11 @@ Next, we identified that we have a main screen to play in. The main screen will 
     
 Note how we have to set a width and a height for this view. While root is of fixed size, all other views need to specify their size. In this case we're setting the value to "fill" which means "as big as possible". This will cause the view to expand until it fills up the whole parent.
 
-The next thing we need, is the bottom HUD. This contains multiple items, which means we need a container type view that can have multiple children of its own. Since the various control options will be aligned horizontally, we will need a container that aligns items horizontally.
+The next thing we need, is the bottom HUD. This contains multiple items, which means we need a container type view that can have multiple children of its own. Since the various control options will be aligned horizontally, we will need a container that aligns items horizontally. We also give it a background, so you can see it later.
 Looky comes with the "linear" view, which puts all its children next to each other, either horizontally or vertically. (If you think this sounds a lot like what "root" does, you would be correct. Root is a special type of "linear" view)
 Now, let's make the bottom HUD container.
 
-    HUDView = looky:build("linear", { width = "fill", height = 100, direction = "h" })
+    HUDView = looky:build("linear", { width = "fill", height = 100, direction = "h", background = { 20, 20, 20, 255 } })
     
 Here, the height is fixed to 100 pixels. When we build this layout, the root will have two children. Children whose layout has a fixed size get priority, while those who want to "fill" get whichever room is left. The result will be that the bottom 100 pixels will be our HUD and the rest of the screen will be the main game screen.
 
@@ -41,7 +41,7 @@ Now the clock will return the number of (whole) seconds with the letter 's' at t
       seconds = seconds + dt
     end
     
-This shows a bit of the basic architecture ideas of Looky, too. Note how seconds is not encapsulated in the view. It's something that's coming from you game's MODEL, not it's view, and so the variable is not a part of the view. Generally speaking, you want to build a working game model and then have views that refer to it, not a working view and then being forced to talk to the view to get the game data you need.
+This shows a bit of the basic architecture ideas of Looky, too. Note how seconds is not located in the view. It's something that's coming from your game-state, not the view, and so the variable is not a part of the view. Generally speaking, you want to build a working game model and then have views that show it to the player, not a working view and then being forced to talk to the view to get the gamestate data you need.
 
 Next item on the list is the speed gauge. For this one, we'll use a bar. We will need to define a player model which holds the current and maximum speed, and then create a numberAsBar view to render the speed. While we're at it, we'll also add the current position and rotation to the player's model, since we'll need it soon anyway.
 
@@ -80,13 +80,13 @@ That only leaves us with the last step, which is to actually render the root vie
       rootView:render()
     end
 
-Now, if you run the program you should see... well, not very much honestly. The speed is zero so you can't see the speed bar; nothing is rendered in the main screen. Only the clock will be ticking, but it will not look very flashy.
-Let's render the actual ship to the screen. Make an images folder, put your favorite spaceship in there as "ship.png" (or take the one in the assets folder) and update your code to draw the ship:
+Now, if you run the program you should see... well, not very much honestly. The speed is zero so you can't see the speed bar; nothing is rendered in the main screen. Only the clock will be ticking in the HUD, but it will not look very flashy.
+Let's render the actual ship to the screen. Make an images folder, take the "ship.png" from the assets folder and update your code to draw the ship:
 
     -- load the ship in your love.load
     shipImage = love.graphics.newImage("images/ship.png")
 
-    -- add some content to ship function
+    -- add some content to renderGameScreen function
     function renderGameScreen()
       love.graphics.setColor(255,255,255,255)
       love.graphics.draw(shipImage, player.x, player.y, player.rotation, 1, 1, shipImage:getWidth() / 2, shipImage:getHeight() / 2)
@@ -123,9 +123,9 @@ The next step then is to make the ship move. Because inputs are done against the
 
 You can take my word for it that this works, or read it over to see what it does. It will allow you to move the ship using the wasd keys. Feel free to give it a try; it should work now. You'll also see the speed-gauge working now.
 
-So we did what we set out to do; but of course it looks rather dreadful right now. Fortunately, Looky lets us redesign and modify existing updates with ease. Let's add a bit more beauty to it. First; the main screen should have a border and a background.
+So we did what we set out to do; but of course it looks rather dreadful right now. Fortunately, Looky lets us redesign and modify existing views with ease. Let's add a little bit more prettyness to it. First; the main screen should have a border and a background.
 
-We can add the following options to the creation of our main screen to set a background and border for it. (You can again grab your own favorite starry background or take the one from the assets folder)
+We can add the following options to the creation of our main screen to set a background and border for it. The background is in the docs/assets folder as "background.png".
 
   background = { file = "images/background.png", fill = "fill" }, padding = looky.padding(5), border = { thickness = 5, color = { 60, 60, 60, 250 }  }
  
@@ -155,7 +155,7 @@ The next step is to create the actual build function. Since the goal is an image
       
       local secondContainerView = looky:build("linear", { width = "fill", height = "fill", direction = "v" })
       secondContainerView:addChild( looky:build("text", { width = "fill", height = "fill", data = function() return "Speed:" end, gravity = { "center", "center" } }))
-      local speedView = looky:build("numberAsBar", { width = "fill", height = 20, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed, filledColor = { 100, 150, 30, 255 } })          
+      local speedView = looky:build("numberAsBar", { width = "fill", height = 40, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed, filledColor = { 100, 150, 30, 255 } })          
       secondContainerView:addChild(speedView)
       
       mainContainerView:addChild(secondContainerView)      
@@ -166,9 +166,9 @@ That's all we need to do to allow us to use our new type of view wherever we wan
 
     speedView = looky:build("speedGauge")
     
-Now if you run the game, you should see a title, the image and our old bar. It's a start. The text label is rather small though, and the same can be said for the clock. We can override the default text-view with a styled version that writes text larger, and maybe in a prettier font. Grab your favorite font (or pull it from the assets directory) and let's register a new font:
+Now if you run the game, you should see a title, the image and our old bar. It's a start. The text label is rather small though, and the same can be said for the clock. We can override the default text-view with a styled version that writes text larger, and maybe in a prettier font. Take the font from the assets folder, put it in a folder called "fonts", and let's register it:
 
-    looky:registerFont( "space", love.graphics.newFont( 30 ))
+    looky:registerFont( "space", love.graphics.newFont( "fonts/Roboto-Bold.ttf", 30 ))
     
 And then, register a styled version of the text-view. We'll add our font, and we'll center the text by default since that looks better. We'll also give it a bit of color and a background.
 
@@ -192,18 +192,20 @@ We're going to add a warning light to the main panel, that lights up when your s
 
 Let's start by creating a new type of view for our warning lights. Since we're making two, it's best to make components out of them. The warning light has a vertical linear container, which contains two views: a label and a light. The label will be text; in order to reuse as much of our existing style as possible we will extend new text further but this time using a smaller version of the font. The light will be a simple image. Since this view will have some customizable parts, we'll also include a schema for it.
 
-First, define an extension to our existing text to use a small font. We need to register the font also.
-    looky:registerFont( "small", love.graphics.newFont(10))
-    
+First, define an extension to our existing text to use a small font. We need to register the font also. And we need to load the two images to use.
+    looky:registerFont( "small", love.graphics.newFont( "fonts/Roboto-Bold.ttf", 10))
     looky:registerStyledLayout( "new.text.label", "new.text", { font = "small" })
+    
+    lightOff = love.graphics.newImage("docs/assets/light_off.png")
+    lightOn = love.graphics.newImage("docs/assets/light_on.png")
 
 Then, create a new view type.
 
     warningLightType = {
       build = function(options)
-        local container = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
-        container:addChild(looky:build("new.text.label", { width = "wrap", height = "wrap", data = function() return options.label end }))
-        container:addChild(looky:build("image", { width = "wrap", height = "wrap", file = "assets/light_off.png" }))
+        local container = looky:build("linear", { width = "cram", height = "wrap", direction = "v" })
+        container:addChild(looky:build("new.text.label", { width = "fill", height = "wrap", data = function() return options.label end }))
+        container:addChild(looky:build("image", { width = "wrap", height = "wrap", file = lightOff }))
         
         return container
       end,
@@ -231,4 +233,76 @@ We will cram our warning lights between the speed gauge and the clock. Looky wil
 
 You'll see the two lights and their labels on the HUD now. Notice how the schema definition allowed us to pass a label to the build() function, which is now shown above the light. Also notice how the labels have the same basic colors as the previously defined text-type, but smaller text.
 
-The next step is to make them light up when something is wrong. This requires two things: the first is to swap out the image when a problem happens, the second is to be able to receive a signal when an update is required.
+The next step is to make them light up when something is wrong. This requires two things: the first is to swap out the image when a problem happens, the second is to be able to receive a signal when an update is required. Let's start by setting up a simple controller that will push out the signals. We will do speed first. It will send out a signal when the speed goes over 240, and one when the speed falls under 240 again. Most of the code is simple lua, except for the call the receiveOutsideMessage(). 
+
+    -- add to love.load
+    isSpeeding = false
+    
+    -- add to love.update
+    if isSpeeding and player.speed < 240 then
+      isSpeeding = false
+      rootView:receiveOutsideSignal("warning", { name = "speeding", active = true })
+    elseif not isSpeeding and player.speed > 240 then
+      isSpeeding = true
+      rootView:receiveOutsideSignal("warning", { name = "speeding", active = false })
+    end
+
+Now, this will send out a signal to the root whenever we start or stop moving at high speed. By default, views will transfer these signals to all their children. So eventually, the signal will end up at our warning lights. However; the warning lights won't actually do anything with it. Let's add a bit of code to the warning lights to handle the signal. We'll need to update the warning light Schema, so that they can accept the warning-signal name they should respond to ("speeding" for the speed light). Then, we'll need to setup an event handler inside the code. 
+    
+    -- change the build function to this:
+    build = function(options)
+      local container = looky:build("linear", { width = "cram", height = "wrap", direction = "v" })
+      container:addChild(looky:build("new.text.label", { width = "fill", height = "wrap", data = function() return options.label end }))
+      local imageView = looky:build("image", { width = "wrap", height = "wrap", file = lightOff })
+      container:addChild(imageView)
+      
+      -- the following line tells the view that it should listen to signals coming from outside that have "warning" as their signal
+      imageView.externalSignalHandlers.warning = function(self, signal, payload)
+        if payload.name == options.respondTo then
+          if payload.active then
+            imageView:setImage(lightOn)
+          else
+            imageView:setImage(lightOff)
+          end
+        end
+      end
+      
+      return container
+    end,
+    
+    -- change the schema to this, so that we can say which warning type it should react to
+    schema = {
+      label = {
+        required = true,
+        schemaType = "string"
+      },
+      respondTo = {
+        required = true,
+        schemaType = "string"
+      }
+    }
+    
+Now if you run the program, you'll see what happens when you update the schema but forget to update the actual build calls. Looky will complain about the missing respondTo properties. So last step: we update the calls to build these lights to pass them some names of signals to react to:
+
+    lightsDisplay:addChild( looky:build( "light", { label = "Speed", respondTo = "speeding" } ))
+    lightsDisplay:addChild( looky:build( "light", { label = "Edge", respondTo = "edge" } ))
+
+Now if you run the program and you speed up to close to the maximum speed, you should see the "speed" indicator flip on. And we can make any number of warning lights, anywhere on the screen, and have them react to any signal we want without having to put any new code in the lights themselves. Whatever code is handling the warnings also does not need to know where on the page the lights are and it's simple to have multiple control systems that give off the same warning.
+
+Here's the code for the edge detector. It works roughly the same way; some love code in the load/update is all we need.
+
+    -- add this in love.load
+    nearEdge = false
+    
+    -- add this in love.update
+    if nearEdge and player.x > 100 and player.x < gameScreenView:availableWidth() - 100 and player.y > 100 and player.y < gameScreenView:availableHeight() - 100 then
+      nearEdge = false
+      rootView:receiveOutsideSignal("warning", { name = "edge", active = false })
+    elseif not nearEdge and (player.x < 100 or player.x > gameScreenView:availableWidth() - 100 or player.y < 100 or player.y > gameScreenView:availableHeight() - 100 ) then
+      nearEdge = true
+      rootView:receiveOutsideSignal("warning", { name = "edge", active = true })
+    end
+
+We use the actual assigned size to the gameScreenView (minus the borders) so that it works for any size of screen.
+
+This is where I'm going to leave off. I hope you have a basic idea of the idea behind Looky and how you can use it to set up your game's layout. In case you get stuck with the tutorial, you can always download the complete project from my github: 

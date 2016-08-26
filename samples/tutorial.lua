@@ -1,10 +1,13 @@
 return function(looky)
   
-    looky:registerFont( "space", love.graphics.newFont( 30 ))
-    looky:registerStyledLayout("new.text", "text", { font = "space", gravity = { "center", "center" }, textColor = { 180, 180, 60, 255 }, background = { 20, 20, 20, 255 } })
+    looky:registerFont( "space", love.graphics.newFont( "docs/assets/Roboto-Bold.ttf", 30 ))
+    looky:registerStyledLayout("new.text", "text", { font = "space", gravity = { "center", "center" }, textColor = { 180, 180, 60, 255 } })
     
-    looky:registerFont( "small", love.graphics.newFont(10))    
+    looky:registerFont( "small", love.graphics.newFont( "docs/assets/Roboto-Bold.ttf", 10))    
     looky:registerStyledLayout( "new.text.label", "new.text", { font = "small" })
+    
+    lightOff = love.graphics.newImage("docs/assets/light_off.png")
+    lightOn = love.graphics.newImage("docs/assets/light_on.png")
 
     speedGaugeType = {
       build = function(options)
@@ -26,12 +29,27 @@ return function(looky)
       build = function(options)
         local container = looky:build("linear", { width = "cram", height = "wrap", direction = "v" })
         container:addChild(looky:build("new.text.label", { width = "fill", height = "wrap", data = function() return options.label end }))
-        container:addChild(looky:build("image", { width = "wrap", height = "wrap", file = "docs/assets/light_off.png" }))
-        container.flagged = "cookies"
+        local imageView = looky:build("image", { width = "wrap", height = "wrap", file = lightOff })
+        container:addChild(imageView)
+        
+        imageView.externalSignalHandlers.warning = function(self, signal, payload)
+          if payload.name == options.respondTo then
+            if payload.active then
+              imageView:setImage(lightOn)
+            else
+              imageView:setImage(lightOff)
+            end
+          end
+        end
+        
         return container
       end,
       schema = {
         label = {
+          required = true,
+          schemaType = "string"
+        },
+        respondTo = {
           required = true,
           schemaType = "string"
         }
@@ -48,7 +66,7 @@ return function(looky)
   end
   gameScreenView = looky:build("freeform", { width = "fill", height = "fill", render = renderGameScreen, background = { file = "docs/assets/background.png", fill = "fill" }, padding = looky.padding(5), border = { thickness = 5, color = { 60, 60, 60, 250 }  } })
 
-  HUDView = looky:build("linear", { width = "fill", height = 100, direction = "h" })
+  HUDView = looky:build("linear", { width = "fill", height = 100, direction = "h", background = { 20, 20, 20, 255 } })
 
   seconds = 0
   clockView = looky:build("new.text", { width = "fill", height = "fill", data = function() return math.floor(seconds) .. "s" end })
@@ -60,14 +78,17 @@ return function(looky)
     speed = 0,
     maxSpeed = 300
   }
-
+  
+  isSpeeding = false
+  nearEdge = false
+  
   shipImage = love.graphics.newImage("docs/assets/ship.png")
 
   speedView = looky:build("speedGauge")
 
   local lightsDisplay = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
-  lightsDisplay:addChild( looky:build( "light", { label = "Speed" } ))
-  lightsDisplay:addChild( looky:build( "light", { label = "Edge" } ))
+  lightsDisplay:addChild( looky:build( "light", { label = "Speed", respondTo = "speeding" } ))
+  lightsDisplay:addChild( looky:build( "light", { label = "Edge", respondTo = "edge" } ))
   
   HUDView:addChild(clockView)
   HUDView:addChild(lightsDisplay)
@@ -107,6 +128,21 @@ return function(looky)
     player.x = player.x + (player.speed * dt) * math.sin(player.rotation)
     player.y = player.y + (player.speed * dt) * (math.cos(player.rotation)*-1)
 
+    if isSpeeding and player.speed < 240 then
+      isSpeeding = false
+      rootView:receiveOutsideSignal("warning", { name = "speeding", active = false })
+    elseif not isSpeeding and player.speed > 240 then
+      isSpeeding = true
+      rootView:receiveOutsideSignal("warning", { name = "speeding", active = true })
+    end
+
+    if nearEdge and player.x > 100 and player.x < gameScreenView:availableWidth() - 100 and player.y > 100 and player.y < gameScreenView:availableHeight() - 100 then
+      nearEdge = false
+      rootView:receiveOutsideSignal("warning", { name = "edge", active = false })
+    elseif not nearEdge and (player.x < 100 or player.x > gameScreenView:availableWidth() - 100 or player.y < 100 or player.y > gameScreenView:availableHeight() - 100 ) then
+      nearEdge = true
+      rootView:receiveOutsideSignal("warning", { name = "edge", active = true })
+    end
 
   end
  
