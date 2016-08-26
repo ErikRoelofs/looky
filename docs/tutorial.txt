@@ -134,3 +134,101 @@ So the final View result will look like this:
   gameScreenView = looky:build("freeform", { width = "fill", height = "fill", render = renderGameScreen, background = { file = "images/background.png", fill = "fill" }, padding = looky.padding(5), border = { thickness = 5, color = { 60, 60, 60, 250 }  } })
   
 Looky will automatically load the image for the background. If you want to re-use the image, it's better to load it yourself (once) and pass the variable to all the Views using that background. Both a filename and an actual image resource will work. The border property will assing a border to the view. The padding property will clean up a bit of space at the edges of the view to draw the border in; if you don't set this padding then it will look the same but the ship will be able to fly over the border.
+
+We also want to upgrade the speed gauge. Right now, it is not clear at all that the bar is supposed to be speed and nothing is visible when the ship does not move. We'll add a handy title above the bar, as well as an icon before the gauge. While we're add it, we'll also add a background color and some notches on the bar.
+Since this is a more serious modification, it's best if we start by registering a new type of view to use here, and put all of our work in there.
+At the the of the page, we will define a new type of view. It needs to have a build method so we can create the instance, and then it needs a schema. For now, we'll leave the schema empty as we'll only have one instance of the view.
+
+    speedGaugeType = {
+      build = function(looky, options)
+      
+      end,
+      schema = {}
+    }
+    looky:registerLayout("speedGauge", speedGaugeType)
+    
+The next step is to create the actual build function. Since the goal is an image on the left, and then a bar with a title on the right, we'll need some containers. We start by setting up a horizontal container. That will hold 2 children: an image (of a speedometer) and a second, vertical container. That vertical container also holds 2 children: a title and then our old speed gauge.
+
+    build = function(options)
+      local mainContainerView = looky:build("linear", { width = "fill", height = "fill", direction = "h" })
+      mainContainerView:addChild( looky:build( "image", { width = "wrap", height = "wrap", file = "docs/assets/speedometer.png" }))
+      
+      local secondContainerView = looky:build("linear", { width = "fill", height = "fill", direction = "v" })
+      secondContainerView:addChild( looky:build("text", { width = "fill", height = "fill", data = function() return "Speed:" end, gravity = { "center", "center" } }))
+      local speedView = looky:build("numberAsBar", { width = "fill", height = 20, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed, filledColor = { 100, 150, 30, 255 } })          
+      secondContainerView:addChild(speedView)
+      
+      mainContainerView:addChild(secondContainerView)      
+      return mainContainerView
+    end,
+
+That's all we need to do to allow us to use our new type of view wherever we want. So let's put it where we had the other speed gauge before. Replace the old declaration of speedView with this one:
+
+    speedView = looky:build("speedGauge")
+    
+Now if you run the game, you should see a title, the image and our old bar. It's a start. The text label is rather small though, and the same can be said for the clock. We can override the default text-view with a styled version that writes text larger, and maybe in a prettier font. Grab your favorite font (or pull it from the assets directory) and let's register a new font:
+
+    looky:registerFont( "space", love.graphics.newFont( 30 ))
+    
+And then, register a styled version of the text-view. We'll add our font, and we'll center the text by default since that looks better. We'll also give it a bit of color and a background.
+
+    looky:registerStyledLayout("new.text", "text", { font = "space", gravity = { "center", "center" }, textColor = { 180, 180, 60, 255 }, background = { 20, 20, 20, 255 } })
+    
+We will have to replace the instances where we were using the old text, to use the new one. Update both of the "text" views to now use "new.text". Remove the gravity option, since that's now default.
+
+    -- update the speed gauge title
+    secondContainerView:addChild( looky:build("new.text", { width = "fill", height = "fill", data = function() return "Speed:" end }))
+
+    -- update the clock
+    clockView = looky:build("new.text", { width = "fill", height = "fill", data = function() return math.floor(seconds) .. "s" end })
+    
+Let's apply some quick styling to the bar itself as well. Add a background, some padding and some notches like this:
+
+    local speedView = looky:build("numberAsBar", { width = "fill", height = 40, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed, filledColor = { 100, 150, 30, 255 }, background = { 40, 40, 45, 255 }, padding = looky.padding(5), notches = { amount = 4, color = { 255, 255, 255, 255 }, height = 0.4 } })
+    
+    
+I'm going to leave off styling it further at this point. Consider making it look "not-dreadful" as an exercise in seeing if you understand it. Instead, I'm going to show you a little bit about signals. Signals are how different parts of the view can communicate with each other and with the outside world. (And for this game, not really required, so the next part is more "how does it work" than "this is when you use it")
+We're going to add a warning light to the main panel, that lights up when your speed approaches the maximum speed. Then we'll add a second one that lights up when you are close to the borders of the screen. Both will have a small label, to explain their purpose, and they'll be turned on and off by receiving signal updates from an outside system.
+
+Let's start by creating a new type of view for our warning lights. Since we're making two, it's best to make components out of them. The warning light has a vertical linear container, which contains two views: a label and a light. The label will be text; in order to reuse as much of our existing style as possible we will extend new text further but this time using a smaller version of the font. The light will be a simple image. Since this view will have some customizable parts, we'll also include a schema for it.
+
+First, define an extension to our existing text to use a small font. We need to register the font also.
+    looky:registerFont( "small", love.graphics.newFont(10))
+    
+    looky:registerStyledLayout( "new.text.label", "new.text", { font = "small" })
+
+Then, create a new view type.
+
+    warningLightType = {
+      build = function(options)
+        local container = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
+        container:addChild(looky:build("new.text.label", { width = "wrap", height = "wrap", data = function() return options.label end }))
+        container:addChild(looky:build("image", { width = "wrap", height = "wrap", file = "assets/light_off.png" }))
+        
+        return container
+      end,
+      schema = {
+        label = {
+          required = true,
+          schemaType = "string"
+        }
+      }
+    
+    }
+    
+    looky:registerLayout("light", warningLightType)
+    
+We will cram our warning lights between the speed gauge and the clock. Looky will figure out how that should look. We'll add a vertical container there and put our two lights in it.
+
+    local lightsDisplay = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
+    lightsDisplay:addChild( looky:build( "light", { label = "Speed" } ))
+    lightsDisplay:addChild( looky:build( "light", { label = "Edge" } ))
+    
+    -- add it to the hud between the other two
+    HUDView:addChild(clockView)
+    HUDView:addChild(lightsDisplay)
+    HUDView:addChild(speedView)
+
+You'll see the two lights and their labels on the HUD now. Notice how the schema definition allowed us to pass a label to the build() function, which is now shown above the light. Also notice how the labels have the same basic colors as the previously defined text-type, but smaller text.
+
+The next step is to make them light up when something is wrong. This requires two things: the first is to swap out the image when a problem happens, the second is to be able to receive a signal when an update is required.

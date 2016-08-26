@@ -1,5 +1,46 @@
 return function(looky)
   
+    looky:registerFont( "space", love.graphics.newFont( 30 ))
+    looky:registerStyledLayout("new.text", "text", { font = "space", gravity = { "center", "center" }, textColor = { 180, 180, 60, 255 }, background = { 20, 20, 20, 255 } })
+    
+    looky:registerFont( "small", love.graphics.newFont(10))    
+    looky:registerStyledLayout( "new.text.label", "new.text", { font = "small" })
+
+    speedGaugeType = {
+      build = function(options)
+        local mainContainerView = looky:build("linear", { width = "fill", height = "fill", direction = "h" })
+        mainContainerView:addChild( looky:build( "image", { width = "wrap", height = "wrap", file = "docs/assets/speedometer.png" }))
+        local secondContainerView = looky:build("linear", { width = "fill", height = "fill", direction = "v" })
+        secondContainerView:addChild( looky:build("new.text", { width = "fill", height = "fill", data = function() return "Speed:" end }))
+        local speedView = looky:build("numberAsBar", { width = "fill", height = 40, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed, filledColor = { 100, 150, 30, 255 }, background = { 40, 40, 45, 255 }, padding = looky.padding(5), notches = { amount = 4, color = { 255, 255, 255, 255 }, height = 0.4 } })
+        secondContainerView:addChild(speedView)
+        mainContainerView:addChild(secondContainerView)
+        
+        return mainContainerView
+      end,
+      schema = {}
+    }
+    looky:registerLayout("speedGauge", speedGaugeType)
+    
+    warningLightType = {
+      build = function(options)
+        local container = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
+        container:addChild(looky:build("new.text.label", { width = "wrap", height = "wrap", data = function() return options.label end }))
+        container:addChild(looky:build("image", { width = "wrap", height = "wrap", file = "docs/assets/light_off.png" }))
+        
+        return container
+      end,
+      schema = {
+        label = {
+          required = true,
+          schemaType = "string"
+        }
+      }
+    
+    }
+    
+    looky:registerLayout("light", warningLightType)
+  
   rootView = looky:build("root", { direction = "v" })
   renderGameScreen = function() 
     love.graphics.setColor(255,255,255,255)
@@ -10,7 +51,7 @@ return function(looky)
   HUDView = looky:build("linear", { width = "fill", height = 100, direction = "h" })
 
   seconds = 0
-  clockView = looky:build("text", { width = "fill", height = "fill", data = function() return math.floor(seconds) .. "s" end, gravity = {"center", "center"} })
+  clockView = looky:build("new.text", { width = "fill", height = "fill", data = function() return math.floor(seconds) .. "s" end })
   
   player = {
     x = 200,
@@ -22,10 +63,14 @@ return function(looky)
 
   shipImage = love.graphics.newImage("docs/assets/ship.png")
 
-  
-  speedView = looky:build("numberAsBar", { width = "fill", height = 20, gravity = { "center", "center" }, value = function() return player.speed end, maxValue = player.maxSpeed, filledColor = { 100, 150, 30, 255 } })    
+  speedView = looky:build("speedGauge")
+
+  local lightsDisplay = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
+  lightsDisplay:addChild( looky:build( "light", { label = "Speed" } ))
+  lightsDisplay:addChild( looky:build( "light", { label = "Edge" } ))
   
   HUDView:addChild(clockView)
+  HUDView:addChild(lightsDisplay)
   HUDView:addChild(speedView)
     
   rootView:addChild(gameScreenView)

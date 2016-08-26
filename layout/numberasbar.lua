@@ -23,7 +23,7 @@ return function(looky)
         if self.notches then
           love.graphics.setColor(self.notches.color)
           for i = 1, self.notches.amount - 1 do
-            local height = self:availableHeight() * 0.15
+            local height = self:availableHeight() * (self.notches.height or 0.15)
             if self.notches.largerEvery and i % self.notches.largerEvery == 0 then
               height = height * 2
             end  
@@ -85,6 +85,10 @@ return function(looky)
             schemaType = "number"
           },
           largerEvery = {
+            required = false,
+            schemaType = "number"
+          },
+          height = { 
             required = false,
             schemaType = "number"
           }
