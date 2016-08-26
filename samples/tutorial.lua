@@ -24,10 +24,10 @@ return function(looky)
     
     warningLightType = {
       build = function(options)
-        local container = looky:build("linear", { width = "wrap", height = "wrap", direction = "v" })
-        container:addChild(looky:build("new.text.label", { width = "wrap", height = "wrap", data = function() return options.label end }))
+        local container = looky:build("linear", { width = "cram", height = "wrap", direction = "v" })
+        container:addChild(looky:build("new.text.label", { width = "fill", height = "wrap", data = function() return options.label end }))
         container:addChild(looky:build("image", { width = "wrap", height = "wrap", file = "docs/assets/light_off.png" }))
-        
+        container.flagged = "cookies"
         return container
       end,
       schema = {

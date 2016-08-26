@@ -37,7 +37,7 @@ function love.load()
   looky:registerStyledLayout("filler.bottomright", "filler", { bottom = "fill", right = "fill" })
   looky:registerStyledLayout("filler.bottomleft", "filler", { bottom = "fill", left = "fill" })
   looky:registerStyledLayout("filler.center", "filler", { top = "fill", bottom = "fill", left = "fill", right = "fill" })
-  
+    
   require "samples/tutorial"(looky)
 end
 

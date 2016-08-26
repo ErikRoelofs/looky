@@ -1,6 +1,6 @@
-local renderAquarium = function(self)  
+local renderAquarium = function(self)      
   local canvas = nil
-  if self.useCanvas then
+  if self.useCanvas then    
     canvas = love.graphics.newCanvas(self:availableWidth(), self:availableHeight())
     love.graphics.setCanvas(canvas)    
   end

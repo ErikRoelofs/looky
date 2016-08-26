@@ -187,11 +187,11 @@ local function baseLayout(width, height)
         return 0
       end
       if self.width == "fill" then
-        return "fill"
-      elseif self.width == "wrap" then
-        return self:contentWidthWithPadding()
-      else
         return self.width
+      elseif type(self.width) == "number" then 
+        return self.width
+      else
+        return self:contentWidthWithPadding()
       end
     end,
     --[[
@@ -204,12 +204,12 @@ local function baseLayout(width, height)
       if self.visibility == "gone" then
         return 0
       end
-      if self:contentHeight() == "fill" then
+      if self.height == "fill" then
         return self.height
-      elseif self.height == "wrap" then
-        return self:contentHeightWithPadding()
-      else        
+      elseif type(self.height) == "number" then
         return self.height
+      else
+        return self:contentHeightWithPadding()      
       end
     end,
     --[[
@@ -275,7 +275,9 @@ local function baseLayout(width, height)
     render = function(self)
       if self.visibility == "visible" then
         self:renderBackground()
-        self:renderCustom()
+        if self:availableWidth() > 0 and self:availableHeight() > 0 then
+          self:renderCustom()
+        end
       end
     end,
     --[[
@@ -327,7 +329,11 @@ local function baseLayout(width, height)
       @return number; total width of this element
     ]]
     contentWidthWithPadding = function(self)
-      return self:contentWidth() + self.padding.left + self.padding.right
+      local width = self:contentWidth()
+      if type(width) ~= "number" then
+        return width
+      end
+      return width + self.padding.left + self.padding.right
     end,
     --[[
       This method returns the total height of this view; content + padding
@@ -335,7 +341,11 @@ local function baseLayout(width, height)
       @return number; total height of this element
     ]]
     contentHeightWithPadding = function(self)
-      return self:contentHeight() + self.padding.top + self.padding.bottom
+      local height = self:contentHeight()
+      if type(height) ~= "number" then
+        return height
+      end
+      return height + self.padding.top + self.padding.bottom
     end,
     --[[
       This method will render the background and border for the View.

@@ -142,9 +142,9 @@ end
 local function containerWidth(self)  
   local width = 0
   for k, v in ipairs(self.children) do
-    if v:desiredWidth() == "fill" then
+    if v:desiredWidth() == "fill" and self.width ~= "cram" then
       return "fill"
-    else
+    elseif v:desiredWidth() ~= "fill" then
       if self.direction == "v" then
         if v:desiredWidth() > width then
           width = v:desiredWidth()
@@ -160,9 +160,9 @@ end
 local function containerHeight(self)
   local height = 0
   for k, v in ipairs(self.children) do
-    if v:desiredHeight() == "fill" then
+    if v:desiredHeight() == "fill" and self.height ~= "cram" then
       return "fill"
-    else
+    elseif v:desiredHeight() ~= "fill" then
       if self.direction == "v" then
         height = height + v:desiredHeight()
       else
@@ -214,7 +214,7 @@ return function(looky)
         end  
       end
       base.contentWidth = containerWidth
-      base.contentHeight = containerHeight
+      base.contentHeight = containerHeight      
       base.scaffoldViews = scaffoldViews
       base.childSpacing = options.childSpacing or 0      
       base.visibleChildren = {}
@@ -248,7 +248,15 @@ return function(looky)
     schema = looky:extendSchema("base", 
       {
         direction = { required = false, schemaType = "fromList", list = { "v", "h" } },
-        childSpacing = { required = false, schemaType = "number" }
+        childSpacing = { required = false, schemaType = "number" },
+        width = { required = true, schemaType = "oneOf", possibilities = {
+          { schemaType = "fromList", list = {"wrap", "fill", "cram"} },
+          { schemaType = "number" }            
+        }},
+        height = { required = true, schemaType = "oneOf", possibilities = {
+          { schemaType = "fromList", list = {"wrap", "fill", "cram"} },
+          { schemaType = "number" }            
+        }},
       }
     )
   }
