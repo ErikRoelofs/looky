@@ -1,6 +1,6 @@
 This is a rendering engine inspired loosely by Android and built in Lua using Love2d.
 
-Current status: effectively unusable.
+Current status: Alpha.
 
 Principles:
 

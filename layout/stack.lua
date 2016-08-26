@@ -7,10 +7,6 @@ local renderChildren = function(self)
     love.graphics.push()      
     love.graphics.translate( self.scaffold[v][1], self.scaffold[v][2])
     v:render()
-    if debug then
-      love.graphics.setColor(255,255,255,255)
-      love.graphics.rectangle("line",0,0,v:grantedWidth(),v:grantedHeight())
-    end    
     love.graphics.pop()
   end
 end
