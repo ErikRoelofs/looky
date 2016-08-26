@@ -11,7 +11,8 @@ To install Looky, first clone or download the repository into your project and p
 
 To clone it with git, run the following command:
 
-    git clone git@github.com/ErikRoelofs/looky.git
+    git clone git@github.com:ErikRoelofs/looky.git
+
     
 To download it, go to the following webpage and click the "download" button:
 
