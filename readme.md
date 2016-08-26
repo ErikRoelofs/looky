@@ -5,7 +5,7 @@
 ### Installation:
 Put it in your project: 
 
-    git clone git@github.com/ErikRoelofs/looky.git
+    git clone git@github.com:ErikRoelofs/looky.git
 
 Include it in your code: 
 
