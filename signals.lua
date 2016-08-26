@@ -1,3 +1,6 @@
+-- this file serves as a simple example for those who wish to propagate all mouse/keyboard into into the view tree.
+-- scavenge whatever you need, or just paste the whole thing into your main.lua (minus the function definition) or require this file.
+-- if you require the file, keep in mind that it will override a bunch of love functions!
 return function(root)
 
   mouseHeld = {}
