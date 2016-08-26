@@ -4,13 +4,16 @@
 
 ### Installation:
 Put it in your project: 
+
     git clone git@github.com/ErikRoelofs/looky.git
 
 Include it in your code: 
+
     looky = require "looky"
 
 ### Quickstart
 There is a quickstart doc in the docs/ folder. You can also check the tutorial which explains the basics:        
+
     https://github.com/ErikRoelofs/looky-tutorial
 
 ### Principles
