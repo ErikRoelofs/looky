@@ -17,6 +17,7 @@ looky:registerLayout("filler", require( _NAME .. "/layout/filler" )(looky))
 looky:registerLayout("4pane", require( _NAME .. "/layout/4pane" )(looky))
 looky:registerLayout("aquarium", require( _NAME .. "/layout/aquarium" )(looky))
 looky:registerLayout("slotted", require( _NAME .. "/layout/slotted" )(looky))
+looky:registerLayout("grid", require( _NAME .. "/layout/grid" )(looky))
 
 looky:registerStyledLayout("filler.right", "filler", { right = "fill" })
 looky:registerStyledLayout("filler.left", "filler", { left = "fill" })
