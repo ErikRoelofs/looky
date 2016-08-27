@@ -52,8 +52,8 @@ return function(looky)
         removeChild = function(self,target)
           self.linear:removeChild(target)
         end,
-        removeAllookyhildren = function(self)
-          self.linear:removeAllookyhildren()
+        removeAllchildren = function(self)
+          self.linear:removeAllchildren()
         end,
         receiveOutsideSignal = function(self, signal, payload, coords)
           self.linear:receiveOutsideSignal(signal, payload, coords)

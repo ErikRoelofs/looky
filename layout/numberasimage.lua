@@ -30,7 +30,7 @@ return function(looky)
       
       container.update = function(self, dt)        
         if self:getValue() ~= self.lastValue then
-          self:removeAllookyhildren()          
+          self:removeAllchildren()          
           self.lastValue = self:getValue()
           
           local toRender = math.max( math.min(self:getValue(), self.maxValue), 0 )

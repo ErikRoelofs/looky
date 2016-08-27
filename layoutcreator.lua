@@ -481,7 +481,7 @@ local function baseLayout(width, height)
       
       @return nil
     ]]
-    removeAllookyhildren = function(self)
+    removeAllchildren = function(self)
       self.children = {}
     end,
     --[[

@@ -49,8 +49,8 @@ return function(looky)
         removeChild = function(self,target)
           self.stack:removeChild(target)
         end,
-        removeAllookyhildren = function(self)
-          self.stack:removeAllookyhildren()
+        removeAllchildren = function(self)
+          self.stack:removeAllchildren()
         end,
         receiveSignal = function(self, signal, payload)
           return self.stack:receiveSignal(signal, payload)

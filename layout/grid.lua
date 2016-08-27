@@ -16,11 +16,11 @@ return function(looky)
       end
       
       container.setChild = function(self, child, x, y)
-        self:getChild(x):getChild(y):removeAllookyhildren()
+        self:getChild(x):getChild(y):removeAllchildren()
         self:getChild(x):getChild(y):addChild(child)
       end
       container.removeChild = function(self, x, y) 
-        self:getChild(x):getChild(y):removeAllookyhildren()
+        self:getChild(x):getChild(y):removeAllchildren()
       end
     
     
