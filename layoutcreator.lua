@@ -31,7 +31,7 @@ end
   
   @return nil
 ]]
-local signalookyhildren = function(self, signal, payload, coords)
+local signalChildren = function(self, signal, payload, coords)
   for i, c in ipairs(self:getChildren()) do
     if c.visibility == "visible" then
       local newCoords = {}
@@ -301,7 +301,9 @@ local function baseLayout(width, height)
       @return nil
     ]]
     update = function(self, dt)
-      
+      for i, v in ipairs(self:getChildren()) do
+        v:update(dt)
+      end
     end,
     --[[
       @MUST IMPLEMENT
@@ -485,9 +487,9 @@ local function baseLayout(width, height)
       self.children = {}
     end,
     --[[
-      docs for signalookyhildren are with the function's definition at the top of this file
+      docs for signalChildren are with the function's definition at the top of this file
     ]]
-    signalookyhildren = signalookyhildren,
+    signalChildren = signalChildren,
     --[[
       This method is called by "the outside" when the view receives a signal.
       (Often this is done by the parent; but the view doesn't know it has one, so everything is treated as "the outside")
@@ -519,7 +521,7 @@ local function baseLayout(width, height)
           if handler == "o" then
             self.messageOut(self, signal, payload, coords)
           elseif handler == "c" then
-            self.signalookyhildren(self, signal, payload, coords)
+            self.signalChildren(self, signal, payload, coords)
           else
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
@@ -549,7 +551,7 @@ local function baseLayout(width, height)
       
       @return nil
     ]]
-    receiveChildSignal = function(self, signal, payload, coords)
+    receiveChildSignal = function(self, signal, payload, coords)      
       local handler = self.childSignalHandlers[signal]
       if not handler then
         handler = self.defaultChildHandler
@@ -559,9 +561,14 @@ local function baseLayout(width, height)
           self.childSignalHandlers[signal](self, signal, payload, coords)
         elseif type(handler) == "string" then
           if handler == "o" then
-            self.messageOut(self, signal, payload)
+            for _, c in ipairs(coords) do
+              c.x, c.y = self:translateCoordsFromChild(payload.child, c.x, c.y)
+              payload.child = self
+            end
+            
+            self.messageOut(self, signal, payload, coords)
           elseif handler == "c" then
-            self.signalookyhildren(self, signal, payload, coords)
+            self.signalChildren(self, signal, payload, coords)
           else
             error( "Only 'o' and 'c' are accepted as string based handler, but got: " .. handler )
           end
@@ -600,12 +607,12 @@ local function baseLayout(width, height)
       
       @return nil
     ]]
-    messageOut = function(self, signal, payload)
+    messageOut = function(self, signal, payload, coords)
       for i, listener in ipairs(self.listeners) do
         if not listener.target[listener.method] then
           print("Could not find method " .. method .. " of listener " )
         end
-        listener.target[listener.method](listener.target, signal, payload)
+        listener.target[listener.method](listener.target, signal, payload, coords)
       end
     end,
     --[[

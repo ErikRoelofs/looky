@@ -55,8 +55,8 @@ return function(looky)
         receiveSignal = function(self, signal, payload)
           return self.stack:receiveSignal(signal, payload)
         end,
-        signalookyhildren = function(self, signal, payload)
-          return self.stack:signalookyhildren(signal, payload)
+        signalChildren = function(self, signal, payload)
+          return self.stack:signalChildren(signal, payload)
         end,
         messageOut = function(self, signal, payload)
           return self.stack:messageOut(signal, payload)
