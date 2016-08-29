@@ -1,7 +1,7 @@
 return function(looky)
   return {
     build = function (options)
-      local container = looky:build("linear", {width = options.width, height = options.height, direction="h"})
+      local container = looky:build("linear", {width = options.width, height = options.height, direction="h", background = options.background, padding = options.padding})
       local i = 0
       while i < options.columns do
         -- add the column
