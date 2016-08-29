@@ -9,14 +9,22 @@ return function(looky)
           return self.value.value
         end
       end
-            
+      
+      local getMaxValue = function(self)
+        if type(self.maxValue) == "function" then
+          return self.maxValue()
+        else
+          return self.maxValue
+        end
+      end
+                        
       local render = function(self)        
         love.graphics.setColor(self.filledColor)
-        love.graphics.rectangle("fill", self.padding.left, self.padding.top, self:availableWidth() * ( self:getValue() / self.maxValue ), self:availableHeight())
+        love.graphics.rectangle("fill", self.padding.left, self.padding.top, self:availableWidth() * ( self:getValue() / self:getMaxValue() ), self:availableHeight())
         
         if self.emptyColor then
           love.graphics.setColor(self.emptyColor)
-          local left = self:availableWidth() * ( self:getValue() / self.maxValue )
+          local left = self:availableWidth() * ( self:getValue() / self:getMaxValue() )
           love.graphics.rectangle("fill", self.padding.left + left, self.padding.top, self:availableWidth() - left, self:availableHeight())          
         end
         
@@ -35,8 +43,10 @@ return function(looky)
       
       local container = looky:build("freeform", {width = options.width, height = options.height, background = options.background, padding = options.padding, render = render, border = options.border})
       container.value = options.value
-      container.maxValue = options.maxValue
       container.getValue = getValue
+      
+      container.maxValue = options.maxValue
+      container.getMaxValue = getMaxValue
       container.filledColor = options.filledColor
       container.emptyColor = options.emptyColor
       container.notches = options.notches
@@ -52,7 +62,15 @@ return function(looky)
       emptyColor = { required = false, schemaType = "color" },
       maxValue = {
         required = true,
-        schemaType = "number"
+        schemaType = "oneOf",
+        possibilities = {
+          {
+            schemaType = "number", 
+          },
+          {
+            schemaType = "function",
+          }
+        }
       },
       value = {
         required = true, 
